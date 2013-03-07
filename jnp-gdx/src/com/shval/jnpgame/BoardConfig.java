@@ -2,11 +2,8 @@ package com.shval.jnpgame;
 
 import static com.shval.jnpgame.Globals.*;
 
+import com.badlogic.gdx.Gdx;
 import com.example.jnp.R;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 
 public class BoardConfig {
 
@@ -99,9 +96,9 @@ public class BoardConfig {
 		ROWS = board.length;
 		COLS = board[0].length();
 		cells = new char[COLS][ROWS];
-		Log.d(TAG, "boardsize (" + COLS + "," + ROWS + ")");
+		Gdx.app.debug(TAG, "boardsize (" + COLS + "," + ROWS + ")");
 		transposeBoard(board);
-		Log.d(TAG, "Level " + i + "defined");
+		Gdx.app.debug(TAG, "Level " + i + "defined");
 	}
 
 	private void transposeBoard(String board[]) {

@@ -1,5 +1,6 @@
 package com.shval.jnpgame;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
@@ -15,9 +16,11 @@ public class JnpGame extends Game {
 	private SpriteBatch batch;
 	private Texture texture;
 	private Sprite sprite;
-	
+	private final int logLevel = Application.LOG_DEBUG;
+			
 	@Override
-	public void create() {		
+	public void create() {
+		Gdx.app.setLogLevel(logLevel);
 		setScreen(new PlayScreen());
 		/*
 		float w = Gdx.graphics.getWidth();

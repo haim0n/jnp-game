@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
+
 
 public class Board {
 	
@@ -82,7 +84,7 @@ public class Board {
 		this.spriteWidth = boardWidth/COLS;
 		this.spriteHeight = boardHeight/ROWS;
 		
-		Log.d(TAG, "Sprite size = " + spriteWidth + " x " + spriteHeight);
+		Gdx.app.debug(TAG, "Sprite size = " + spriteWidth + " x " + spriteHeight);
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
 				Cell cell = cells[x][y];
@@ -103,7 +105,7 @@ public class Board {
 		
 		this.stable = true;
 		scale = panel.getContext().getResources().getDisplayMetrics().density;
-		Log.d(TAG, "scale = " + scale);
+		Gdx.app.debug(TAG, "scale = " + scale);
 		
 		cells = new Cell[COLS][ROWS];
 		for (int x = 0; x < COLS; x++) {
@@ -123,7 +125,7 @@ public class Board {
 	public Cell getCell(int x, int y) {
 		if (x < 0 || x >= COLS || y < 0 || y >= ROWS) {
 			/* error */
-			Log.d(TAG, "Out of scope");
+			Gdx.app.debug(TAG, "Out of scope");
 			return null;
 		}
 		return cells[x][y];
@@ -149,7 +151,7 @@ public class Board {
 
 		if (x < 0 || x >= COLS || y < 0 || y >= ROWS) {
 			// error
-			Log.d(TAG, "attemptSlide: Out of scope");
+			Gdx.app.debug(TAG, "attemptSlide: Out of scope");
 			return false;
 		}
 				
@@ -215,7 +217,7 @@ public class Board {
 	
 	// returns true if moving
 	private boolean attemptMove(int dir, Cell cell) {
-		Log.d(TAG, "Attempt to move (" + cell.getX() + ", " + cell.getY() + ") in direction: " + dir);
+		Gdx.app.debug(TAG, "Attempt to move (" + cell.getX() + ", " + cell.getY() + ") in direction: " + dir);
 		resetAllScanFlags(); // reset all cells scan flag
 		if(cell.canMove(dir)) {
 			resetAllScanFlags();
@@ -229,7 +231,7 @@ public class Board {
 	// every tick
 	void update() {
 		boolean isMilestone;
-		//Log.d(TAG, "Updating game state");
+		//Gdx.app.debug(TAG, "Updating game state");
 		
 		if (stable)
 			return;
@@ -248,7 +250,7 @@ public class Board {
 			return;
 
 		// new milestone (N.Z) is reached - update board
-		Log.d(TAG, "Reached milestone. Rebuilding board");
+		Gdx.app.debug(TAG, "Reached milestone. Rebuilding board");
 		Cell cellsOld[][] = cells;
 		cells = new Cell[COLS][ROWS];
 		for (int x = 0; x < COLS; x++) {
@@ -265,7 +267,7 @@ public class Board {
 		
 		if (attemptMerge(false)) { // don't merge blacks
 			if (isWinPosition()) { // check only if something merged
-				Log.d(TAG, "You win!");
+				Gdx.app.debug(TAG, "You win!");
 			}
 		}
 	}	

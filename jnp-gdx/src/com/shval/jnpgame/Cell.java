@@ -2,6 +2,8 @@ package com.shval.jnpgame;
 
 import static com.shval.jnpgame.Globals.*;
 
+import com.badlogic.gdx.Gdx;
+
 public class Cell {
 
 	private static final String TAG = Cell.class.getSimpleName();
@@ -116,7 +118,7 @@ public class Cell {
 		int newDy = dyFromMilestone + (int) speed.getYv();
 		
 		if (true)
-			Log.d(TAG, "new (dx, dy) = (" + newDx + ", " + newDy + ")");
+			Gdx.app.debug(TAG, "new (dx, dy) = (" + newDx + ", " + newDy + ")");
 		// milestone reached?
 		boolean isMilestone = false;
 		
@@ -137,7 +139,7 @@ public class Cell {
 		}	 
 		
 		if (isMilestone) {
-			Log.d(TAG, "Milestone reached new: (" + x + "," + y + ")");			
+			Gdx.app.debug(TAG, "Milestone reached new: (" + x + "," + y + ")");			
 			dxFromMilestone = 0;
 			dyFromMilestone = 0;
 		} else {
@@ -176,13 +178,13 @@ public class Cell {
 		scanFlag = true;
 		
 		if(isFixed) {
-			Log.e(TAG, "Trying tomove a fixed cell");
+			Gdx.app.error(TAG, "Trying tomove a fixed cell");
 		}
 		
 		// move current cell
 		if (isMoving()) {
 			// should be here only if falling > 1 blocks
-			Log.d(TAG, "Trying to move when already moving - falling >1 blocks?");
+			Gdx.app.debug(TAG, "Trying to move when already moving - falling >1 blocks?");
 		}
 		
 		float vx = 0, vy = 0;
