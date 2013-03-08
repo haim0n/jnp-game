@@ -22,7 +22,7 @@ public class Cell {
 	private int type;
 	private boolean scanFlag; // was this cell encountered in current board scanning
 	private static final int CELL_SIZE = 100; // 
-	private static final float SPEED = 50;
+	private static final float SPEED = 500;
 	private int spriteWidth;
 	private int spriteHeight; 
 	
@@ -77,13 +77,18 @@ public class Cell {
 			graphicDx = 0;
 		
 		if (speed.getYv() != 0)
-			graphicDy = (spriteWidth * (int) dyFromMilestone) / CELL_SIZE;
+			graphicDy = (spriteHeight * (int) dyFromMilestone) / CELL_SIZE;
 		else
 			graphicDy = 0;
 		
 		int graphicX = spriteWidth * x + graphicDx;
 		int graphicY = spriteHeight * y + graphicDy;
-		Gdx.app.debug(TAG, "rendering cell (" + x + ", " + y + ") at (" + graphicX + ", " + graphicY + ")");
+		if(false) {
+			Gdx.app.debug(TAG, "(" + x + ", " + y + "): dx, dy = " + dxFromMilestone + ", " + dyFromMilestone);
+			Gdx.app.debug(TAG, "(" + x + ", " + y + "): dx, dy = " + dxFromMilestone + ", " + dyFromMilestone);
+			Gdx.app.debug(TAG, "(" + x + ", " + y + "): Gdx, Gdy = " + graphicDx + ", " + graphicDy);
+			Gdx.app.debug(TAG, "(" + x + ", " + y + "): rendering at (" + graphicX + ", " + graphicY + ")");
+		}
 		spriteBatch.draw(sprite, graphicX, graphicY, spriteWidth, spriteHeight);
 	}
 
@@ -102,8 +107,8 @@ public class Cell {
 		float newDx = dxFromMilestone + (speed.getXv() * delta);
 		float newDy = dyFromMilestone + (speed.getYv() * delta);
 		
-		if (true)
-			Gdx.app.debug(TAG, x + ", " + y + " new (dx, dy) = (" + newDx + ", " + newDy + ")");
+		if (false)
+			Gdx.app.debug(TAG, "(" + x + ", " + y + "): new (dx, dy) = (" + newDx + ", " + newDy + ")");
 		// milestone reached?
 		boolean isMilestone = false;
 		
