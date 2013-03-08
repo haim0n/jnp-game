@@ -32,6 +32,8 @@ public class Jelly {
 	}
 	
 	public boolean canMove(int dir) {
+		
+		// (0,0) is lower left
 		boolean ret = true;
 		int dx = 0, dy = 0;
 		if (isFixed)
@@ -44,10 +46,10 @@ public class Jelly {
 			dx = 1;
 			break;
 		case DOWN:
-			dy = 1;
+			dy = -1;
 			break;
 		case UP:
-			dy = -1;
+			dy = 1;
 			break;
 		default:
 			// should never be here

@@ -3,40 +3,33 @@ package com.shval.jnpgame;
 import static com.shval.jnpgame.Globals.*;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Cell {
 
 	private static final String TAG = Cell.class.getSimpleName();
 	
-	private Bitmap bitmap;	// the actual bitmap
-	private final Bitmap fullScaleBitmap;
+	private Sprite sprite;	// the actual bitmap
 	private int x;			// the X coordinate (in the board cells matrix)
 	private int y;			// the Y coordinate 	"  "
-	private int dxFromMilestone;
-	private int dyFromMilestone;
+	private float dxFromMilestone;
+	private float dyFromMilestone;
 	private Speed speed;	// the speed with its directions
 	private Jelly jelly;
 	private boolean isFixed;
 	private int type;
 	private boolean scanFlag; // was this cell encountered in current board scanning
 	private static final int CELL_SIZE = 100; // 
-	private static final float SPEED = 55;
-	private int spriteWidth = 0;
-	private int spriteHeight = 0;
-	private static float scale;
-
+	private static final float SPEED = 50;
+	private int spriteWidth;
+	private int spriteHeight; 
 	
-	private static int scalePixels(int px) {
-		return (int) ((float) px * scale + 0.5f);
-	}
-	
-	public Cell(Bitmap bitmap, int x, int y, Jelly jelly,
-			boolean fixed, int type, final float scale) {
+	public Cell(TextureRegion rawTextureR, int x, int y, Jelly jelly,
+			boolean fixed, int type) {
 		
-		Cell.scale = scale;
-		this.fullScaleBitmap = Bitmap.createBitmap(bitmap, 
-				scalePixels(12 + 2 * 48), scalePixels(12 + 2 * 48),
-				scalePixels(48), scalePixels(48));
+		this.sprite = new Sprite(rawTextureR);
 		this.x = x;
 		this.y = y;
 		this.jelly = jelly;
@@ -48,15 +41,10 @@ public class Cell {
 	public void setResolution(int spriteWidth, int spriteHeight) {
 		this.spriteWidth = spriteWidth;
 		this.spriteHeight = spriteHeight;
-		bitmap = Bitmap.createScaledBitmap(fullScaleBitmap, spriteWidth , spriteHeight , false);			
 	}
 	
 	public void resetScanFlag() {
 		scanFlag = false;
-	}
-	
-	public Bitmap getBitmap() {
-		return bitmap;
 	}
 	
 	public Jelly getJelly() {
@@ -65,10 +53,6 @@ public class Cell {
 
 	void setJelly(Jelly newJelly) {
 		this.jelly = newJelly;
-	}
-
-	public void setBitmap(Bitmap bitmap) {
-		this.bitmap = bitmap;
 	}
 	
 	public int getX() {
@@ -84,22 +68,23 @@ public class Cell {
 		this.y = y;
 	}
 	
-	public void render(Canvas canvas) {
+	public void render(SpriteBatch spriteBatch) {
 		//canvas.drawBitmap(bitmap, x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2), null);
 		int graphicDx, graphicDy;
 		if (speed.getXv() != 0)
-			graphicDx = (spriteWidth * dxFromMilestone) / CELL_SIZE;
+			graphicDx = (spriteWidth * (int) dxFromMilestone) / CELL_SIZE;
 		else
 			graphicDx = 0;
 		
 		if (speed.getYv() != 0)
-			graphicDy = (spriteWidth * dyFromMilestone) / CELL_SIZE;
+			graphicDy = (spriteWidth * (int) dyFromMilestone) / CELL_SIZE;
 		else
 			graphicDy = 0;
 		
 		int graphicX = spriteWidth * x + graphicDx;
 		int graphicY = spriteHeight * y + graphicDy;
-		canvas.drawBitmap(bitmap, graphicX, graphicY, null);
+		Gdx.app.debug(TAG, "rendering cell (" + x + ", " + y + ") at (" + graphicX + ", " + graphicY + ")");
+		spriteBatch.draw(sprite, graphicX, graphicY, spriteWidth, spriteHeight);
 	}
 
 	/**
@@ -108,17 +93,17 @@ public class Cell {
 	// on every tick, update returns true if reached new milestone (x, y)
 
 	
-	boolean update() {
+	boolean update(float delta) {
 		
 		if(!isMoving())
 			return false; // no milestone and nothing to update
 		
 		// update speed & location
-		int newDx = dxFromMilestone + (int) speed.getXv();
-		int newDy = dyFromMilestone + (int) speed.getYv();
+		float newDx = dxFromMilestone + (speed.getXv() * delta);
+		float newDy = dyFromMilestone + (speed.getYv() * delta);
 		
 		if (true)
-			Gdx.app.debug(TAG, "new (dx, dy) = (" + newDx + ", " + newDy + ")");
+			Gdx.app.debug(TAG, x + ", " + y + " new (dx, dy) = (" + newDx + ", " + newDy + ")");
 		// milestone reached?
 		boolean isMilestone = false;
 		
@@ -196,10 +181,10 @@ public class Cell {
 			vx = SPEED;
 			break;
 		case DOWN:
-			vy = SPEED;
+			vy = -SPEED;
 			break;
 		case UP:
-			vy = -SPEED;
+			vy = SPEED;
 			break;
 		default:
 			// should never be here

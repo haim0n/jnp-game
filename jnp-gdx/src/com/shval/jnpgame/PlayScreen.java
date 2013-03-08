@@ -1,22 +1,40 @@
 package com.shval.jnpgame;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class PlayScreen implements Screen, InputProcessor {
 
 	private Board board; // this is our world now
+	private BoardView boardView;
+	private JnpGame game;
+	
+	public PlayScreen(JnpGame game, int level) {
+		this.game = game;
+		
+		// create board & view
+		board = new Board(level);
+		boardView = new BoardView(board);
+		board.start();
+		
+	}
 	
 	@Override
 	public void render(float delta) {
 		// TODO Auto-generated method stub
-
+		board.update(delta);
+	       Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
+	       Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		boardView.render();
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
+		board.setResolution(width, height);
 
 	}
 

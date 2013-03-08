@@ -12,16 +12,19 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class JnpGame extends Game {
-	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private Texture texture;
-	private Sprite sprite;
 	private final int logLevel = Application.LOG_DEBUG;
+	public BoardConfig config;
 			
 	@Override
 	public void create() {
+		// load assets
+		Assets.load();
+		
+		//
 		Gdx.app.setLogLevel(logLevel);
-		setScreen(new PlayScreen());
+		setScreen(new PlayScreen(this, 0));
 		/*
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();

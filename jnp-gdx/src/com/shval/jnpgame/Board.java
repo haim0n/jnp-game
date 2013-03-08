@@ -1,12 +1,13 @@
 package com.shval.jnpgame;
 
+import com.shval.jnpgame.BoardConfig;
 import static com.shval.jnpgame.Globals.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 
 public class Board {
@@ -17,21 +18,40 @@ public class Board {
 	private boolean stable;
 	int spriteWidth;
 	int spriteHeight;
-	float scale;
-	private Bitmap rawBg;
-	private Bitmap bg;
+	int boardWidth;
+	int boardHeight;
+	BoardConfig config;
+	Sprite bgSprite;
 	
-	private Cell createCell(BoardConfig config, int x, int y) {
+	public Board(int level) {
+		config = new BoardConfig(level);
+		this.ROWS = config.ROWS;
+		this.COLS = config.COLS;
+		
+		this.stable = true;
+		
+		cells = new Cell[COLS][ROWS];
+		for (int x = 0; x < COLS; x++) {
+			for (int y = 0; y < ROWS; y++) {
+				cells[x][y] = createCell(x, y);
+			}
+		}
+		
+		Texture texture = config.getBgTexture(level);
+		bgSprite = new Sprite(texture);
+	}
+
+	private Cell createCell(int x, int y) {
 		int type = config.getType(x, y);
 		if (type == NONE)
 			return null;
-		Bitmap bm = config.getBitmap(x, y);
+		TextureRegion textureR = config.getTextureRegion(x, y);
 		boolean fixed = config.isFixed(x, y);
 		Jelly jelly = null;
 		if (type != WALL) {
 			jelly = new Jelly(this);
 		}
-		Cell cell = new Cell(bm, x, y, jelly, fixed, type, scale);
+		Cell cell = new Cell(textureR, x, y, jelly, fixed, type);
 		if(jelly != null)
 			jelly.join(cell);
 		return cell;
@@ -73,16 +93,13 @@ public class Board {
 	}
 	
 	public void setResolution(int boardWidth, int boardHeight) {
-		// square
-		/*
-		int spriteSize = Math.min(boardWidth/COLS, boardHeight/ROWS); 
-		this.spriteWidth = spriteSize;
-		this.spriteHeight = spriteSize;
-		*/
-		
+
 		// not necessarily square
 		this.spriteWidth = boardWidth/COLS;
 		this.spriteHeight = boardHeight/ROWS;
+		
+		this.boardWidth = boardWidth;
+		this.boardHeight = boardHeight;
 		
 		Gdx.app.debug(TAG, "Sprite size = " + spriteWidth + " x " + spriteHeight);
 		for (int x = 0; x < COLS; x++) {
@@ -93,32 +110,10 @@ public class Board {
 			}
 		}
 
-		//int w = (int) ( (float) 256 * scale + 0.5f);
-		//int h = (int) ( (float) 256 * scale + 0.5f);
-		bg = Bitmap.createScaledBitmap(rawBg, boardWidth, boardHeight, false);
 	}
-	
-	public Board(BoardConfig config, MainGamePanel panel, Bitmap rawBg) {
-
-		this.ROWS = config.ROWS;
-		this.COLS = config.COLS;
 		
-		this.stable = true;
-		scale = panel.getContext().getResources().getDisplayMetrics().density;
-		Gdx.app.debug(TAG, "scale = " + scale);
-		
-		cells = new Cell[COLS][ROWS];
-		for (int x = 0; x < COLS; x++) {
-			for (int y = 0; y < ROWS; y++) {
-				cells[x][y] = createCell(config, x, y);
-			}
-		}
-		
-		this.rawBg = rawBg;
-	}
-	
 	public void start() {
-		attemptMerge(true); // try mering blacks also 
+		attemptMerge(true); // try merging blacks also 
 		updateBoardPhysics();
 	}
 
@@ -163,14 +158,14 @@ public class Board {
 		return attemptMove(dir, cell);
 	}
 	
-	void render(Canvas canvas) {
-		canvas.drawBitmap(bg, 0, 0, null);
+	void render(SpriteBatch spriteBatch) {
+		spriteBatch.draw(bgSprite, 0, 0, boardWidth, boardHeight);
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
 				Cell cell = cells[x][y];
 				if (cell == null)
 					continue;
-				cell.render(canvas);
+				cell.render(spriteBatch);
 			}
 		}	
 	}
@@ -228,10 +223,10 @@ public class Board {
 		return false;
 	}
 	
-	// every tick
-	void update() {
+	void update(float delta) {
+		
 		boolean isMilestone;
-		//Gdx.app.debug(TAG, "Updating game state");
+		//Gdx.app.debug(TAG, "Updating game state. delta = " + delta);
 		
 		if (stable)
 			return;
@@ -242,7 +237,7 @@ public class Board {
 				Cell cell = cells[x][y];
 				if (cell == null)
 					continue;
-				isMilestone |= cell.update();
+				isMilestone |= cell.update(delta);
 			}
 		}
 		

@@ -3,27 +3,34 @@ package com.shval.jnpgame;
 import static com.shval.jnpgame.Globals.*;
 
 import com.badlogic.gdx.Gdx;
-import com.example.jnp.R;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class BoardConfig {
 
 	int ROWS;
 	int COLS;
-	Resources res;
 	private static String TAG = BoardConfig.class.getName();
 	private char cells[][];
 	
 	// level 1
 	private String levels[][] = { 
 			{ // level 0 - dev playground
+				/*
 			"xxxxxxxxxxxxxx",
 			"x    dbrg  rRx",
-			"xd   gygr    x",
+			"xd b gygr    x",
 			"xd   dgdy   Bx",
 			"xw   yrydd   x",
 			"x    ryby   Yx",
 			"x    bdrg    x",
 			"xxxxxxxxxxxxxx"
+			*/
+			"w",
+			" ",
+			"b",
+			" ",
+			"w"	
 			},
 			{ // level 1			
 			"xxxxxxxxxxxxxx",
@@ -47,49 +54,6 @@ public class BoardConfig {
 			},
 			};
 	
-/*
-// level 1
-	private char board[][] = {
-			 {'w','w','w','w','w','w','w','w','w','w','w','w','w','w'},
-			 {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
-			 {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
-			 {'w',' ',' ',' ',' ',' ',' ','r',' ',' ',' ',' ',' ','w'},
-			 {'w',' ',' ',' ',' ',' ',' ','w','w',' ',' ',' ',' ','w'},
-			 {'w',' ',' ','g',' ',' ',' ',' ',' ','r',' ','b',' ','w'},
-			 {'w','w','b','w','w','w','g',' ','w','w','w','w','w','w'},
-			 {'w','w','w','w','w','w','w','w','w','w','w','w','w','w'}
-	 };
-	
-	// level2 
-	private char board[][] = {
-			 {'w','w','w','w','w','w','w','w','w','w','w','w','w','w'},
-			 {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
-			 {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
-			 {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
-			 {'w',' ',' ',' ',' ',' ','g',' ',' ',' ','g',' ',' ','w'},
-			 {'w',' ',' ',' ','r',' ','r',' ',' ',' ','r',' ',' ','w'},
-			 {'w','w','r','w','w',' ','w',' ','w',' ','w','w','w','w'},
-			 {'w','w','w','w','w','w','w','w','w','w','w','w','w','w'}
-	};
-*/	
-	/*
-	private char board[][] = {
-			 {'w','w','w','w','w','w'},
-			 {'w','y',' ','b','r','w'},
-			 {'w','w',' ','R','w','w'},
-			 {'w','y',' ','y',' ','w'},
-			 {'w','w','w','w','w','w'}
-	};
-	*/
-	/*
-	private char board[][] = {
-			 {'w','w','w'},
-			 {'w','r','w'},
-			 {'w','R','w'},
-			 {'w',' ','w'},
-			 {'w','w','w'}			 
-	};
-	*/
 	
 	public void setLevel(int i) {
 		String board[] = levels[i];
@@ -98,53 +62,30 @@ public class BoardConfig {
 		cells = new char[COLS][ROWS];
 		Gdx.app.debug(TAG, "boardsize (" + COLS + "," + ROWS + ")");
 		transposeBoard(board);
-		Gdx.app.debug(TAG, "Level " + i + "defined");
+		Gdx.app.debug(TAG, "Level " + i + " defined");
 	}
 
 	private void transposeBoard(String board[]) {
+		// in libgdx (0,0) is the lower left corner
+		// we'll stick to that
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
-				cells[x][y] = board[y].charAt(x);
+				cells[x][ROWS - 1 - y] = board[y].charAt(x);
 			}
 		}
 	}
 	
-	public BoardConfig(Resources res) {
-		this.res = res;
-		setLevel(1); // default level
+	public BoardConfig(int level) {
+		setLevel(level);
 	}
 	
-	Bitmap getBitmap(int x, int y) {
+	TextureRegion getTextureRegion(int x, int y) {
 		int type = getType(x, y);
-		int imageId;
-		switch(type) {
-			case WALL:
-				imageId = R.drawable.wall1;
-				break;
-			case JELLY_BLUE:
-				imageId = R.drawable.jelly_blue;
-				break;
-			case JELLY_GREEN:
-				imageId = R.drawable.jelly_green;
-				break;
-			case JELLY_RED:
-				imageId = R.drawable.jelly_red;
-				break;
-			case JELLY_YELLOW:
-				imageId = R.drawable.jelly_yellow;
-				break;
-			case JELLY_BLACK:
-				imageId = R.drawable.jelly_black;
-				break;
-			default:
-				imageId = 0;
-				break;
-		}
-
-		if (imageId == 0) {
-			return null;
-		}
-		return BitmapFactory.decodeResource(res, imageId);
+		return Assets.getTextureRegion(type);
+	}
+	
+	Texture getBgTexture(int level) {
+		return Assets.getBgTexture(level);
 	}
 	
 	boolean isFixed(int x, int y) {
