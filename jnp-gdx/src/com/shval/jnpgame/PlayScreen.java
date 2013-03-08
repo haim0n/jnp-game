@@ -1,5 +1,7 @@
 package com.shval.jnpgame;
 
+import static com.shval.jnpgame.Globals.*;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -8,10 +10,25 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class PlayScreen implements Screen, InputProcessor {
 
+	private static final String TAG = Board.class.getSimpleName();
+	
 	private Board board; // this is our world now
 	private BoardView boardView;
 	private JnpGame game;
+
 	
+	// UI
+	private final int UI_FACTOR = 8; // higher is more sensitive
+	int uiThreshold;	
+	private int cellWidth;
+	private int cellHeight;
+
+	// panel state
+	int xDown;
+	int yDown;
+	boolean down;
+	
+	 
 	public PlayScreen(JnpGame game, int level) {
 		this.game = game;
 		
@@ -34,21 +51,21 @@ public class PlayScreen implements Screen, InputProcessor {
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
 		board.setResolution(width, height);
-
+		cellWidth = board.getSpriteWidth();
+		cellHeight = board.getSpriteHeight();
+		uiThreshold = cellWidth/UI_FACTOR;
 	}
 
 	@Override
 	// this is called when the main game makes this screen active
 	public void show() {
-		// TODO Auto-generated method stub
-
+		 Gdx.input.setInputProcessor(this);
 	}
 
 	@Override
 	// this is called when the main game makes another screen active
 	public void hide() {
-		// TODO Auto-generated method stub
-
+		Gdx.input.setInputProcessor(null);
 	}
 
 	@Override
@@ -65,15 +82,15 @@ public class PlayScreen implements Screen, InputProcessor {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		// TODO: in the tutorial we saw Gdx.input.setInputProcessor(null);
+		Gdx.input.setInputProcessor(null);
 	}
 
 	// * InputProcessor methods ***************************//
 	@Override
 	public boolean keyDown(int keycode) {
 		// TODO Auto-generated method stub
-		return false;
+		Gdx.app.debug(TAG, "Action keydown spotted. keycode = " + keycode);
+		return true;
 	}
 
 	@Override
@@ -90,20 +107,43 @@ public class PlayScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
+		Gdx.app.debug(TAG, "Action down spotted. coords: x = " + screenX + " y = " + screenY);
+		down = true;
+		xDown = screenX;
+		
+		// here (0, 0) is in the upper left, thats nasty
+		yDown = this.board.boardHeight - screenY;
+		return true;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
+		down = false;
+		return true;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
+		int x = screenX;
+		// here (0, 0) is in the upper left, thats nasty
+		int y = this.board.boardHeight - screenY;
+		int dir;
+		int uiThreshold = cellWidth/UI_FACTOR;
+		Gdx.app.debug(TAG, "Action move spotted. coords: x = " + x + " y = " + y);
+		
+		// apply thresholds for good UI
+		if (x > xDown + uiThreshold)
+			dir = RIGHT;
+		else if (x < xDown - uiThreshold)
+			dir = LEFT;
+		else
+			return true;
+
+		Gdx.app.debug(TAG, "Attempting to slide cell (" + xDown/cellWidth + ", " + yDown/cellHeight + ")" + "in direction " + dir);
+		board.attemptSlide(dir, xDown/cellWidth, yDown/cellHeight);
+		xDown = x;
+		yDown = y;
+		return true;
 	}
 
 	@Override

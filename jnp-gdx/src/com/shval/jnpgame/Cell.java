@@ -168,7 +168,7 @@ public class Cell {
 		scanFlag = true;
 		
 		if(isFixed) {
-			Gdx.app.error(TAG, "Trying tomove a fixed cell");
+			Gdx.app.error(TAG, "Trying to move a fixed cell");
 		}
 		
 		// move current cell

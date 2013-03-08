@@ -280,7 +280,6 @@ public class Board {
 					cell.stopVertical();
 				else
 					allStill = false;
-					
 			}
 		}
 		stable = allStill;
