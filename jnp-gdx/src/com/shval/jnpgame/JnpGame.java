@@ -12,8 +12,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class JnpGame extends Game {
-	private SpriteBatch batch;
-	private Texture texture;
 	private final int logLevel = Application.LOG_DEBUG;
 	public BoardConfig config;
 			
@@ -46,8 +44,6 @@ public class JnpGame extends Game {
 
 	@Override
 	public void dispose() {
-		batch.dispose();
-		texture.dispose();
 	}
 
 	/*

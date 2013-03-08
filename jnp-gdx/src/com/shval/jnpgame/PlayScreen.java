@@ -19,7 +19,6 @@ public class PlayScreen implements Screen, InputProcessor {
 		board = new Board(level);
 		boardView = new BoardView(board);
 		board.start();
-		
 	}
 	
 	@Override
@@ -67,7 +66,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-
+		// TODO: in the tutorial we saw Gdx.input.setInputProcessor(null);
 	}
 
 	// * InputProcessor methods ***************************//
