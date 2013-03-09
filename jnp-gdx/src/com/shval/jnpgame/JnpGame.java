@@ -52,11 +52,11 @@ public class JnpGame extends Game {
 		batch.end(); 
 		
 	}
-	 */
+	 
 	@Override
 	public void resize(int width, int height) {
 	}
-
+*/
 	@Override
 	public void pause() {
 	}

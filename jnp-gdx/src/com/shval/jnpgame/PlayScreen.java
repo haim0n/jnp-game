@@ -49,6 +49,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
+		Gdx.app.debug(TAG, "Resizing screen to " + width + " x " + height);
 		board.setResolution(width, height);
 		cellWidth = board.getSpriteWidth();
 		cellHeight = board.getSpriteHeight();

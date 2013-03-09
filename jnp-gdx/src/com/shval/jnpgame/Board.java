@@ -95,13 +95,15 @@ public class Board {
 	public void setResolution(int boardWidth, int boardHeight) {
 
 		// not necessarily square
-		this.spriteWidth = boardWidth/COLS;
-		this.spriteHeight = boardHeight/ROWS;
+		// TODO: try using floats
+		this.spriteWidth = boardWidth / COLS + 1;
+		this.spriteHeight = boardHeight / ROWS + 1;
 		
 		this.boardWidth = boardWidth;
 		this.boardHeight = boardHeight;
 		
 		Gdx.app.debug(TAG, "Sprite size = " + spriteWidth + " x " + spriteHeight);
+		Gdx.app.debug(TAG, "Board size = " + boardWidth + " x " + boardHeight);
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
 				Cell cell = cells[x][y];
@@ -109,7 +111,6 @@ public class Board {
 					cell.setResolution(spriteWidth, spriteHeight);
 			}
 		}
-
 	}
 		
 	public void start() {

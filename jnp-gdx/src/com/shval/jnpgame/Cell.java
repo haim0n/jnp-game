@@ -24,7 +24,8 @@ public class Cell {
 	private static final int CELL_SIZE = 100; // 
 	private static final float SPEED = 500;
 	private int spriteWidth;
-	private int spriteHeight; 
+	private int spriteHeight;
+	private boolean isResolutionSet = false;
 	
 	public Cell(TextureRegion rawTextureR, int x, int y, Jelly jelly,
 			boolean fixed, int type) {
@@ -39,8 +40,12 @@ public class Cell {
 	}
 	
 	public void setResolution(int spriteWidth, int spriteHeight) {
-		this.spriteWidth = spriteWidth;
-		this.spriteHeight = spriteHeight;
+		// set width only on first call
+		if (!isResolutionSet) {
+			this.spriteWidth = spriteWidth;
+			this.spriteHeight = spriteHeight;
+			isResolutionSet = true;
+		}
 	}
 	
 	public void resetScanFlag() {
