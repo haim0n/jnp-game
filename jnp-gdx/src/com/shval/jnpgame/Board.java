@@ -45,13 +45,13 @@ public class Board {
 		int type = config.getType(x, y);
 		if (type == NONE)
 			return null;
-		TextureRegion textureR = config.getTextureRegion(x, y);
+		Texture texture = config.getTexture(x, y);
 		boolean fixed = config.isFixed(x, y);
 		Jelly jelly = null;
 		if (type != WALL) {
 			jelly = new Jelly(this);
 		}
-		Cell cell = new Cell(textureR, x, y, jelly, fixed, type);
+		Cell cell = new Cell(texture, x, y, jelly, fixed, type);
 		if(jelly != null)
 			jelly.join(cell);
 		return cell;
@@ -159,7 +159,7 @@ public class Board {
 		return attemptMove(dir, cell);
 	}
 	
-	void render(SpriteBatch spriteBatch) {
+	void render(SpriteBatch spriteBatch) {		
 		spriteBatch.draw(bgSprite, 0, 0, boardWidth, boardHeight);
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {

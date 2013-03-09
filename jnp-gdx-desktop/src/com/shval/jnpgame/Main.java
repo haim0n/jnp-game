@@ -8,8 +8,8 @@ public class Main {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "Jelly No Puzlle";
 		cfg.useGL20 = false;
-		cfg.width = 480;
-		cfg.height = 320;
+		cfg.width = 640;
+		cfg.height = 480;
 		
 		new LwjglApplication(new JnpGame(), cfg);
 	}

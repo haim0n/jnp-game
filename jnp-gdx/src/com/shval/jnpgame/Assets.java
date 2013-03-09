@@ -46,7 +46,7 @@ public class Assets {
     	}
     }
     
-    public static TextureRegion getTextureRegion (int type) {
+    public static Texture getTexture (int type) {
     	Texture texture;
     	
 		switch(type) {
@@ -76,7 +76,7 @@ public class Assets {
 		if (texture == null)
 			return null;
 		
-		return new TextureRegion(texture, 12 + 2 * 48, 12 + 2 * 48, 48, 48);
+		return texture;
     }  
  
     /*

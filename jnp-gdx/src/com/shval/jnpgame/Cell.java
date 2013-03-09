@@ -3,6 +3,10 @@ package com.shval.jnpgame;
 import static com.shval.jnpgame.Globals.*;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL11;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,7 +15,9 @@ public class Cell {
 
 	private static final String TAG = Cell.class.getSimpleName();
 	
-	private Sprite sprite;	// the actual bitmap
+	private Texture rawTexture;	// the actual bitmap
+	private TextureRegion textureRegions[][]; // each cell composed of 2 x 2 texture regions
+	
 	private int x;			// the X coordinate (in the board cells matrix)
 	private int y;			// the Y coordinate 	"  "
 	private float dxFromMilestone;
@@ -27,16 +33,25 @@ public class Cell {
 	private int spriteHeight;
 	private boolean isResolutionSet = false;
 	
-	public Cell(TextureRegion rawTextureR, int x, int y, Jelly jelly,
+	public Cell(Texture rawTexture, int x, int y, Jelly jelly,
 			boolean fixed, int type) {
 		
-		this.sprite = new Sprite(rawTextureR);
+		this.rawTexture = rawTexture;
+		textureRegions = new TextureRegion[2][2];
+
+		textureRegions[0][0] = new TextureRegion(rawTexture, 8 + 1 * 48, 8 + 4 * 48 + 48 / 2, 48 / 2, 48 / 2);
+		textureRegions[0][1] = new TextureRegion(rawTexture, 8 + 1 * 48, 8 + 0 * 48, 48 / 2, 48 / 2);				
+
+		textureRegions[1][0] = new TextureRegion(rawTexture, 8 + 3 * 48 + 48 / 2, 8 + 4 * 48 + 48 / 2, 48 / 2, 48 / 2);
+		textureRegions[1][1] = new TextureRegion(rawTexture, 8 + 3 * 48 + 48 / 2, 8 + 0 * 48, 48 / 2, 48 / 2);				
+
 		this.x = x;
 		this.y = y;
 		this.jelly = jelly;
 		this.isFixed = fixed;
 		this.type = type;
 		speed = new Speed(0, 0);
+		
 	}
 	
 	public void setResolution(int spriteWidth, int spriteHeight) {
@@ -46,6 +61,7 @@ public class Cell {
 			this.spriteHeight = spriteHeight;
 			isResolutionSet = true;
 		}
+		
 	}
 	
 	public void resetScanFlag() {
@@ -94,7 +110,17 @@ public class Cell {
 			Gdx.app.debug(TAG, "(" + x + ", " + y + "): Gdx, Gdy = " + graphicDx + ", " + graphicDy);
 			Gdx.app.debug(TAG, "(" + x + ", " + y + "): rendering at (" + graphicX + ", " + graphicY + ")");
 		}
-		spriteBatch.draw(sprite, graphicX, graphicY, spriteWidth, spriteHeight);
+		spriteBatch.draw(textureRegions[0][0], graphicX, graphicY,
+				spriteWidth / 2, spriteHeight / 2);
+		
+		spriteBatch.draw(textureRegions[0][1], graphicX, graphicY + spriteHeight / 2,
+				spriteWidth / 2, spriteHeight / 2);
+		
+		spriteBatch.draw(textureRegions[1][0], graphicX + spriteWidth / 2, graphicY,
+				spriteWidth / 2, spriteHeight / 2);
+		
+		spriteBatch.draw(textureRegions[1][1], graphicX + spriteWidth / 2, graphicY + spriteHeight / 2,
+				spriteWidth / 2, spriteHeight / 2);
 	}
 
 	/**

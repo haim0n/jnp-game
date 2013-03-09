@@ -29,7 +29,9 @@ public class BoardConfig {
 			"xxxxxxxxxxxxxx",
 			"x            x",
 			"x            x",
-			"x      r     x",
+			"x            x",
+			"x            x",
+			"x       r    x",
 			"x      xx    x",
 			"x  g     r b x",
 			"xxbxxxg xxxxxx",
@@ -72,9 +74,9 @@ public class BoardConfig {
 		setLevel(level);
 	}
 	
-	TextureRegion getTextureRegion(int x, int y) {
+	Texture getTexture(int x, int y) {
 		int type = getType(x, y);
-		return Assets.getTextureRegion(type);
+		return Assets.getTexture(type);
 	}
 	
 	Texture getBgTexture(int level) {
