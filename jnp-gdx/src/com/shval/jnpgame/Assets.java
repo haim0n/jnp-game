@@ -1,5 +1,6 @@
 package com.shval.jnpgame;
 
+
 import static com.shval.jnpgame.Globals.JELLY_BLACK;
 import static com.shval.jnpgame.Globals.JELLY_BLUE;
 import static com.shval.jnpgame.Globals.JELLY_GREEN;
