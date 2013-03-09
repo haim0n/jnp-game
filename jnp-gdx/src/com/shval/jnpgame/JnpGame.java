@@ -15,7 +15,7 @@ public class JnpGame extends Game {
 		
 		//
 		Gdx.app.setLogLevel(logLevel);
-		setScreen(new PlayScreen(this, 0));
+		setScreen(new PlayScreen(this, 1));
 	}
 
 	@Override

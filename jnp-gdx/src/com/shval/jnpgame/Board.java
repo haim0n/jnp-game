@@ -96,8 +96,13 @@ public class Board {
 
 		// not necessarily square
 		// TODO: try using floats
-		this.spriteWidth = boardWidth / COLS + 1;
-		this.spriteHeight = boardHeight / ROWS + 1;
+		this.spriteWidth = (int) Math.ceil((float)boardWidth / (float)COLS);
+		this.spriteHeight = (int) Math.ceil((float)boardHeight / (float)ROWS);
+		
+		// make sprite w/h even
+		this.spriteWidth += this.spriteWidth % 2;
+		this.spriteHeight += this.spriteHeight % 2;
+			
 		
 		this.boardWidth = boardWidth;
 		this.boardHeight = boardHeight;

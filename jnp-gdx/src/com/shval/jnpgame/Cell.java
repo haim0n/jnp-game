@@ -54,6 +54,22 @@ public class Cell {
 		
 	}
 	
+	public void setNeighbours(int neighbourTypes[]) {
+
+		int types[] = neighbourTypes;
+		
+		if (this.type == types[DOWN] && this.type == types[LEFT])
+			textureRegions[0][0] = new TextureRegion(rawTexture, 8 + 1 * 48, 8 + 4 * 48 + 48 / 2, 48 / 2, 48 / 2);
+		else if (this.type == types[DOWN] && this.type != types[LEFT])
+		
+		
+		textureRegions[0][1] = new TextureRegion(rawTexture, 8 + 1 * 48, 8 + 0 * 48, 48 / 2, 48 / 2);				
+
+		textureRegions[1][0] = new TextureRegion(rawTexture, 8 + 3 * 48 + 48 / 2, 8 + 4 * 48 + 48 / 2, 48 / 2, 48 / 2);
+		textureRegions[1][1] = new TextureRegion(rawTexture, 8 + 3 * 48 + 48 / 2, 8 + 0 * 48, 48 / 2, 48 / 2);				
+			
+	}
+	
 	public void setResolution(int spriteWidth, int spriteHeight) {
 		// set width only on first call
 		if (!isResolutionSet) {

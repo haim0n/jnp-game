@@ -4,6 +4,7 @@ package com.shval.jnpgame;
 public class Globals {
 	
 	// directions
+	// those are used as indexes in some cases so keep them contiguous	
 	public static final int UP = 0;
 	public static final int DOWN = 1;
 	public static final int RIGHT = 2;
