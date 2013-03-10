@@ -21,7 +21,8 @@ public class Board {
 	int boardWidth;
 	int boardHeight;
 	BoardConfig config;
-	Sprite bgSprite;
+	Sprite bgSprite; // TODO: can it be just a texure?
+	TextureRegion resetButtonTextureR;
 	
 	// dummy "out of scope" cell, make it a wall
 	static final Cell outOfScopeCell = new Cell(null, 0, 0 ,null , WALL, NONE);
@@ -42,6 +43,9 @@ public class Board {
 		
 		Texture texture = config.getBgTexture(level);
 		bgSprite = new Sprite(texture);
+		Texture resetButtonsTexture = config.getResetButtonsTexture(level);
+		resetButtonTextureR = new TextureRegion(resetButtonsTexture, 0, 0, 256, 128);
+		
 	}
 
 	public int getRows() {
@@ -197,7 +201,11 @@ public class Board {
 				cell.render(spriteBatch, 2);
 			}
 		}	
-
+		
+		// buttons
+		
+		//spriteBatch.draw(resetButtonTextureR, (COLS - 5) * spriteWidth, 0 * spriteHeight,
+			//	4 * spriteWidth, spriteHeight * 6 / 8);
 	}
 
 	

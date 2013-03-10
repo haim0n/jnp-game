@@ -14,6 +14,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	private Board board; // this is our world now
 	private BoardView boardView;
 	private JnpGame game;
+	private int level;
 
 	
 	// UI
@@ -27,15 +28,15 @@ public class PlayScreen implements Screen, InputProcessor {
 	int yDown;
 	boolean down;
 	
-	 
+
 	public PlayScreen(JnpGame game, int level) {
 		this.game = game;
-		
-		// create board & view
+		this.level = level;
+		Gdx.app.debug(TAG, "Rseting level " + level);
 		board = new Board(level);
 		board.start();
-		boardView = new BoardView(board);
-		
+		boardView = new BoardView();
+		boardView.setBoard(board);
 	}
 	
 	@Override
@@ -109,11 +110,20 @@ public class PlayScreen implements Screen, InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		Gdx.app.debug(TAG, "Action down spotted. coords: x = " + screenX + " y = " + screenY);
-		down = true;
 		xDown = screenX;
 		
 		// here (0, 0) is in the upper left, thats nasty
 		yDown = this.board.boardHeight - screenY;
+		 
+		
+		int x = xDown/cellWidth;
+		int y = yDown/cellHeight;
+		
+		Gdx.app.debug(TAG, "Action down spotted. boardHeight: " + this.board.boardHeight + ". x = " + x + " y = " + y);
+		if (y == 0 && x >= board.getCols() - 5)
+			game.reset();
+		
+		down = true;
 		return true;
 	}
 

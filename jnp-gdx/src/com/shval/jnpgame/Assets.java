@@ -21,6 +21,7 @@ public class Assets {
     public static Texture blackTexture;
     public static Texture wallTexture;
     public static Texture bgTexture;
+    public static Texture buttonsTexture;
     //public static TextureAtlas atlas;  
       
     public static void load () {
@@ -34,6 +35,7 @@ public class Assets {
         blackTexture = new Texture(Gdx.files.internal("data/jelly_black.png"));
         wallTexture = new Texture(Gdx.files.internal("data/wall0.png"));
         bgTexture = new Texture(Gdx.files.internal("data/bg00.png"));
+        buttonsTexture = new Texture(Gdx.files.internal(("data/button.png")));
     }
 
     public static Texture getBgTexture(int level) {
@@ -77,7 +79,11 @@ public class Assets {
 			return null;
 		
 		return texture;
-    }  
+    }
+
+	public static Texture getButtonsTexture(int level) {
+			return buttonsTexture;
+	}  
  
     /*
     public static TextureRegion getFrame (String name, int index) {  

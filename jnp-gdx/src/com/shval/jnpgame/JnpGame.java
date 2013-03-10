@@ -6,20 +6,38 @@ import com.badlogic.gdx.Gdx;
 
 public class JnpGame extends Game {
 	private final int logLevel = Application.LOG_DEBUG;
+	//private final int logLevel = Application.LOG_ERROR;
+	private int MAX_LEVELS;
 	public BoardConfig config;
+	int currentLevel;
 			
 	@Override
 	public void create() {
-		int level = 0;
+		currentLevel = 0;
 		
 		// load assets
 		Assets.load();
 		
+		MAX_LEVELS = 5; // TODO:read from config
 		//
 		Gdx.app.setLogLevel(logLevel);
-		setScreen(new PlayScreen(this, level));
+		playLevel(currentLevel);
 	}
 
+	private void playLevel(int level) {
+		setScreen(new PlayScreen(this, level));		
+	}
+	
+	public void reset() {
+		playLevel(currentLevel);
+	}
+	
+	public void win() {
+		currentLevel++;
+		if (currentLevel <= MAX_LEVELS)
+		playLevel(currentLevel);
+	}
+	
 	@Override
 	public void dispose() {
 	}
