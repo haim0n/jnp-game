@@ -22,7 +22,7 @@ public class BoardConfig {
 			"xd   dgdyB  Bx",
 			"xw   yrydd   x",
 			"x    rybyB  Yx",
-			"x   Yddrg    x",
+			"x   YddRg    x",
 			"xxxxxxxxxxxxxx"
 			},
 			{ // level 1			

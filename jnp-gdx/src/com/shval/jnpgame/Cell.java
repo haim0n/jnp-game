@@ -229,27 +229,26 @@ public class Cell {
 		
 		
 		// anchoring
-		
-		// 
+		 
 		c = board.getCell(x - 1, y);
 		if (c != null && c.anchoredTo == RIGHT)
 			anchorTextureRegions[LEFT] = 
-					new TextureRegion(c.getRawTexture(), 25, 30, 24, 18);
+					new TextureRegion(c.getRawTexture(), 27, 30, 24, 18);
 
 		c = board.getCell(x + 1, y);
 		if (c != null && c.anchoredTo == LEFT)
 			anchorTextureRegions[RIGHT] = 
-					new TextureRegion(c.getRawTexture(), 3, 5, 24, 18);
+					new TextureRegion(c.getRawTexture(), 1, 5, 24, 18);
 		
 		c = board.getCell(x, y + 1);
 		if (c != null && c.anchoredTo == DOWN)
 			anchorTextureRegions[UP] = 
-					new TextureRegion(c.getRawTexture(), 3, 25, 18, 24);
+					new TextureRegion(c.getRawTexture(), 4, 27, 18, 24);
 
 		c = board.getCell(x, y - 1);
 		if (c != null && c.anchoredTo == UP)
 			anchorTextureRegions[DOWN] = 
-					new TextureRegion(c.getRawTexture(), 30, 3, 18, 24);
+					new TextureRegion(c.getRawTexture(), 30, 1, 18, 24);
 
 	}
 	
