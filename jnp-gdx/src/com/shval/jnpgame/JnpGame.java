@@ -10,7 +10,7 @@ public class JnpGame extends Game {
 			
 	@Override
 	public void create() {
-		int level = 1;
+		int level = 0;
 		
 		// load assets
 		Assets.load();

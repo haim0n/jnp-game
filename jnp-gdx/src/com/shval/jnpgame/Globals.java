@@ -7,6 +7,7 @@ public class Globals {
 	public static final int NONE 	= -1;
 	
 	// directions
+	// those are used as indexes in some cases so keep them contiguous
 	public static final int UP 		= 0;
 	public static final int DOWN 	= 1;
 	public static final int RIGHT 	= 2;

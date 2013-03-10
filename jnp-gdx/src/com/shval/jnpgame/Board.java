@@ -205,6 +205,8 @@ public class Board {
 		case UP:
 			dy = 1;
 			break;
+		case NONE:
+			return false;
 		default:
 			// should never be here
 			Gdx.app.error(TAG, "isNeighbor(...): Invalid direction");
@@ -271,11 +273,7 @@ public class Board {
 				else
 					neighbor = null;
 				
-				if (neighbor != null && cell.getJelly() != neighbor.getJelly()
-							&& cell.getType() == neighbor.getType() && !neighbor.isMoving()) {
-					neighbor.getJelly().merge(cell.getJelly());
-					merge = true;
-				}
+				merge |= attemptMerge(cell, neighbor);
 			}
 		}
 		

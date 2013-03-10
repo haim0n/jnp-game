@@ -17,7 +17,7 @@ public class Cell {
 	
 	private Texture rawTexture;	// the actual bitmap
 	private TextureRegion textureRegions[][]; // each cell composed of 2 x 2 texture regions
-	private TextureRegion fixerTextureRegion; // for cells which fix neighbors, TODO: can a cell fix more than one neighbor?
+	private TextureRegion anchorTextureRegions[]; // each cell can anchor 4 adjecent cells
 	
 	private int x;			// the X coordinate (in the board cells matrix)
 	private int y;			// the Y coordinate 	"  "
@@ -39,6 +39,7 @@ public class Cell {
 		
 		this.rawTexture = rawTexture;
 		textureRegions = new TextureRegion[2][2];
+		anchorTextureRegions = new TextureRegion[4]; // TODO: all nulls?
 		
 		if (rawTexture != null) {
 			textureRegions[0][0] = new TextureRegion(rawTexture, 8 + 1 * 48, 8 + 4 * 48 + 48 / 2, 48 / 2, 48 / 2);
@@ -55,6 +56,11 @@ public class Cell {
 		this.anchoredTo = anchoredTo;
 		speed = new Speed(0, 0);
 		
+	}
+	
+	
+	public Texture getRawTexture() {
+		return rawTexture;
 	}
 	
 	private int[] getTextureLocation(int topology) {
@@ -220,7 +226,31 @@ public class Cell {
 		j = 4 - location[1];
 		
 		textureRegions[1][0] = new TextureRegion(rawTexture, 8 + i * 48 + 48 / 2, 8 + j * 48 + 48 / 2, 48 / 2, 48 / 2);
-			
+		
+		
+		// anchoring
+		
+		// 
+		c = board.getCell(x - 1, y);
+		if (c != null && c.anchoredTo == RIGHT)
+			anchorTextureRegions[LEFT] = 
+					new TextureRegion(c.getRawTexture(), 25, 30, 24, 18);
+
+		c = board.getCell(x + 1, y);
+		if (c != null && c.anchoredTo == LEFT)
+			anchorTextureRegions[RIGHT] = 
+					new TextureRegion(c.getRawTexture(), 3, 5, 24, 18);
+		
+		c = board.getCell(x, y + 1);
+		if (c != null && c.anchoredTo == DOWN)
+			anchorTextureRegions[UP] = 
+					new TextureRegion(c.getRawTexture(), 3, 25, 18, 24);
+
+		c = board.getCell(x, y - 1);
+		if (c != null && c.anchoredTo == UP)
+			anchorTextureRegions[DOWN] = 
+					new TextureRegion(c.getRawTexture(), 30, 3, 18, 24);
+
 	}
 	
 	public void setResolution(int spriteWidth, int spriteHeight) {
@@ -291,10 +321,34 @@ public class Cell {
 		spriteBatch.draw(textureRegions[1][1], graphicX + spriteWidth / 2, graphicY + spriteHeight / 2,
 				spriteWidth / 2, spriteHeight / 2);
 		
-		if (fixerTextureRegion != null) {
-			spriteBatch.draw(fixerTextureRegion, graphicX + spriteWidth / 2, graphicY + spriteHeight / 2,
-					spriteWidth / 2, spriteHeight / 2);			
-		}
+		
+		// render anchors
+		
+		int anchorWidth = spriteWidth * 3 / 8;
+		int anchorHeight = spriteHeight / 2;
+		
+		if (anchorTextureRegions[DOWN] != null)
+			spriteBatch.draw(anchorTextureRegions[DOWN], 
+					graphicX + spriteWidth / 2 - anchorWidth / 2, graphicY,
+					anchorWidth, anchorHeight);
+
+		if (anchorTextureRegions[UP] != null)
+			spriteBatch.draw(anchorTextureRegions[UP], 
+					graphicX + spriteWidth / 2 - anchorWidth / 2, graphicY + anchorHeight,
+					anchorWidth, anchorHeight);
+
+		anchorWidth = spriteWidth / 2;
+		anchorHeight = spriteHeight * 3 / 8;
+
+		if (anchorTextureRegions[LEFT] != null)
+			spriteBatch.draw(anchorTextureRegions[LEFT], 
+					graphicX, graphicY + spriteHeight / 2 - anchorHeight / 2,
+					anchorWidth, anchorHeight);
+
+		if (anchorTextureRegions[RIGHT] != null)
+			spriteBatch.draw(anchorTextureRegions[RIGHT],
+					graphicX + anchorWidth, graphicY + spriteHeight / 2 - anchorHeight / 2,
+					anchorWidth, anchorHeight);
 	}
 
 	/**
