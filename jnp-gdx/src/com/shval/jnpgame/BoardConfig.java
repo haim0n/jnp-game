@@ -16,6 +16,15 @@ public class BoardConfig {
 	// level 1
 	private String levels[][] = { 
 			{ // level 0 - dev playground
+				"xxxxxxxxxxxxxx",
+				"x          rRx",
+				"xd           x",
+				"xd          Bx",
+				"xw           x",
+				"x gb    br   x",
+				"x yr    rb   x",
+				"xxxxxxxxxxxxxx"				
+				/*
 			"xxxxxxxxxxxxxx",
 			"x   Gdbrg  rRx",
 			"xd b gygr    x",
@@ -24,6 +33,7 @@ public class BoardConfig {
 			"x    rybyB  Yx",
 			"x   YddRg    x",
 			"xxxxxxxxxxxxxx"
+			*/
 			},
 			{ // level 1			
 			"xxxxxxxxxxxxxx",

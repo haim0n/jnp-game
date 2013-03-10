@@ -177,16 +177,30 @@ public class Board {
 	
 	void render(SpriteBatch spriteBatch) {		
 		spriteBatch.draw(bgSprite, 0, 0, boardWidth, boardHeight);
+		
+		// render cells
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
 				Cell cell = cells[x][y];
 				if (cell == null)
 					continue;
-				cell.render(spriteBatch);
+				cell.render(spriteBatch, 1);
+			}
+		}
+		
+		// render anchors
+		for (int x = 0; x < COLS; x++) {
+			for (int y = 0; y < ROWS; y++) {
+				Cell cell = cells[x][y];
+				if (cell == null)
+					continue;
+				cell.render(spriteBatch, 2);
 			}
 		}	
+
 	}
-		
+
+	
 	private boolean isNeighbour(Cell cell1, int dir, Cell cell2) {
 		if (cell1 == null || cell2 == null)
 			return false;

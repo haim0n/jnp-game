@@ -287,7 +287,15 @@ public class Cell {
 		this.y = y;
 	}
 	
-	public void render(SpriteBatch spriteBatch) {
+	public void render(SpriteBatch spriteBatch, int layer) {
+		if (layer == 1)
+			renderCell(spriteBatch);
+		
+		if (layer == 2)
+			renderAnchors(spriteBatch);
+	}
+	
+	private void renderCell(SpriteBatch spriteBatch) {
 		//canvas.drawBitmap(bitmap, x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2), null);
 		int graphicDx, graphicDy;
 		if (speed.getXv() != 0)
@@ -320,20 +328,37 @@ public class Cell {
 		spriteBatch.draw(textureRegions[1][1], graphicX + spriteWidth / 2, graphicY + spriteHeight / 2,
 				spriteWidth / 2, spriteHeight / 2);
 		
+	}
+	
+	public void renderAnchors(SpriteBatch spriteBatch) {
+		int graphicDx, graphicDy;
+		if (speed.getXv() != 0)
+			graphicDx = (spriteWidth * (int) dxFromMilestone) / CELL_SIZE;
+		else
+			graphicDx = 0;
 		
+		if (speed.getYv() != 0)
+			graphicDy = (spriteHeight * (int) dyFromMilestone) / CELL_SIZE;
+		else
+			graphicDy = 0;
+		
+		int graphicX = spriteWidth * x + graphicDx;
+		int graphicY = spriteHeight * y + graphicDy;
+
 		// render anchors
+		// add 1 to create anchor continuity 
 		
 		int anchorWidth = spriteWidth * 3 / 8;
 		int anchorHeight = spriteHeight / 2;
 		
 		if (anchorTextureRegions[DOWN] != null)
 			spriteBatch.draw(anchorTextureRegions[DOWN], 
-					graphicX + spriteWidth / 2 - anchorWidth / 2, graphicY,
+					graphicX + spriteWidth / 2 - anchorWidth / 2, graphicY - 1,
 					anchorWidth, anchorHeight);
 
 		if (anchorTextureRegions[UP] != null)
 			spriteBatch.draw(anchorTextureRegions[UP], 
-					graphicX + spriteWidth / 2 - anchorWidth / 2, graphicY + anchorHeight,
+					graphicX + spriteWidth / 2 - anchorWidth / 2, graphicY + spriteHeight - anchorHeight + 1,
 					anchorWidth, anchorHeight);
 
 		anchorWidth = spriteWidth / 2;
@@ -341,12 +366,12 @@ public class Cell {
 
 		if (anchorTextureRegions[LEFT] != null)
 			spriteBatch.draw(anchorTextureRegions[LEFT], 
-					graphicX, graphicY + spriteHeight / 2 - anchorHeight / 2,
+					graphicX - 1, graphicY + spriteHeight / 2 - anchorHeight / 2,
 					anchorWidth, anchorHeight);
 
 		if (anchorTextureRegions[RIGHT] != null)
 			spriteBatch.draw(anchorTextureRegions[RIGHT],
-					graphicX + anchorWidth, graphicY + spriteHeight / 2 - anchorHeight / 2,
+					graphicX + spriteWidth - anchorWidth + 1, graphicY + spriteHeight / 2 - anchorHeight / 2,
 					anchorWidth, anchorHeight);
 	}
 
