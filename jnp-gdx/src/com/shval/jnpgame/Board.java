@@ -23,8 +23,8 @@ public class Board {
 	BoardConfig config;
 	Sprite bgSprite;
 	
-	// dummy "out of scope" cell
-	static final Cell outOfScopeCell = new Cell(null, 0, 0 ,null, false ,0);
+	// dummy "out of scope" cell, make it a wall
+	static final Cell outOfScopeCell = new Cell(null, 0, 0 ,null , WALL, NONE);
 	
 	public Board(int level) {
 		config = new BoardConfig(level);
@@ -54,14 +54,15 @@ public class Board {
 	
 	private Cell createCell(int x, int y) {
 		int type = config.getType(x, y);
+		int anchoredTo = config.getAncoredTo(x, y);
 		if (type == NONE)
 			return null;
 		Texture texture = config.getTexture(x, y);
-		boolean fixed = config.isFixed(x, y);
+		//boolean fixed = config.isFixed(x, y);
 		Jelly jelly = null;
 		jelly = new Jelly(this);
 		
-		Cell cell = new Cell(texture, x, y, jelly, fixed, type);
+		Cell cell = new Cell(texture, x, y, jelly, type, anchoredTo);
 		if(jelly != null)
 			jelly.join(cell);
 		return cell;
@@ -186,12 +187,62 @@ public class Board {
 		}	
 	}
 		
+	private boolean isNeighbour(Cell cell1, int dir, Cell cell2) {
+		if (cell1 == null || cell2 == null)
+			return false;
+		
+		int dx = 0, dy = 0;
+		switch (dir) {
+		case LEFT:
+			dx = -1;
+			break;
+		case RIGHT:		
+			dx = 1;
+			break;
+		case DOWN:
+			dy = -1;
+			break;
+		case UP:
+			dy = 1;
+			break;
+		default:
+			// should never be here
+			Gdx.app.error(TAG, "isNeighbor(...): Invalid direction");
+			return false;
+		}
+		
+		return ((cell1.getX() + dx == cell2.getX()) && (cell1.getY() + dy == cell2.getY()) );
+	}
+	
+	private boolean attemptMerge(Cell cell, Cell neighbor) {
+		
+		if (neighbor == null || neighbor.isMoving())
+			return false;
+		
+		if (cell.getJelly() == neighbor.getJelly())
+			return false;
+		
+		if (cell.getType() == neighbor.getType()) {
+			neighbor.getJelly().merge(cell.getJelly());
+			return true;
+		}
+		
+		// anchored cells will be merged
+		if (isNeighbour(cell, cell.anchoredTo, neighbor) ||
+			isNeighbour(neighbor, neighbor.anchoredTo, cell) ) {
+				neighbor.getJelly().merge(cell.getJelly());
+				return true;				
+		}
+		
+		return false;
+	}
+	
 	private boolean attemptMerge(boolean blacksMerge) {
 		// blacksMerge enables us to create black jellies
 		// larger than one cell.
 		// this is useful 'couse we usually need it on start
 		
-		boolean merge = false; // used to check for win
+		boolean merge = false; // indicates wether something merged
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
 				Cell cell = cells[x][y];
@@ -212,11 +263,7 @@ public class Board {
 				else
 					neighbor = null;
 				
-				if (neighbor != null && cell.getJelly() != neighbor.getJelly()
-							&& cell.getType() == neighbor.getType() && !neighbor.isMoving()) {
-					neighbor.getJelly().merge(cell.getJelly());
-					merge = true;
-				}
+				merge |= attemptMerge(cell, neighbor);
 				
 				// try to merge with down neighbor
 				if (y < ROWS - 1)

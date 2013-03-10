@@ -83,6 +83,7 @@ public class BoardConfig {
 		return Assets.getBgTexture(level);
 	}
 	
+	/*
 	boolean isFixed(int x, int y) {
 		 char cell = cells[x][y];
 		 boolean ret;
@@ -100,6 +101,56 @@ public class BoardConfig {
 		 }
 		 return ret;
 	}	
+	*/
+	
+	int getAncoredTo(int x, int y) {
+		 char cell = cells[x][y];
+		 int ret;
+		 
+		 switch(cell) {
+		 	case 'R' :
+		 	case 'G' :		 		
+		 	case 'B' :		 		
+		 	case 'Y' :
+		 		break;
+		 	default :
+		 		return NONE;
+		 }
+		 
+		 // TODO: for now, anchor to blacks, if no blacks around, to walls
+		 if (cells[x-1][y] == 'd' || cells[x-1][y] == 'D')
+			 return LEFT;
+
+		 if (cells[x][y+1] == 'd' || cells[x-1][y] == 'D')
+			 return UP;
+
+		 if (cells[x+1][y] == 'd' || cells[x-1][y] == 'D')
+			 return RIGHT;
+
+		 if (cells[x][y-1] == 'd' || cells[x-1][y] == 'D')
+			 return DOWN;
+
+		 // walls ?
+		 if (cells[x-1][y] == 'w' || cells[x-1][y] == 'W'
+				 || cells[x-1][y] == 'x' || cells[x-1][y] == 'X')
+			 return LEFT;
+
+		 if (cells[x][y+1] == 'w' || cells[x-1][y] == 'W' 
+				 || cells[x][y+1] == 'x' || cells[x-1][y] == 'X')
+			 return UP;
+
+		 if (cells[x+1][y] == 'd' || cells[x-1][y] == 'D'
+				 || cells[x+1][y] == 'x' || cells[x-1][y] == 'X')
+			 return RIGHT;
+
+		 if (cells[x][y-1] == 'd' || cells[x-1][y] == 'D' 
+				 || cells[x][y-1] == 'x' || cells[x-1][y] == 'X')
+			 return DOWN;
+		 
+		 // should not be here
+		 return NONE;
+	}
+	
 	
 	int getType(int x, int y) {
 		 char cell = cells[x][y];

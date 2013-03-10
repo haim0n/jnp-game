@@ -25,7 +25,8 @@ public class Cell {
 	private float dyFromMilestone;
 	private Speed speed;	// the speed with its directions
 	private Jelly jelly;
-	private boolean isFixed;
+	//private boolean isFixed; this is redudant only walls are really fixed
+	public int anchoredTo;
 	private int type;
 	private boolean scanFlag; // was this cell encountered in current board scanning
 	private static final int CELL_SIZE = 100; // 
@@ -34,8 +35,7 @@ public class Cell {
 	private int spriteHeight;
 	private boolean isResolutionSet = false;
 	
-	public Cell(Texture rawTexture, int x, int y, Jelly jelly,
-			boolean fixed, int type) {
+	public Cell(Texture rawTexture, int x, int y, Jelly jelly, int type, int anchoredTo) {
 		
 		this.rawTexture = rawTexture;
 		textureRegions = new TextureRegion[2][2];
@@ -50,8 +50,9 @@ public class Cell {
 		this.x = x;
 		this.y = y;
 		this.jelly = jelly;
-		this.isFixed = fixed;
+		//this.isFixed = fixed;
 		this.type = type;
+		this.anchoredTo = anchoredTo;
 		speed = new Speed(0, 0);
 		
 	}
@@ -140,13 +141,13 @@ public class Cell {
 		// 0 0
 		
 		c = board.getCell(x - 1, y);
-		t0 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
+		t0 = (c != null && c.getType() == type) ? 1 : 0;
 		
 		c = board.getCell(x - 1, y + 1);
-		t1 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
+		t1 = (c != null && c.getType() == type) ? 1 : 0;
 		
 		c = board.getCell(x, y + 1);
-		t2 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
+		t2 = (c != null && c.getType() == type) ? 1 : 0;
 		
 		topology = 4 * t0 + 2 * t1 + 1 * t2;	
 		location = getTextureLocation(topology);
@@ -162,13 +163,13 @@ public class Cell {
 		// 0 0
 		
 		c = board.getCell(x + 1, y);
-		t0 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
+		t0 = (c != null && c.getType() == type) ? 1 : 0;
 		
 		c = board.getCell(x + 1, y + 1);
-		t1 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
+		t1 = (c != null && c.getType() == type) ? 1 : 0;
 		
 		c = board.getCell(x, y + 1);
-		t2 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
+		t2 = (c != null && c.getType() == type) ? 1 : 0;
 		
 		topology = 4 * t0 + 2 * t1 + 1 * t2;	
 		location = getTextureLocation(topology);
@@ -182,13 +183,13 @@ public class Cell {
 		// x 0
 		
 		c = board.getCell(x - 1, y);
-		t0 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
+		t0 = (c != null && c.getType() == type) ? 1 : 0;
 		
 		c = board.getCell(x - 1, y - 1);
-		t1 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
+		t1 = (c != null && c.getType() == type) ? 1 : 0;
 		
 		c = board.getCell(x, y - 1);
-		t2 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
+		t2 = (c != null && c.getType() == type) ? 1 : 0;
 		
 		topology = 4 * t0 + 2 * t1 + 1 * t2;	
 		location = getTextureLocation(topology);
@@ -205,13 +206,13 @@ public class Cell {
 		// 0 x
 		
 		c = board.getCell(x + 1, y);
-		t0 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
+		t0 = (c != null && c.getType() == type) ? 1 : 0;
 		
 		c = board.getCell(x + 1, y - 1);
-		t1 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
+		t1 = (c != null && c.getType() == type) ? 1 : 0;
 		
 		c = board.getCell(x, y - 1);
-		t2 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
+		t2 = (c != null && c.getType() == type) ? 1 : 0;
 		
 		topology = 4 * t0 + 2 * t1 + 1 * t2;	
 		location = getTextureLocation(topology);
@@ -354,7 +355,7 @@ public class Cell {
 	public void handleActionDown(int eventX, int eventY) {};
 	
 	public boolean canMove(int dir) {
-		if (isFixed)
+		if (type == WALL)
 			return false;
 		if (scanFlag)
 			return true;
@@ -362,17 +363,20 @@ public class Cell {
 		return jelly.canMove(dir);
 	}
 	
+	/*
 	public boolean getIsFixed() {
 		return isFixed;
 	}
+	*/
 	
 	public void move(int dir) {
 		if (scanFlag)
 			return;
 		scanFlag = true;
 		
-		if(isFixed) {
-			Gdx.app.error(TAG, "Trying to move a fixed cell");
+		
+		if(type == WALL) {
+			Gdx.app.error(TAG, "Trying to move a wall");
 		}
 		
 		// move current cell

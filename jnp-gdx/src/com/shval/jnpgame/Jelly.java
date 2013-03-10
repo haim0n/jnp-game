@@ -4,9 +4,12 @@ import static com.shval.jnpgame.Globals.*;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+
 
 public class Jelly {
 	
+	private static final String TAG = Board.class.getSimpleName();
 	private Board board;
 	private ArrayList<Cell> cells;
 	private boolean isFixed = false;
@@ -21,7 +24,7 @@ public class Jelly {
 	
 	public void join(Cell cell) {
 		cells.add(cell);
-		isFixed |= cell.getIsFixed();
+		isFixed |= (cell.getType() == WALL);
 	}
 
 	public void merge(Jelly neighbour) {
@@ -87,6 +90,7 @@ public class Jelly {
 			break;
 		default:
 			// should never be here
+			Gdx.app.error(TAG, "move(direction): Invalid direction");
 			return;
 		}
 		
