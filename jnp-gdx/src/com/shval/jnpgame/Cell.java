@@ -54,19 +54,169 @@ public class Cell {
 		
 	}
 	
-	public void setNeighbours(int neighbourTypes[]) {
+	private int[] getTextureLocation(int topology) {
+		// target cell - lower right cell
+		int i, j;
+		switch (topology) {
+	
+			// 00	
+			// 0x		
+		case (0):
+	
+			// x0	
+			// 0x		
+		case (2):
+		
+			i = 1;
+			j = 0;
+			break;
+	
+			// 0x	
+			// 0x		
+		case (1):
+			i = 0;
+			j = 3;
+			break;
+	
+			// xx	
+			// 0x		
+		case (3):
+			i = 1;
+			j = 4;
+			break;
+			
+			// 00	
+			// xx		
+		case (4):
+			i = 2;
+			j = 0;
+			break;
+			
+			// 0x	
+			// xx		
+		case (5):
+			i = 1;
+			j = 1;
+			break;
+			
+			// x0	
+			// xx		
+		case (6):
+			i = 4;
+			j = 1;
+			break;
+			
+			// xx	
+			// xx		
+		case (7):
+			i = 2;
+			j = 2;
+			break;
+		default:
+			Gdx.app.error(TAG, "Invalid topology");
+			return null;
+		}
+		
+		int ret[] = new int[2];
+		ret[0] = i;
+		ret[1] = j;
+		return ret;			
+	}
+	
+	public void setNeighbours() {
 
-		int types[] = neighbourTypes;
+		int i, j;
+		int location[];
+		Cell c0, c1, c2;
+		int t0, t1, t2;
+		int topology;
 		
-		if (this.type == types[DOWN] && this.type == types[LEFT])
-			textureRegions[0][0] = new TextureRegion(rawTexture, 8 + 1 * 48, 8 + 4 * 48 + 48 / 2, 48 / 2, 48 / 2);
-		else if (this.type == types[DOWN] && this.type != types[LEFT])
+		Board board = jelly.getBoard();
 		
+		// region:
+		// x 0
+		// 0 0
 		
-		textureRegions[0][1] = new TextureRegion(rawTexture, 8 + 1 * 48, 8 + 0 * 48, 48 / 2, 48 / 2);				
+		c0 = board.getCell(x - 1, y);
+		t0 = (c0 != null && c0.getType() == type) ? 1 : 0;
+		
+		c1 = board.getCell(x - 1, y + 1);
+		t1 = (c1 != null && c1.getType() == type) ? 1 : 0;
+		
+		c2 = board.getCell(x, y + 1);
+		t2 = (c2 != null && c2.getType() == type) ? 1 : 0;
+		
+		topology = 4 * t0 + 2 * t1 + 1 * t2;	
+		location = getTextureLocation(topology);
+		i = location[0];
+		j = location[1];
+		
+	//	Gdx.app.debug(TAG, "Setting neighbors: " + x + ", " + y + " : topology = " + topology
+//						+ ", i = " + i + ", j= " + j);
+		textureRegions[0][1] = new TextureRegion(rawTexture, 8 + i * 48, 8 + j * 48, 48 / 2, 48 / 2);		
+		
+		// region:
+		// 0 x
+		// 0 0
+		
+		c0 = board.getCell(x + 1, y);
+		t0 = (c0 != null && c0.getType() == type) ? 1 : 0;
+		
+		c1 = board.getCell(x + 1, y + 1);
+		t1 = (c1 != null && c1.getType() == type) ? 1 : 0;
+		
+		c2 = board.getCell(x, y + 1);
+		t2 = (c2 != null && c2.getType() == type) ? 1 : 0;
+		
+		topology = 4 * t0 + 2 * t1 + 1 * t2;	
+		location = getTextureLocation(topology);
+		i = 4 - location[0];
+		j = location[1];
+		
+		textureRegions[1][1] = new TextureRegion(rawTexture, 8 + i * 48 + 48 / 2, 8 + j * 48, 48 / 2, 48 / 2);		
+		
+		// region:
+		// 0 0
+		// x 0
+		
+		c0 = board.getCell(x - 1, y);
+		t0 = (c0 != null && c0.getType() == type) ? 1 : 0;
+		
+		c1 = board.getCell(x - 1, y - 1);
+		t1 = (c1 != null && c1.getType() == type) ? 1 : 0;
+		
+		c2 = board.getCell(x, y - 1);
+		t2 = (c2 != null && c2.getType() == type) ? 1 : 0;
+		
+		topology = 4 * t0 + 2 * t1 + 1 * t2;	
+		location = getTextureLocation(topology);
+		i = location[0];
+		j = 4 - location[1];
+		
+		//Gdx.app.debug(TAG, "Setting neighbours: " + x + ", " + y + " : topology = " + topology
+			//	+ ", i = " + i + ", j= " + j);
 
-		textureRegions[1][0] = new TextureRegion(rawTexture, 8 + 3 * 48 + 48 / 2, 8 + 4 * 48 + 48 / 2, 48 / 2, 48 / 2);
-		textureRegions[1][1] = new TextureRegion(rawTexture, 8 + 3 * 48 + 48 / 2, 8 + 0 * 48, 48 / 2, 48 / 2);				
+		textureRegions[0][0] = new TextureRegion(rawTexture, 8 + i * 48, 8 + j * 48 + 48 / 2, 48 / 2, 48 / 2);		
+		
+		// region:
+		// 0 0
+		// 0 x
+		
+		c0 = board.getCell(x + 1, y);
+		t0 = (c0 != null && c0.getType() == type) ? 1 : 0;
+		
+		c1 = board.getCell(x + 1, y - 1);
+		t1 = (c1 != null && c1.getType() == type) ? 1 : 0;
+		
+		c2 = board.getCell(x, y - 1);
+		t2 = (c2 != null && c2.getType() == type) ? 1 : 0;
+		
+		topology = 4 * t0 + 2 * t1 + 1 * t2;	
+		location = getTextureLocation(topology);
+		i = 4 - location[0];
+		j = 4 - location[1];
+		
+		textureRegions[1][0] = new TextureRegion(rawTexture, 8 + i * 48 + 48 / 2, 8 + j * 48 + 48 / 2, 48 / 2, 48 / 2);
 			
 	}
 	

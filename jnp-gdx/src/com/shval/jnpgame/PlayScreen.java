@@ -33,8 +33,9 @@ public class PlayScreen implements Screen, InputProcessor {
 		
 		// create board & view
 		board = new Board(level);
-		boardView = new BoardView(board);
 		board.start();
+		boardView = new BoardView(board);
+		
 	}
 	
 	@Override

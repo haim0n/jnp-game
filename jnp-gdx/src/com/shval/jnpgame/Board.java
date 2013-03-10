@@ -48,9 +48,8 @@ public class Board {
 		Texture texture = config.getTexture(x, y);
 		boolean fixed = config.isFixed(x, y);
 		Jelly jelly = null;
-		if (type != WALL) {
-			jelly = new Jelly(this);
-		}
+		jelly = new Jelly(this);
+		
 		Cell cell = new Cell(texture, x, y, jelly, fixed, type);
 		if(jelly != null)
 			jelly.join(cell);
@@ -182,8 +181,8 @@ public class Board {
 		// this is useful 'couse we usually need it on start
 		
 		boolean merge = false; // used to check for win
-		for (int x = 0; x < COLS - 1; x++) {
-			for (int y = 0; y < ROWS - 1; y++) {
+		for (int x = 0; x < COLS; x++) {
+			for (int y = 0; y < ROWS; y++) {
 				Cell cell = cells[x][y];
 				
 				// moving cell do not merge
@@ -197,7 +196,11 @@ public class Board {
 					
 				Cell neighbor;
 				// try to merge with right neighbor
-				neighbor = cells[x+1][y];
+				if (x < COLS - 1)
+					neighbor = cells[x+1][y];
+				else
+					neighbor = null;
+				
 				if (neighbor != null && cell.getJelly() != neighbor.getJelly()
 							&& cell.getType() == neighbor.getType() && !neighbor.isMoving()) {
 					neighbor.getJelly().merge(cell.getJelly());
@@ -205,11 +208,34 @@ public class Board {
 				}
 				
 				// try to merge with down neighbor
-				neighbor = cells[x][y+1];
+				if (y < ROWS - 1)
+					neighbor = cells[x][y+1];
+				else
+					neighbor = null;
+				
 				if (neighbor != null && cell.getJelly() != neighbor.getJelly()
 							&& cell.getType() == neighbor.getType() && !neighbor.isMoving()) {
 					neighbor.getJelly().merge(cell.getJelly());
 					merge = true;
+				}
+			}
+		}
+		
+		if (merge) {
+			for (int x = 0; x < COLS ; x++) {
+				for (int y = 0; y < ROWS ; y++) {
+					Cell cell = cells[x][y];
+					
+					// moving cell do not merge
+					if (cell == null || cell.isMoving())
+						continue;
+					
+					// try to merge black jellies only if 
+					// called with blacksMerge == true
+					if (!blacksMerge && cell.getType() == JELLY_BLACK)
+						continue;
+					
+					cell.setNeighbours();
 				}
 			}
 		}
