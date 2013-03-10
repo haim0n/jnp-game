@@ -204,8 +204,8 @@ public class Board {
 		
 		// buttons
 		
-		//spriteBatch.draw(resetButtonTextureR, (COLS - 5) * spriteWidth, 0 * spriteHeight,
-			//	4 * spriteWidth, spriteHeight * 6 / 8);
+		spriteBatch.draw(resetButtonTextureR, (COLS - 5) * spriteWidth, 0 * spriteHeight,
+				4 * spriteWidth, spriteHeight * 6 / 8);
 	}
 
 	
