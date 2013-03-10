@@ -10,12 +10,14 @@ public class JnpGame extends Game {
 			
 	@Override
 	public void create() {
+		int level = 1;
+		
 		// load assets
 		Assets.load();
 		
 		//
 		Gdx.app.setLogLevel(logLevel);
-		setScreen(new PlayScreen(this, 0));
+		setScreen(new PlayScreen(this, level));
 	}
 
 	@Override

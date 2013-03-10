@@ -17,6 +17,7 @@ public class Cell {
 	
 	private Texture rawTexture;	// the actual bitmap
 	private TextureRegion textureRegions[][]; // each cell composed of 2 x 2 texture regions
+	private TextureRegion fixerTextureRegion; // for cells which fix neighbors, TODO: can a cell fix more than one neighbor?
 	
 	private int x;			// the X coordinate (in the board cells matrix)
 	private int y;			// the Y coordinate 	"  "
@@ -288,6 +289,11 @@ public class Cell {
 		
 		spriteBatch.draw(textureRegions[1][1], graphicX + spriteWidth / 2, graphicY + spriteHeight / 2,
 				spriteWidth / 2, spriteHeight / 2);
+		
+		if (fixerTextureRegion != null) {
+			spriteBatch.draw(fixerTextureRegion, graphicX + spriteWidth / 2, graphicY + spriteHeight / 2,
+					spriteWidth / 2, spriteHeight / 2);			
+		}
 	}
 
 	/**

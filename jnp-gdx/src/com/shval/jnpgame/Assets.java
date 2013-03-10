@@ -32,7 +32,7 @@ public class Assets {
         greenTexture = new Texture(Gdx.files.internal("data/jelly_green.png"));
         yellowTexture = new Texture(Gdx.files.internal("data/jelly_yellow.png"));
         blackTexture = new Texture(Gdx.files.internal("data/jelly_black.png"));
-        wallTexture = new Texture(Gdx.files.internal("data/wall1.png"));
+        wallTexture = new Texture(Gdx.files.internal("data/wall0.png"));
         bgTexture = new Texture(Gdx.files.internal("data/bg00.png"));
     }
 
