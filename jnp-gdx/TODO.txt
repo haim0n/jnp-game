@@ -1,0 +1,19 @@
+beatify app icon
+set loglevel to be read from config file on startup.
+Win logic/screen
+render fixed jellies 
+dynamic b/g
+add revert/reset buttons. 
+add instructions
+add select level screen.
+add orientation as part of config. define it automatically using COLS/ROWS ratio
+compare COLS/ROWS ratio with runtime height/width ratio and compensate by removing/adding dummy level rows.
+calibrate speed/sensitivity
+resolve all inline TODO
+anchor should be vector like
+
+
+===================== code refactor ========================
+unify move & canMove logic in Jelly
+make cell abstract and inherit it for wall/jelly/etc
+try avoiding hard coded numbers
