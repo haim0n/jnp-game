@@ -38,12 +38,13 @@ public class Cell {
 		
 		this.rawTexture = rawTexture;
 		textureRegions = new TextureRegion[2][2];
-
-		textureRegions[0][0] = new TextureRegion(rawTexture, 8 + 1 * 48, 8 + 4 * 48 + 48 / 2, 48 / 2, 48 / 2);
-		textureRegions[0][1] = new TextureRegion(rawTexture, 8 + 1 * 48, 8 + 0 * 48, 48 / 2, 48 / 2);				
-
-		textureRegions[1][0] = new TextureRegion(rawTexture, 8 + 3 * 48 + 48 / 2, 8 + 4 * 48 + 48 / 2, 48 / 2, 48 / 2);
-		textureRegions[1][1] = new TextureRegion(rawTexture, 8 + 3 * 48 + 48 / 2, 8 + 0 * 48, 48 / 2, 48 / 2);				
+		
+		if (rawTexture != null) {
+			textureRegions[0][0] = new TextureRegion(rawTexture, 8 + 1 * 48, 8 + 4 * 48 + 48 / 2, 48 / 2, 48 / 2);
+			textureRegions[0][1] = new TextureRegion(rawTexture, 8 + 1 * 48, 8 + 0 * 48, 48 / 2, 48 / 2);
+			textureRegions[1][0] = new TextureRegion(rawTexture, 8 + 3 * 48 + 48 / 2, 8 + 4 * 48 + 48 / 2, 48 / 2, 48 / 2);
+			textureRegions[1][1] = new TextureRegion(rawTexture, 8 + 3 * 48 + 48 / 2, 8 + 0 * 48, 48 / 2, 48 / 2);
+		}
 
 		this.x = x;
 		this.y = y;
@@ -127,24 +128,24 @@ public class Cell {
 
 		int i, j;
 		int location[];
-		Cell c0, c1, c2;
+		Cell c;
 		int t0, t1, t2;
 		int topology;
 		
 		Board board = jelly.getBoard();
-		
+			
 		// region:
 		// x 0
 		// 0 0
 		
-		c0 = board.getCell(x - 1, y);
-		t0 = (c0 != null && c0.getType() == type) ? 1 : 0;
+		c = board.getCell(x - 1, y);
+		t0 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
 		
-		c1 = board.getCell(x - 1, y + 1);
-		t1 = (c1 != null && c1.getType() == type) ? 1 : 0;
+		c = board.getCell(x - 1, y + 1);
+		t1 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
 		
-		c2 = board.getCell(x, y + 1);
-		t2 = (c2 != null && c2.getType() == type) ? 1 : 0;
+		c = board.getCell(x, y + 1);
+		t2 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
 		
 		topology = 4 * t0 + 2 * t1 + 1 * t2;	
 		location = getTextureLocation(topology);
@@ -159,14 +160,14 @@ public class Cell {
 		// 0 x
 		// 0 0
 		
-		c0 = board.getCell(x + 1, y);
-		t0 = (c0 != null && c0.getType() == type) ? 1 : 0;
+		c = board.getCell(x + 1, y);
+		t0 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
 		
-		c1 = board.getCell(x + 1, y + 1);
-		t1 = (c1 != null && c1.getType() == type) ? 1 : 0;
+		c = board.getCell(x + 1, y + 1);
+		t1 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
 		
-		c2 = board.getCell(x, y + 1);
-		t2 = (c2 != null && c2.getType() == type) ? 1 : 0;
+		c = board.getCell(x, y + 1);
+		t2 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
 		
 		topology = 4 * t0 + 2 * t1 + 1 * t2;	
 		location = getTextureLocation(topology);
@@ -179,14 +180,14 @@ public class Cell {
 		// 0 0
 		// x 0
 		
-		c0 = board.getCell(x - 1, y);
-		t0 = (c0 != null && c0.getType() == type) ? 1 : 0;
+		c = board.getCell(x - 1, y);
+		t0 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
 		
-		c1 = board.getCell(x - 1, y - 1);
-		t1 = (c1 != null && c1.getType() == type) ? 1 : 0;
+		c = board.getCell(x - 1, y - 1);
+		t1 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
 		
-		c2 = board.getCell(x, y - 1);
-		t2 = (c2 != null && c2.getType() == type) ? 1 : 0;
+		c = board.getCell(x, y - 1);
+		t2 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
 		
 		topology = 4 * t0 + 2 * t1 + 1 * t2;	
 		location = getTextureLocation(topology);
@@ -202,14 +203,14 @@ public class Cell {
 		// 0 0
 		// 0 x
 		
-		c0 = board.getCell(x + 1, y);
-		t0 = (c0 != null && c0.getType() == type) ? 1 : 0;
+		c = board.getCell(x + 1, y);
+		t0 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
 		
-		c1 = board.getCell(x + 1, y - 1);
-		t1 = (c1 != null && c1.getType() == type) ? 1 : 0;
+		c = board.getCell(x + 1, y - 1);
+		t1 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
 		
-		c2 = board.getCell(x, y - 1);
-		t2 = (c2 != null && c2.getType() == type) ? 1 : 0;
+		c = board.getCell(x, y - 1);
+		t2 = (c == Board.outOfScopeCell || (c != null && c.getType() == type)) ? 1 : 0;
 		
 		topology = 4 * t0 + 2 * t1 + 1 * t2;	
 		location = getTextureLocation(topology);

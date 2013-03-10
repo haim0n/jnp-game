@@ -23,6 +23,9 @@ public class Board {
 	BoardConfig config;
 	Sprite bgSprite;
 	
+	// dummy "out of scope" cell
+	static final Cell outOfScopeCell = new Cell(null, 0, 0 ,null, false ,0);
+	
 	public Board(int level) {
 		config = new BoardConfig(level);
 		this.ROWS = config.ROWS;
@@ -41,6 +44,14 @@ public class Board {
 		bgSprite = new Sprite(texture);
 	}
 
+	public int getRows() {
+		return ROWS;
+	}
+
+	public int getCols() {
+		return COLS;
+	}
+	
 	private Cell createCell(int x, int y) {
 		int type = config.getType(x, y);
 		if (type == NONE)
@@ -125,8 +136,8 @@ public class Board {
 	public Cell getCell(int x, int y) {
 		if (x < 0 || x >= COLS || y < 0 || y >= ROWS) {
 			/* error */
-			Gdx.app.debug(TAG, "Out of scope");
-			return null;
+			//Gdx.app.debug(TAG, "Out of scope");
+			return outOfScopeCell;
 		}
 		return cells[x][y];
 	}
