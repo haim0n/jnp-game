@@ -30,7 +30,7 @@ public class Cell {
 	private int type;
 	private boolean scanFlag; // was this cell encountered in current board scanning
 	private static final int CELL_SIZE = 100; // 
-	private static final float SPEED = 500;
+	private static final float SPEED = 800;
 	private int spriteWidth;
 	private int spriteHeight;
 	private boolean isResolutionSet = false;
