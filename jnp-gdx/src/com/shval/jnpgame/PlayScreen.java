@@ -122,6 +122,8 @@ public class PlayScreen implements Screen, InputProcessor {
 		Gdx.app.debug(TAG, "Action down spotted. boardHeight: " + this.board.boardHeight + ". x = " + x + " y = " + y);
 		if (y == 0 && x >= board.getCols() - 5)
 			game.reset();
+		if (y == 0 && x == board.getCols() - 6)
+			board.revert();
 		
 		down = true;
 		return true;

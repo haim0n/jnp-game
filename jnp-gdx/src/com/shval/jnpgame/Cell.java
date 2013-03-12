@@ -31,6 +31,24 @@ public class Cell {
 	private int spriteHeight;
 	private boolean isResolutionSet = false;
 	
+	public Cell(Cell other) {
+		this.type = other.type;
+		this.rawTexture = other.rawTexture;
+		this.anchoredTo = other.anchoredTo;
+		this.x = other.x;
+		this.y = other.y;
+		this.jelly = null; // we assume that right jelly will be set from outside
+		
+		textureRegions = other.textureRegions;
+		anchorTextureRegions = other.anchorTextureRegions; // TODO: all nulls?
+		speed = new Speed(other.getSpeed());
+		
+		spriteWidth = other.spriteWidth;
+		spriteHeight = other.spriteHeight;
+		isResolutionSet = other.isResolutionSet;
+
+	}
+	
 	private Cell(int x, int y) {
 		this.type = NONE;
 		this.rawTexture = null;
@@ -80,6 +98,10 @@ public class Cell {
 		return cell;
 	}
 
+	public Speed getSpeed() {
+		return speed;
+	}
+	
 	public boolean isBlack() {
 		return isBlack(type);
 	}

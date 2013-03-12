@@ -32,6 +32,11 @@ public class Speed {
 		this.vy = yv;
 	}
 
+	public Speed(Speed other) {
+		this.vx = other.vx;
+		this.vy = other.vy;
+	}
+
 	public float getXv() {
 		return vx;
 	}

@@ -14,7 +14,10 @@ public class Board {
 	
 	private static final String TAG = Board.class.getSimpleName();
 	private final int ROWS, COLS;
+	private final int REVERT_DEPTH = 3;
 	private Cell cells[][];
+	private Cell boardStateStack[][][];
+	private int boardStateIndex;
 	private boolean stable;
 	int spriteWidth;
 	int spriteHeight;
@@ -41,6 +44,8 @@ public class Board {
 			}
 		}
 		
+		boardStateStack = new Cell[REVERT_DEPTH][COLS][ROWS]; 
+		
 		Texture texture = config.getBgTexture(level);
 		bgSprite = new Sprite(texture);
 		Texture resetButtonsTexture = config.getResetButtonsTexture(level);
@@ -48,6 +53,40 @@ public class Board {
 		jellifyBoard();
 	}
 
+	private void pushBoardState() {
+		if (boardStateIndex == REVERT_DEPTH) {
+			for (int i = 0; i < REVERT_DEPTH - 1; i++) {
+				boardStateStack[i] = boardStateStack[i+1];
+			}
+			boardStateIndex--;
+		}
+		
+		Cell stackedCells[][] = new Cell[COLS][ROWS];
+		for (int x = 0; x < COLS; x++) {
+			for (int y = 0; y < ROWS; y++) {
+				Cell cell = cells[x][y];
+				if (cell != null)
+					stackedCells[x][y] = new Cell(cells[x][y]);
+			}
+		}
+		boardStateStack[boardStateIndex] = stackedCells;
+		boardStateIndex++;
+	}
+	
+
+	public void revert() {
+		popBoardState();
+		jellifyBoard();
+		attemptMerge();
+	}
+
+	private void popBoardState() {
+		if (boardStateIndex == 0)
+			return;
+		boardStateIndex--;
+		cells = boardStateStack[boardStateIndex];
+	}
+	
 	public int getRows() {
 		return ROWS;
 	}
@@ -262,7 +301,7 @@ public class Board {
 	}
 	
 	private boolean attemptMerge() {
-		boolean merge = false; // indicates wether something merged
+		boolean merge = false; // indicates whether something merged
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
 				Cell cell = cells[x][y];
@@ -356,10 +395,14 @@ public class Board {
 		// trigger board dynamics (not to be confused with on tick update) 
 		updateBoardPhysics();
 		
-		if (attemptMerge()) { // don't merge blacks
+		if (attemptMerge()) {
 			if (isWinPosition()) { // check only if something merged
 				Gdx.app.debug(TAG, "You win!");
 			}
+		}
+		
+		if (stable) { // new stable point reached
+			pushBoardState();
 		}
 	}	
 	
