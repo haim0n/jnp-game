@@ -51,6 +51,7 @@ public class Board {
 		Texture resetButtonsTexture = config.getResetButtonsTexture(level);
 		resetButtonTextureR = new TextureRegion(resetButtonsTexture, 0, 0, 256, 128);
 		jellifyBoard();
+		
 	}
 
 	private void pushBoardState() {
@@ -76,6 +77,7 @@ public class Board {
 
 	public void revert() {
 		popBoardState();
+		stable =  true;
 		jellifyBoard();
 		attemptMerge();
 	}
@@ -215,7 +217,10 @@ public class Board {
 		if (cell == null)
 			return false;
 		
-		return attemptMove(dir, cell);
+		boolean ret = attemptMove(dir, cell);
+		if (ret) // moved from a stable position
+			pushBoardState();
+		return ret;
 	}
 	
 	void render(SpriteBatch spriteBatch) {		
@@ -399,11 +404,7 @@ public class Board {
 			if (isWinPosition()) { // check only if something merged
 				Gdx.app.debug(TAG, "You win!");
 			}
-		}
-		
-		if (stable) { // new stable point reached
-			pushBoardState();
-		}
+		}		
 	}	
 	
 	private void updateBoardPhysics() {

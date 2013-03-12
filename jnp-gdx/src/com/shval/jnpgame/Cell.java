@@ -41,7 +41,7 @@ public class Cell {
 		
 		textureRegions = other.textureRegions;
 		anchorTextureRegions = other.anchorTextureRegions; // TODO: all nulls?
-		speed = new Speed(other.getSpeed());
+		speed = new Speed(0, 0); // creates stale cells only
 		
 		spriteWidth = other.spriteWidth;
 		spriteHeight = other.spriteHeight;
