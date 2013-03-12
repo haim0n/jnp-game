@@ -14,7 +14,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	private Board board; // this is our world now
 	private BoardView boardView;
 	private JnpGame game;
-	private int level;
+	// private int level;
 
 	
 	// UI
@@ -31,7 +31,7 @@ public class PlayScreen implements Screen, InputProcessor {
 
 	public PlayScreen(JnpGame game, int level) {
 		this.game = game;
-		this.level = level;
+		// this.level = level;
 		Gdx.app.debug(TAG, "Rseting level " + level);
 		board = new Board(level);
 		board.start();

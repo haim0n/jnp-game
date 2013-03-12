@@ -1,16 +1,10 @@
 package com.shval.jnpgame;
 
 
-import static com.shval.jnpgame.Globals.JELLY_BLACK;
-import static com.shval.jnpgame.Globals.JELLY_BLUE;
-import static com.shval.jnpgame.Globals.JELLY_GREEN;
-import static com.shval.jnpgame.Globals.JELLY_RED;
-import static com.shval.jnpgame.Globals.JELLY_YELLOW;
-import static com.shval.jnpgame.Globals.WALL;
+import static com.shval.jnpgame.Globals.*;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Assets {
 	
@@ -67,11 +61,12 @@ public class Assets {
 		case JELLY_YELLOW:
 			texture = yellowTexture;
 			break;
-		case JELLY_BLACK:
-			texture = blackTexture;
-			break;
-		default:
+		case NONE:
 			texture = null;
+			break;
+
+		default:
+			texture = blackTexture;
 			break;
 		}
 

@@ -25,19 +25,19 @@ public class Board {
 	TextureRegion resetButtonTextureR;
 	
 	// dummy "out of scope" cell, make it a wall
-	static final Cell outOfScopeCell = new Cell(null, 0, 0 ,null , WALL, NONE);
+	//static final Cell outOfScopeCell = new Cell(null, 0, 0 ,null , WALL, NONE);
+	static final Cell outOfScopeCell = Cell.createCell(-1, -1, null);
 	
 	public Board(int level) {
 		config = new BoardConfig(level);
 		this.ROWS = config.ROWS;
 		this.COLS = config.COLS;
-		
 		this.stable = true;
 		
 		cells = new Cell[COLS][ROWS];
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
-				cells[x][y] = createCell(x, y);
+				cells[x][y] = Cell.createCell(x, y, config);
 			}
 		}
 		
@@ -45,7 +45,7 @@ public class Board {
 		bgSprite = new Sprite(texture);
 		Texture resetButtonsTexture = config.getResetButtonsTexture(level);
 		resetButtonTextureR = new TextureRegion(resetButtonsTexture, 0, 0, 256, 128);
-		
+		jellifyBoard();
 	}
 
 	public int getRows() {
@@ -56,22 +56,6 @@ public class Board {
 		return COLS;
 	}
 	
-	private Cell createCell(int x, int y) {
-		int type = config.getType(x, y);
-		int anchoredTo = config.getAncoredTo(x, y);
-		if (type == NONE)
-			return null;
-		Texture texture = config.getTexture(x, y);
-		//boolean fixed = config.isFixed(x, y);
-		Jelly jelly = null;
-		jelly = new Jelly(this);
-		
-		Cell cell = new Cell(texture, x, y, jelly, type, anchoredTo);
-		if(jelly != null)
-			jelly.join(cell);
-		return cell;
-	}
-	
 	int getSpriteHeight() {
 		return spriteHeight;
 	}
@@ -80,9 +64,25 @@ public class Board {
 		return spriteWidth;
 	}
 	
+	// create jelly for each cell and try merging them
+	public void jellifyBoard()
+	{
+		for (int x = 0; x < COLS; x++) {
+			for (int y = 0; y < ROWS; y++) {
+				Cell cell = cells[x][y];
+				if (cell == null || cell.getType() == NONE)
+					continue;
+				Jelly jelly = new Jelly(this);
+				cell.setJelly(jelly);
+				jelly.join(cell);
+			}
+		}
+		attemptMerge();
+	}
+	
 	private boolean isWinPosition() {
 		// win iff all non-black jellies
-		Jelly jellies[] = new Jelly[MAX_JELLY_TYPES];
+		Jelly jellies[] = new Jelly[MAX_COLORED_JELLY_TYPES];
 
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
@@ -93,7 +93,7 @@ public class Board {
 				
 				int type = cell.getType();
 				// walls and blacks are not in the game
-				if (type == WALL || type == JELLY_BLACK)
+				if (type == WALL || Cell.isBlack(type))
 					continue;
 
 				if (jellies[type] != null) {
@@ -134,7 +134,7 @@ public class Board {
 	}
 		
 	public void start() {
-		attemptMerge(true); // try merging blacks also 
+		attemptMerge(); 
 		updateBoardPhysics();
 	}
 
@@ -261,11 +261,7 @@ public class Board {
 		return false;
 	}
 	
-	private boolean attemptMerge(boolean blacksMerge) {
-		// blacksMerge enables us to create black jellies
-		// larger than one cell.
-		// this is useful 'couse we usually need it on start
-		
+	private boolean attemptMerge() {
 		boolean merge = false; // indicates wether something merged
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
@@ -275,11 +271,6 @@ public class Board {
 				if (cell == null || cell.isMoving())
 					continue;
 				
-				// try to merge black jellies only if 
-				// called with blacksMerge == true
-				if (!blacksMerge && cell.getType() == JELLY_BLACK)
-					continue;
-					
 				Cell neighbor;
 				// try to merge with right neighbor
 				if (x < COLS - 1)
@@ -306,11 +297,6 @@ public class Board {
 					
 					// moving cell do not merge
 					if (cell == null || cell.isMoving())
-						continue;
-					
-					// try to merge black jellies only if 
-					// called with blacksMerge == true
-					if (!blacksMerge && cell.getType() == JELLY_BLACK)
 						continue;
 					
 					cell.setNeighbours();
@@ -370,7 +356,7 @@ public class Board {
 		// trigger board dynamics (not to be confused with on tick update) 
 		updateBoardPhysics();
 		
-		if (attemptMerge(false)) { // don't merge blacks
+		if (attemptMerge()) { // don't merge blacks
 			if (isWinPosition()) { // check only if something merged
 				Gdx.app.debug(TAG, "You win!");
 			}

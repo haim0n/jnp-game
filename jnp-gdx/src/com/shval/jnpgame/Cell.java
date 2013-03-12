@@ -3,11 +3,7 @@ package com.shval.jnpgame;
 import static com.shval.jnpgame.Globals.*;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL11;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -35,9 +31,27 @@ public class Cell {
 	private int spriteHeight;
 	private boolean isResolutionSet = false;
 	
-	public Cell(Texture rawTexture, int x, int y, Jelly jelly, int type, int anchoredTo) {
+	private Cell(int x, int y) {
+		this.type = NONE;
+		this.rawTexture = null;
+		this.anchoredTo = NONE; 
+		this.x = x;
+		this.y = y;
+		this.jelly = null;
+
+		textureRegions = null;
+		anchorTextureRegions = null;
+		speed = null;
+	}
+	
+	private Cell(int x, int y, BoardConfig config) {
+		this.type = config.getType(x, y);
+		this.rawTexture = config.getTexture(x, y);
+		this.anchoredTo = config.getAncoredTo(x, y);
+		this.x = x;
+		this.y = y;
+		this.jelly = null;
 		
-		this.rawTexture = rawTexture;
 		textureRegions = new TextureRegion[2][2];
 		anchorTextureRegions = new TextureRegion[4]; // TODO: all nulls?
 		
@@ -48,17 +62,31 @@ public class Cell {
 			textureRegions[1][1] = new TextureRegion(rawTexture, 8 + 3 * 48 + 48 / 2, 8 + 0 * 48, 48 / 2, 48 / 2);
 		}
 
-		this.x = x;
-		this.y = y;
-		this.jelly = jelly;
-		//this.isFixed = fixed;
-		this.type = type;
-		this.anchoredTo = anchoredTo;
 		speed = new Speed(0, 0);
-		
 	}
 	
+	// factory of the cell,
+	// if no config is given, then a dummy cell is created
+	public static Cell createCell(int x, int y, BoardConfig config) {
+		
+		if (config == null) {
+			return new Cell(x, y);
+		}
+		
+		if (config.getType(x, y) == NONE)
+			return null;
+
+		Cell cell = new Cell(x, y, config);
+		return cell;
+	}
+
+	public boolean isBlack() {
+		return isBlack(type);
+	}
 	
+	public static boolean isBlack(int cellType) {
+		return cellType >= JELLY_BLACK_MIN;
+	}
 	public Texture getRawTexture() {
 		return rawTexture;
 	}
@@ -310,12 +338,14 @@ public class Cell {
 		
 		int graphicX = spriteWidth * x + graphicDx;
 		int graphicY = spriteHeight * y + graphicDy;
+		/*
 		if(false) {
 			Gdx.app.debug(TAG, "(" + x + ", " + y + "): dx, dy = " + dxFromMilestone + ", " + dyFromMilestone);
 			Gdx.app.debug(TAG, "(" + x + ", " + y + "): dx, dy = " + dxFromMilestone + ", " + dyFromMilestone);
 			Gdx.app.debug(TAG, "(" + x + ", " + y + "): Gdx, Gdy = " + graphicDx + ", " + graphicDy);
 			Gdx.app.debug(TAG, "(" + x + ", " + y + "): rendering at (" + graphicX + ", " + graphicY + ")");
 		}
+		*/
 		spriteBatch.draw(textureRegions[0][0], graphicX, graphicY,
 				spriteWidth / 2, spriteHeight / 2);
 		
@@ -389,9 +419,10 @@ public class Cell {
 		// update speed & location
 		float newDx = dxFromMilestone + (speed.getXv() * delta);
 		float newDy = dyFromMilestone + (speed.getYv() * delta);
-		
+		/*
 		if (false)
 			Gdx.app.debug(TAG, "(" + x + ", " + y + "): new (dx, dy) = (" + newDx + ", " + newDy + ")");
+		*/
 		// milestone reached?
 		boolean isMilestone = false;
 		

@@ -4,7 +4,6 @@ import static com.shval.jnpgame.Globals.*;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class BoardConfig {
 
@@ -20,10 +19,10 @@ public class BoardConfig {
 			"xxxxxxxxxxxxxx",
 			"x   Gdbrg  rRx",
 			"xd b gygr    x",
-			"xd   dgdyB  Bx",
-			"xw   yrydd   x",
+			"xd   0g1yB  Bx",
+			"xw   yry22   x",
 			"x    rybyB  Yx",
-			"x   YddRg    x",
+			"x   Y33Rg    x",
 			"xxxxxxxxxxxxxx"
 			},
 			{ // level 1			
@@ -106,8 +105,7 @@ public class BoardConfig {
 	
 	int getAncoredTo(int x, int y) {
 		 char cell = cells[x][y];
-		 int ret;
-		 
+		 		 
 		 switch(cell) {
 		 	case 'R' :
 		 	case 'G' :		 		
@@ -152,6 +150,9 @@ public class BoardConfig {
 		 return NONE;
 	}
 	
+	int getBlackType(char blackAscii) {
+		return blackAscii + JELLY_BLACK_MIN;
+	}
 	
 	int getType(int x, int y) {
 		 char cell = cells[x][y];
@@ -180,7 +181,17 @@ public class BoardConfig {
 		 		break;		 		
 		 	case 'd' :
 		 	case 'D' :		 		
-		 		ret = JELLY_BLACK;
+		 	case '0' :
+		 	case '1' :
+		 	case '2' :
+		 	case '3' :
+		 	case '4' :
+		 	case '5' :
+		 	case '6' :
+		 	case '7' :
+		 	case '8' :
+		 	case '9' :
+		 		ret = getBlackType(cell);
 		 		break;
 		 	default :
 		 		ret = NONE;
