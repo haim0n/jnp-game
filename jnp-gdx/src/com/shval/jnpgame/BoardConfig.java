@@ -117,35 +117,31 @@ public class BoardConfig {
 		 }
 		 
 		 // TODO: for now, anchor to blacks, if no blacks around, to walls
-		 if (cells[x-1][y] == 'd' || cells[x-1][y] == 'D')
+		 if (Cell.isBlack(getType(x-1, y)))
 			 return LEFT;
 
-		 if (cells[x][y+1] == 'd' || cells[x-1][y] == 'D')
+		 if (Cell.isBlack(getType(x, y+1)))
 			 return UP;
 
-		 if (cells[x+1][y] == 'd' || cells[x-1][y] == 'D')
+		 if (Cell.isBlack(getType(x+1, y)))
 			 return RIGHT;
 
-		 if (cells[x][y-1] == 'd' || cells[x-1][y] == 'D')
+		 if (Cell.isBlack(getType(x, y-1)))
 			 return DOWN;
 
-		 // walls ?
-		 if (cells[x-1][y] == 'w' || cells[x-1][y] == 'W'
-				 || cells[x-1][y] == 'x' || cells[x-1][y] == 'X')
+
+		 if (Cell.isWall(getType(x-1, y)))
 			 return LEFT;
 
-		 if (cells[x][y+1] == 'w' || cells[x-1][y] == 'W' 
-				 || cells[x][y+1] == 'x' || cells[x-1][y] == 'X')
+		 if (Cell.isWall(getType(x, y+1)))
 			 return UP;
 
-		 if (cells[x+1][y] == 'd' || cells[x-1][y] == 'D'
-				 || cells[x+1][y] == 'x' || cells[x-1][y] == 'X')
+		 if (Cell.isWall(getType(x+1, y)))
 			 return RIGHT;
 
-		 if (cells[x][y-1] == 'd' || cells[x-1][y] == 'D' 
-				 || cells[x][y-1] == 'x' || cells[x-1][y] == 'X')
+		 if (Cell.isWall(getType(x, y-1)))
 			 return DOWN;
-		 
+
 		 // should not be here
 		 return NONE;
 	}

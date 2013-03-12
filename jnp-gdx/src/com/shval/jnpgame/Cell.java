@@ -83,6 +83,10 @@ public class Cell {
 	public boolean isBlack() {
 		return isBlack(type);
 	}
+
+	public static boolean isWall(int cellType) {
+		return cellType == WALL;
+	}
 	
 	public static boolean isBlack(int cellType) {
 		return cellType >= JELLY_BLACK_MIN;
