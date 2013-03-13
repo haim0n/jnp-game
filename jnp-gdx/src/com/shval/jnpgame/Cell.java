@@ -41,7 +41,7 @@ public class Cell {
 		
 		textureRegions = other.textureRegions;
 		anchorTextureRegions = other.anchorTextureRegions; // TODO: all nulls?
-		speed = new Speed(0, 0); // creates stale cells only
+		speed = new Speed(other.getSpeed()); // creates stale cells only
 		
 		spriteWidth = other.spriteWidth;
 		spriteHeight = other.spriteHeight;
@@ -514,11 +514,6 @@ public class Cell {
 			Gdx.app.error(TAG, "Trying to move a wall");
 		}
 		
-		// move current cell
-		if (isMoving()) {
-			// should be here only if falling > 1 blocks
-			Gdx.app.debug(TAG, "Trying to move when already moving - falling >1 blocks?");
-		}
 		
 		float vx = 0, vy = 0;
 		switch (dir) {

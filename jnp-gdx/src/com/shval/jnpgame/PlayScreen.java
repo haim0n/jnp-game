@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.GL10;
 
 public class PlayScreen implements Screen, InputProcessor {
 
-	private static final String TAG = Board.class.getSimpleName();
+	private static final String TAG = PlayScreen.class.getSimpleName();
 	
 	private Board board; // this is our world now
 	private BoardView boardView;
@@ -32,9 +32,8 @@ public class PlayScreen implements Screen, InputProcessor {
 	public PlayScreen(JnpGame game, int level) {
 		this.game = game;
 		// this.level = level;
-		Gdx.app.debug(TAG, "Rseting level " + level);
+		Gdx.app.debug(TAG, "Reseting level " + level);
 		board = new Board(level);
-		board.start();
 		boardView = new BoardView();
 		boardView.setBoard(board);
 	}
@@ -56,6 +55,8 @@ public class PlayScreen implements Screen, InputProcessor {
 		cellWidth = board.getSpriteWidth();
 		cellHeight = board.getSpriteHeight();
 		uiThreshold = cellWidth/UI_FACTOR;
+		// the action begins (here, and not in Screen's constructor!)
+		board.start();
 	}
 
 	@Override

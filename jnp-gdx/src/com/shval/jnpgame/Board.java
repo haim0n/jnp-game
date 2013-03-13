@@ -55,6 +55,7 @@ public class Board {
 	}
 
 	private void pushBoardState() {
+		Gdx.app.debug(TAG, "Pushing: boardStateIndex = " + boardStateIndex);
 		if (boardStateIndex == REVERT_DEPTH) {
 			for (int i = 0; i < REVERT_DEPTH - 1; i++) {
 				boardStateStack[i] = boardStateStack[i+1];
@@ -75,18 +76,24 @@ public class Board {
 	}
 	
 
-	public void revert() {
-		popBoardState();
-		stable =  true;
-		jellifyBoard();
-		attemptMerge();
-	}
-
-	private void popBoardState() {
+	// returns false if stack empty
+	private boolean popBoardState() {
 		if (boardStateIndex == 0)
-			return;
+			return false;
 		boardStateIndex--;
 		cells = boardStateStack[boardStateIndex];
+		return true;
+	}
+
+
+	public void revert() {
+		Gdx.app.debug(TAG, "Reverting: boardStateIndex = " + boardStateIndex);
+		if (popBoardState()) {
+			stable =  true;
+			jellifyBoard();
+			attemptMerge();
+			updateBoardPhysics();
+		}
 	}
 	
 	public int getRows() {
@@ -218,8 +225,6 @@ public class Board {
 			return false;
 		
 		boolean ret = attemptMove(dir, cell);
-		if (ret) // moved from a stable position
-			pushBoardState();
 		return ret;
 	}
 	
@@ -335,6 +340,7 @@ public class Board {
 		}
 		
 		if (merge) {
+			Gdx.app.debug(TAG, "Setting neighbors");
 			for (int x = 0; x < COLS ; x++) {
 				for (int y = 0; y < ROWS ; y++) {
 					Cell cell = cells[x][y];
@@ -352,11 +358,14 @@ public class Board {
 	
 	// returns true if moving
 	private boolean attemptMove(int dir, Cell cell) {
-		Gdx.app.debug(TAG, "Attempt to move (" + cell.getX() + ", " + cell.getY() + ") in direction: " + dir);
+		//Gdx.app.debug(TAG, "Attempt to move (" + cell.getX() + ", " + cell.getY() + ") in direction: " + dir);
 		resetAllScanFlags(); // reset all cells scan flag
 		if(cell.canMove(dir)) {
 			resetAllScanFlags();
-			stable = false;
+			if (stable) { // just swithched from stable to non stable
+				pushBoardState();
+				stable = false;
+			}
 			cell.move(dir);
 			return true;
 		}
