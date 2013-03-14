@@ -50,7 +50,7 @@ public class Cell {
 	}
 	
 	private Cell(int x, int y) {
-		this.type = NONE;
+		this.type = WALL; // this is very comfortable for drawing board boarders
 		this.rawTexture = null;
 		this.anchoredTo = NONE; 
 		this.x = x;

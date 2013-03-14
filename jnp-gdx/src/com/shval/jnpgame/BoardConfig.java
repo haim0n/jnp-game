@@ -17,7 +17,7 @@ public class BoardConfig {
 			{ // level 0 - dev playground
 
 			"xxxxxxxxxxxxxx",
-			"x   Gdbrg  rRx",
+			"x   G4brg  rRx",
 			"xd b gygr    x",
 			"xd   0g1yB  Bx",
 			"xw   yry22   x",
