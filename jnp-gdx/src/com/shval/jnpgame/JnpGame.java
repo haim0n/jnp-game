@@ -40,12 +40,13 @@ public class JnpGame extends Game {
 	
 	public void win() {
 		currentLevel++;
-		if (currentLevel <= MAX_LEVELS)
-			playLevel(currentLevel);
-		else {
+		if (currentLevel > MAX_LEVELS) {
 			Gdx.app.debug(TAG, "You win game. Congradulations!!");
-			// you win
+			currentLevel = 1;
 		}
+		
+		playLevel(currentLevel);
+
 	}
 	
 	@Override
