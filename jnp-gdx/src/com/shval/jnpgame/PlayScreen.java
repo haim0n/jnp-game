@@ -33,7 +33,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		this.game = game;
 		// this.level = level;
 		Gdx.app.debug(TAG, "Reseting level " + level);
-		board = new Board(level);
+		board = new Board(level, this);
 		boardView = new BoardView();
 		boardView.setBoard(board);
 	}
@@ -42,8 +42,8 @@ public class PlayScreen implements Screen, InputProcessor {
 	public void render(float delta) {
 		// TODO Auto-generated method stub
 		board.update(delta);
-	       Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
-	       Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		boardView.render();
 	}
 
@@ -121,7 +121,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		int y = yDown/cellHeight;
 		
 		Gdx.app.debug(TAG, "Action down spotted. boardHeight: " + this.board.boardHeight + ". x = " + x + " y = " + y);
-		if (y == 0 && x >= board.getCols() - 5)
+		if (y == 0 && x >= board.getCols() - 4 && x <= board.getCols() - 2)
 			game.reset();
 		if (y == 0 && x == board.getCols() - 6)
 			board.revert();
@@ -170,6 +170,10 @@ public class PlayScreen implements Screen, InputProcessor {
 	public boolean scrolled(int amount) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public void win() {
+		game.win();
 	}
 
 }

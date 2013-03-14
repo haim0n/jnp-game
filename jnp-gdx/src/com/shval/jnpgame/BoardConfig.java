@@ -9,7 +9,8 @@ public class BoardConfig {
 
 	int ROWS;
 	int COLS;
-	private static String TAG = BoardConfig.class.getName();
+	int LEVELS;
+	private static String TAG = BoardConfig.class.getSimpleName();
 	private char cells[][];
 	
 	// level 1
@@ -50,7 +51,17 @@ public class BoardConfig {
 			};
 	
 	
+	public BoardConfig(int level) {
+		LEVELS = levels.length - 1; // zero level doesn't count
+		Gdx.app.debug(TAG, "Number of levels is " + LEVELS);
+		setLevel(level);
+	}
+	
 	public void setLevel(int i) {
+		Gdx.app.debug(TAG, "Attempting to define level " + i);
+		if (i > LEVELS || i <0)
+			i = 0; // ha !!! see you pass this one ...
+		
 		String board[] = levels[i];
 		ROWS = board.length;
 		COLS = board[0].length();
@@ -68,10 +79,6 @@ public class BoardConfig {
 				cells[x][ROWS - 1 - y] = board[y].charAt(x);
 			}
 		}
-	}
-	
-	public BoardConfig(int level) {
-		setLevel(level);
 	}
 	
 	Texture getTexture(int x, int y) {

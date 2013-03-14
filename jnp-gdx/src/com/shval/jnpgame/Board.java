@@ -26,16 +26,18 @@ public class Board {
 	BoardConfig config;
 	Sprite bgSprite; // TODO: can it be just a texure?
 	TextureRegion resetButtonTextureR;
+	PlayScreen screen;
 	
 	// dummy "out of scope" cell, make it a wall
 	//static final Cell outOfScopeCell = new Cell(null, 0, 0 ,null , WALL, NONE);
 	static final Cell outOfScopeCell = Cell.createCell(-1, -1, null);
 	
-	public Board(int level) {
+	public Board(int level, PlayScreen screen) {
 		config = new BoardConfig(level);
 		this.ROWS = config.ROWS;
 		this.COLS = config.COLS;
 		this.stable = true;
+		this.screen = screen;
 		
 		cells = new Cell[COLS][ROWS];
 		for (int x = 0; x < COLS; x++) {
@@ -253,8 +255,8 @@ public class Board {
 		
 		// buttons
 		
-		spriteBatch.draw(resetButtonTextureR, (COLS - 5) * spriteWidth, 0 * spriteHeight,
-				4 * spriteWidth, spriteHeight * 6 / 8);
+		spriteBatch.draw(resetButtonTextureR, (COLS - 4) * spriteWidth, 0 * spriteHeight,
+				3 * spriteWidth, spriteHeight * 6 / 8);
 	}
 
 	
@@ -412,6 +414,7 @@ public class Board {
 		if (attemptMerge()) {
 			if (isWinPosition()) { // check only if something merged
 				Gdx.app.debug(TAG, "You win!");
+				screen.win();
 			}
 		}		
 	}	
