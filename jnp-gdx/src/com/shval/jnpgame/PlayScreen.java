@@ -125,7 +125,8 @@ public class PlayScreen implements Screen, InputProcessor {
 			game.reset();
 		if (y == 0 && x == board.getCols() - 6)
 			board.revert();
-		
+		if (y == 0 && x == 0) // cheat
+			win();		
 		down = true;
 		return true;
 	}

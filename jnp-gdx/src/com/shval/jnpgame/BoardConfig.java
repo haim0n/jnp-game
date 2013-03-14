@@ -28,7 +28,7 @@ public class BoardConfig {
 			},
 			{ // level 1			
 			"xxxxxxxxxxxxxx",
-			"x            x",
+//			"x            x",
 			"x            x",
 			"x            x",
 			"x            x",
@@ -41,6 +41,7 @@ public class BoardConfig {
 			{ // level 2
 			"xxxxxxxxxxxxxx",
 			"x            x",
+			"x            x", // 			
 			"x            x",
 			"x            x",
 			"x     g   g  x",
@@ -51,6 +52,7 @@ public class BoardConfig {
 			{ // level 3
 			"xxxxxxxxxxxxxx",
 			"x            x",
+			"x            x", //			
 			"x            x",
 			"x   bg  x g  x",
 			"xxx xxxrxxx  x",
@@ -60,7 +62,7 @@ public class BoardConfig {
 			},
 			{ // level 4
 			"xxxxxxxxxxxxxx",
-			"x            x",
+//			"x            x",
 			"x       r    x",
 			"x       b    x",
 			"x       x    x",
@@ -83,7 +85,7 @@ public class BoardConfig {
 			},
 			{ // level 6
 			"xxxxxxxxxxxxxx",
-			"xxxxxxx      x",
+//			"xxxxxxx      x",
 			"xxxxxxx g    x",
 			"x       xx   x",
 			"x r   b      x",
