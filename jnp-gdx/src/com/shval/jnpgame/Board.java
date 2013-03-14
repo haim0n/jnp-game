@@ -2,13 +2,8 @@ package com.shval.jnpgame;
 
 import com.shval.jnpgame.BoardConfig;
 import static com.shval.jnpgame.Globals.*;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 
 public class Board {
 	
@@ -19,21 +14,15 @@ public class Board {
 	private Cell boardStateStack[][][];
 	private int boardStateIndex;
 	private boolean stable;
-	int spriteWidth;
-	int spriteHeight;
-	int boardWidth;
-	int boardHeight;
-	BoardConfig config;
-	Sprite bgSprite; // TODO: can it be just a texure?
-	TextureRegion resetButtonTextureR;
+	int cellWidth;
+	int cellHeight;
 	PlayScreen screen;
 	
 	// dummy "out of scope" cell, make it a wall
 	//static final Cell outOfScopeCell = new Cell(null, 0, 0 ,null , WALL, NONE);
 	static final Cell outOfScopeCell = Cell.createCell(-1, -1, null);
 	
-	public Board(int level, PlayScreen screen) {
-		config = new BoardConfig(level);
+	public Board(BoardConfig config, PlayScreen screen) {
 		this.ROWS = config.ROWS;
 		this.COLS = config.COLS;
 		this.stable = true;
@@ -46,12 +35,8 @@ public class Board {
 			}
 		}
 		
-		boardStateStack = new Cell[REVERT_DEPTH][COLS][ROWS]; 
+		boardStateStack = new Cell[REVERT_DEPTH][COLS][ROWS];
 		
-		Texture texture = config.getBgTexture(level);
-		bgSprite = new Sprite(texture);
-		Texture resetButtonsTexture = config.getResetButtonsTexture(level);
-		resetButtonTextureR = new TextureRegion(resetButtonsTexture, 0, 0, 256, 128);
 		jellifyBoard();
 		
 	}
@@ -107,11 +92,11 @@ public class Board {
 	}
 	
 	int getSpriteHeight() {
-		return spriteHeight;
+		return cellHeight;
 	}
 	
 	int getSpriteWidth() {
-		return spriteWidth;
+		return cellWidth;
 	}
 	
 	// create jelly for each cell and try merging them
@@ -161,24 +146,20 @@ public class Board {
 
 		// not necessarily square
 		// TODO: try using floats
-		this.spriteWidth = (int) Math.ceil((float)boardWidth / (float)COLS);
-		this.spriteHeight = (int) Math.ceil((float)boardHeight / (float)ROWS);
+		this.cellWidth = (int) Math.ceil((float)boardWidth / (float)COLS);
+		this.cellHeight = (int) Math.ceil((float)boardHeight / (float)ROWS);
 		
 		// make sprite w/h even
-		this.spriteWidth += this.spriteWidth % 2;
-		this.spriteHeight += this.spriteHeight % 2;
+		this.cellWidth += this.cellWidth % 2;
+		this.cellHeight += this.cellHeight % 2;
 			
-		
-		this.boardWidth = boardWidth;
-		this.boardHeight = boardHeight;
-		
-		Gdx.app.debug(TAG, "Sprite size = " + spriteWidth + " x " + spriteHeight);
+		Gdx.app.debug(TAG, "Sprite size = " + cellWidth + " x " + cellHeight);
 		Gdx.app.debug(TAG, "Board size = " + boardWidth + " x " + boardHeight);
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
 				Cell cell = cells[x][y];
 				if (cell != null)
-					cell.setResolution(spriteWidth, spriteHeight);
+					cell.setResolution(cellWidth, cellHeight);
 			}
 		}
 	}
@@ -231,7 +212,6 @@ public class Board {
 	}
 	
 	void render(SpriteBatch spriteBatch) {		
-		spriteBatch.draw(bgSprite, 0, 0, boardWidth, boardHeight);
 		
 		// render cells
 		for (int x = 0; x < COLS; x++) {
@@ -252,11 +232,6 @@ public class Board {
 				cell.render(spriteBatch, 2);
 			}
 		}	
-		
-		// buttons
-		
-		spriteBatch.draw(resetButtonTextureR, (COLS - 4) * spriteWidth, 0 * spriteHeight,
-				3 * spriteWidth, spriteHeight * 6 / 8);
 	}
 
 	

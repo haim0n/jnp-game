@@ -1,8 +1,5 @@
 package com.shval.jnpgame;
 
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
-
 /*
 TODO: Screen should implement this 
 public interface Command 

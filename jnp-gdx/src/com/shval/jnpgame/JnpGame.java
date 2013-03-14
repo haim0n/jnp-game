@@ -19,14 +19,19 @@ public class JnpGame extends Game {
 		// load assets
 		Assets.load();
 		
-		MAX_LEVELS = 100; // TODO:read from config
+		//load board config
+		config = new BoardConfig();
+		
+		MAX_LEVELS = config.getLevels();
 		//
 		Gdx.app.setLogLevel(logLevel);
 		playLevel(currentLevel);
 	}
 
 	private void playLevel(int level) {
-		setScreen(new PlayScreen(this, level));		
+		Gdx.app.debug(TAG, "Playing level " + level);
+		config.setLevel(level);
+		setScreen(new PlayScreen(config, this));		
 	}
 	
 	public void reset() {

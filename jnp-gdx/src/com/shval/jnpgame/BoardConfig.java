@@ -10,6 +10,7 @@ public class BoardConfig {
 	int ROWS;
 	int COLS;
 	int LEVELS;
+	int level;
 	private static String TAG = BoardConfig.class.getSimpleName();
 	private char cells[][];
 	
@@ -98,26 +99,30 @@ public class BoardConfig {
 			};
 	
 	
-	public BoardConfig(int level) {
+	public BoardConfig() {
 		LEVELS = levels.length - 1; // zero level doesn't count
 		Gdx.app.debug(TAG, "Number of levels is " + LEVELS);
-		setLevel(level);
 	}
 	
-	public void setLevel(int i) {
-		Gdx.app.debug(TAG, "Attempting to define level " + i);
-		if (i > LEVELS || i <0)
-			i = 0; // ha !!! see you pass this one ...
+	public void setLevel(int level) {
+		Gdx.app.debug(TAG, "Attempting to define level " + level);
+		if (level > LEVELS || level < 0)
+			level = 0; // ha !!! see you pass this one ...
 		
-		String board[] = levels[i];
+		this.level = level;
+		String board[] = levels[level];
 		ROWS = board.length;
 		COLS = board[0].length();
 		cells = new char[COLS][ROWS];
 		Gdx.app.debug(TAG, "boardsize (" + COLS + "," + ROWS + ")");
 		transposeBoard(board);
-		Gdx.app.debug(TAG, "Level " + i + " defined");
+		Gdx.app.debug(TAG, "Level " + level + " defined");
 	}
 
+	int getLevels() {
+		return LEVELS;
+	}
+	
 	private void transposeBoard(String board[]) {
 		// in libgdx (0,0) is the lower left corner
 		// we'll stick to that
@@ -133,7 +138,7 @@ public class BoardConfig {
 		return Assets.getTexture(type);
 	}
 	
-	Texture getBgTexture(int level) {
+	Texture getBgTexture() {
 		return Assets.getBgTexture(level);
 	}
 	
@@ -250,7 +255,7 @@ public class BoardConfig {
 		 return ret;
 	}
 
-	public Texture getResetButtonsTexture(int level) {
+	public Texture getResetButtonsTexture() {
 		return Assets.getButtonsTexture(level);
 	}
 	
