@@ -8,6 +8,7 @@ add instructions
 add select level screen.
 add orientation as part of config. define it automatically using COLS/ROWS ratio
 compare COLS/ROWS ratio with runtime height/width ratio and compensate by removing/adding dummy level rows.
+compensate for cell width/height roundup errors
 calibrate speed/sensitivity
 resolve all inline TODO
 anchor should be vector like
