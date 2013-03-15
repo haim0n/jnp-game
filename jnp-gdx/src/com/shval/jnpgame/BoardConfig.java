@@ -113,7 +113,6 @@ public class BoardConfig {
 			"xxx  g  b  xxx",
 			"xx   W  W   xx",
 			"xx   B  G   xx",
-			"xx          xx",
 			"xxg        bxx",
 			"xxxg      bxxx",
 			"xxxx      xxxx",			
@@ -137,7 +136,7 @@ public class BoardConfig {
 			"xxxxxxxxxxxxxx",
 			"x   gr       x",
 			"x   dd D     x",
-			"x    w w     x",
+			"x    w w xxxxx",
 			"x            x",
 			"x  w  w      x",
 			"x        W  Rx",
@@ -293,7 +292,7 @@ public class BoardConfig {
 	
 	Texture getTexture(int x, int y) {
 		int type = getType(x, y);
-		return Assets.getTexture(type);
+		return Assets.getTexture(type, level);
 	}
 	
 

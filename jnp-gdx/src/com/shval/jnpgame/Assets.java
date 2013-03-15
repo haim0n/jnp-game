@@ -13,7 +13,13 @@ public class Assets {
     public static Texture greenTexture;
     public static Texture yellowTexture;
     public static Texture blackTexture;
-    public static Texture wallTexture;
+    
+    public static Texture wallTexture0;
+    public static Texture wallTexture1;
+    public static Texture wallTexture3;
+    public static Texture wallTexture5;
+    public static Texture wallTexture6;
+    
     public static Texture bgTexture0;
     public static Texture bgTexture1;
     public static Texture bgTexture21;
@@ -21,6 +27,7 @@ public class Assets {
     public static Texture bgTexture30;    
     public static Texture bgTexture51;
     public static Texture bgTexture52;
+    
     public static Texture buttonsTexture;
     public static Texture smallStarTexture;
     //public static TextureAtlas atlas;  
@@ -35,7 +42,11 @@ public class Assets {
         greenTexture = new Texture(Gdx.files.internal("data/jelly_green.png"));
         yellowTexture = new Texture(Gdx.files.internal("data/jelly_yellow.png"));
         blackTexture = new Texture(Gdx.files.internal("data/jelly_black.png"));
-        wallTexture = new Texture(Gdx.files.internal("data/wall0.png"));
+        wallTexture0 = new Texture(Gdx.files.internal("data/wall0.png"));
+        wallTexture1 = new Texture(Gdx.files.internal("data/wall1.png"));
+        wallTexture3 = new Texture(Gdx.files.internal("data/wall3.png"));
+        wallTexture5 = new Texture(Gdx.files.internal("data/wall5.png"));
+        wallTexture6 = new Texture(Gdx.files.internal("data/wall6.png"));
         bgTexture0 = new Texture(Gdx.files.internal("data/bg00.png"));
         bgTexture1 = new Texture(Gdx.files.internal("data/bg01.png"));
         bgTexture21 = new Texture(Gdx.files.internal("data/bg21.png"));
@@ -71,12 +82,54 @@ public class Assets {
     	}
     }
     
-    public static Texture getTexture (int type) {
+    private static Texture getWallTexture(int level) {
+    	
+    	Texture texture;
+    	
+		switch(level) {
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+			texture = wallTexture0;
+			break;
+			
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 13:
+		case 14:
+		case 15:
+		case 16:			
+			texture = wallTexture3;
+			break;
+
+		case 9:
+		case 10:
+		case 11:
+		case 12:
+		case 17:
+		case 18:
+		case 19:
+			texture = wallTexture1;
+			break;
+			
+		default:
+			texture = null;
+			break;
+		}
+		
+		return texture;
+    }
+    
+    
+    public static Texture getTexture (int type, int level) {
     	Texture texture;
     	
 		switch(type) {
 		case WALL:
-			texture = wallTexture;
+			texture = getWallTexture(level);
 			break;
 		case JELLY_BLUE:
 			texture = blueTexture;
