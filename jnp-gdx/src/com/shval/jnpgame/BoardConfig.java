@@ -2,6 +2,8 @@ package com.shval.jnpgame;
 
 import static com.shval.jnpgame.Globals.*;
 
+import java.awt.Color;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -11,7 +13,7 @@ public class BoardConfig {
 	int COLS;
 	int LEVELS;
 	int level;
-	private static String TAG = BoardConfig.class.getSimpleName();
+	static private final String TAG = BoardConfig.class.getSimpleName();
 	private char cells[][];
 	
 	// level 1
@@ -257,8 +259,7 @@ public class BoardConfig {
 			"xxxxxxxxxxxxxx",
 			},
 			};
-	
-	
+
 	public BoardConfig() {
 		LEVELS = levels.length - 1; // zero level doesn't count
 		Gdx.app.debug(TAG, "Number of levels is " + LEVELS);
@@ -298,10 +299,7 @@ public class BoardConfig {
 		return Assets.getTexture(type);
 	}
 	
-	Texture getBgTexture() {
-		return Assets.getBgTexture(level);
-	}
-	
+
 	/*
 	boolean isFixed(int x, int y) {
 		 char cell = cells[x][y];
@@ -418,5 +416,25 @@ public class BoardConfig {
 	public Texture getResetButtonsTexture() {
 		return Assets.getButtonsTexture(level);
 	}
+
+	public Background getBackground() {
+		
+		// level 1:
+		Background background = new Background();
+		//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
+		
+		background.color.set(0.5f, 0.7f, 2.5f, 0);
+		// background.color.set(Color.blue); TODO: why doesnt it work !!!
+		// static 
+		int dx = 96 ;
+		background.addLayer(Assets.getBgTexture(1), 0, 0, dx, 128);
+		background.addLayer(Assets.getBgTexture(1), dx, 0, dx, 128);
+		background.addLayer(Assets.getBgTexture(1), 2 * dx, 0, dx, 128);
+		
+		//	dynamic
+		background.addLayer(Assets.getBgTexture(0), 0, 86, -15, 0, 128, 0, 100, 128);
+		background.addLayer(Assets.getBgTexture(0), 200, 86, -15, 0, 128, 0, 100, 128);
+		return background;
+	}		
 	
 }

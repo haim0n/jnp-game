@@ -14,11 +14,13 @@ public class Assets {
     public static Texture yellowTexture;
     public static Texture blackTexture;
     public static Texture wallTexture;
-    public static Texture bgTexture;
+    public static Texture bgTexture0;
+    public static Texture bgTexture1;
     public static Texture buttonsTexture;
     //public static TextureAtlas atlas;  
       
     public static void load () {
+    	
         //String textureFile = "data/frogger.txt";
         //atlas = new TextureAtlas(Gdx.files.internal(textureFile), Gdx.files.internal("data"));
         redTexture = new Texture(Gdx.files.internal("data/jelly_red.png"));
@@ -28,17 +30,21 @@ public class Assets {
         yellowTexture = new Texture(Gdx.files.internal("data/jelly_yellow.png"));
         blackTexture = new Texture(Gdx.files.internal("data/jelly_black.png"));
         wallTexture = new Texture(Gdx.files.internal("data/wall0.png"));
-        bgTexture = new Texture(Gdx.files.internal("data/bg00.png"));
+        bgTexture0 = new Texture(Gdx.files.internal("data/bg00.png"));
+        bgTexture1 = new Texture(Gdx.files.internal("data/bg01.png"));
         buttonsTexture = new Texture(Gdx.files.internal(("data/button.png")));
     }
 
-    public static Texture getBgTexture(int level) {
+    public static Texture getBgTexture(int index) {
     	// TODO: add more BGs
-    	switch(level) {
+    	switch(index) {
 		case 0:
-			return bgTexture;
+			return bgTexture0;
+		case 1:
+			return bgTexture1;
 		default:
-			return bgTexture;
+			Gdx.app.debug("Assets", "Invalid backgroud texture " + index);
+			return null;
     	}
     }
     

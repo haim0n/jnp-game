@@ -8,7 +8,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -16,9 +15,9 @@ public class PlayScreen implements Screen, InputProcessor {
 
 	private static final String TAG = PlayScreen.class.getSimpleName();
 	
+	private Background background;
 	private Board board; // this is our world now
 	private JnpGame game;
-	private Sprite bgSprite; // TODO: can it be just a texure?
 	private TextureRegion resetButtonTextureR;
 	private int boardWidth;
 	private int boardHeight;
@@ -40,9 +39,8 @@ public class PlayScreen implements Screen, InputProcessor {
 		this.game = game;
 		// this.level = level;
 		board = new Board(config, this);
+		background = config.getBackground();
 		
-		Texture texture = config.getBgTexture();
-		bgSprite = new Sprite(texture);
 		Texture resetButtonsTexture = config.getResetButtonsTexture();
 		resetButtonTextureR = new TextureRegion(resetButtonsTexture, 0, 0, 256, 128);
 		
@@ -60,12 +58,10 @@ public class PlayScreen implements Screen, InputProcessor {
 		// first update
 		board.update(delta);
 		
-		// the render
-		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		// render
 		
-		// background
-		spriteBatch.draw(bgSprite, 0, 0, boardWidth, boardHeight);
+		// background (render & update)
+		background.render(delta, spriteBatch);
 		
 		// board
 		board.render(spriteBatch);
@@ -85,6 +81,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		this.boardWidth = width;
 		this.boardHeight = height;
 		board.setResolution(width, height);
+		background.setResolution(width, height);
 		cellWidth = board.getSpriteWidth();
 		cellHeight = board.getSpriteHeight();
 		uiThreshold = cellWidth/UI_FACTOR;
