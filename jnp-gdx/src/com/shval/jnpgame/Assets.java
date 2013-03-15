@@ -181,7 +181,7 @@ public class Assets {
 		return texture;
     }
 
-	public static Texture getButtonsTexture(int level) {
+	public static Texture getButtonsTexture() {
 			return buttonsTexture;
 	}
 
@@ -208,10 +208,4 @@ public class Assets {
 			return null;
 		}
 	}  
- 
-    /*
-    public static TextureRegion getFrame (String name, int index) {  
-        return atlas.findRegion(name, index);  
-    } 
-     */
 }
