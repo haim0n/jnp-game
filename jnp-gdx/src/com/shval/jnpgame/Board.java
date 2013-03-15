@@ -5,6 +5,7 @@ import static com.shval.jnpgame.Globals.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Timer;
 
 public class Board {
 	
@@ -25,6 +26,27 @@ public class Board {
 	// dummy "out of scope" cell, make it a wall
 	//static final Cell outOfScopeCell = new Cell(null, 0, 0 ,null , WALL, NONE);
 	static final Cell outOfScopeCell = Cell.createCell(-1, -1, null);
+	
+	private class WinTask extends Timer.Task {
+		@Override
+		public void run() {
+			screen.win();
+		}
+	}
+
+	private class DelayedSoundPlay extends Timer.Task {
+		
+		Sound sound;
+		
+		DelayedSoundPlay(Sound sound) {
+			this.sound = sound;
+		}
+		
+		@Override
+		public void run() {
+			sound.play(soundVolume);
+		}
+	}
 	
 	public Board(BoardConfig config, PlayScreen screen) {
 		this.ROWS = config.ROWS;
@@ -401,16 +423,16 @@ public class Board {
 		updateBoardPhysics();
 
 		if (stable) {// milestone is stable
-			if (attemptMerge())
-				sounds[SOUND_MERGE_START].play(soundVolume);
-			setNeighbours();
-		}
-
-
-		if (isWinPosition()) { // check only if something merged
-			Gdx.app.debug(TAG, "You win!");
-			sounds[SOUND_WIN].play(soundVolume);
-			screen.win();
+			if (attemptMerge()) {
+				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_START]), 0.1f);
+				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), 0.3f);
+				setNeighbours();
+			}
+			if (isWinPosition()) { // check only if something merged
+				Gdx.app.debug(TAG, "You win!");
+				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_WIN]), 0.7f);
+				Timer.schedule(new WinTask(), 1f);
+			}
 		}
 
 	}	
