@@ -68,8 +68,6 @@ public class Board {
 		
 		boardStateStack = new Cell[REVERT_DEPTH][COLS][ROWS];
 		
-		
-		
 	}
 
 	private void pushBoardState() {
@@ -424,8 +422,8 @@ public class Board {
 
 		if (stable) {// milestone is stable
 			if (attemptMerge()) {
-				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_START]), 0.1f);
-				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), 0.5f);
+				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_START]), 0.2f);
+				//Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), 0.3f);
 				setNeighbours();
 			}
 			if (isWinPosition()) { // check only if something merged

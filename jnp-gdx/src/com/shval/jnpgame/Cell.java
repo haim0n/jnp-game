@@ -451,7 +451,7 @@ public class Cell {
 		if (Yv < 0)
 			speed.setYv(Yv + GRAVITY * delta);
 		
-		Gdx.app.debug(TAG, "Yv = " + Yv);
+		//Gdx.app.debug(TAG, "Yv = " + Yv);
 		//Gdx.app.debug(TAG, "(" + x + ", " + y + "): new (dx, dy) = (" + newDx + ", " + newDy + ")");
 		
 		// milestone reached?
