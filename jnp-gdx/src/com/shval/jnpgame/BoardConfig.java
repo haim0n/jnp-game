@@ -1,9 +1,6 @@
 package com.shval.jnpgame;
 
 import static com.shval.jnpgame.Globals.*;
-
-import java.awt.Color;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -195,7 +192,7 @@ public class BoardConfig {
 			"x2200      xxx",
 			"x3311      xxx",
 			"x3311      xxx",
-			"xxR x Gxxx xxx",			
+			"xxr x Gxxx xxx",			
 			"xxxxxxxxxxxxxx",
 			},
 			{ // level 15
@@ -418,22 +415,138 @@ public class BoardConfig {
 	}
 
 	public Background getBackground() {
-		
-		// level 1:
 		Background background = new Background();
-		//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
 		
-		background.color.set(0.5f, 0.7f, 2.5f, 0);
-		// background.color.set(Color.blue); TODO: why doesnt it work !!!
-		// static 
-		int dx = 96 ;
-		background.addLayer(Assets.getBgTexture(1), 0, 0, dx, 128);
-		background.addLayer(Assets.getBgTexture(1), dx, 0, dx, 128);
-		background.addLayer(Assets.getBgTexture(1), 2 * dx, 0, dx, 128);
-		
-		//	dynamic
-		background.addLayer(Assets.getBgTexture(0), 0, 86, -15, 0, 128, 0, 100, 128);
-		background.addLayer(Assets.getBgTexture(0), 200, 86, -15, 0, 128, 0, 100, 128);
+		// background.color.set(Color.blue); TODO: why doesnt it work !!!		
+		switch (level) {
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+			// blue sky + clouds
+			
+			background.color.set(0.5f, 0.7f, 1f, 0);
+	
+			// static 
+			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
+			background.addLayer(Assets.getBgTexture(1), 0, 0, 96, 128);
+			background.addLayer(Assets.getBgTexture(1), 96, 0, 96, 128);
+			background.addLayer(Assets.getBgTexture(1), 2 * 96, 0, 96, 128);
+			
+			//	dynamic
+			background.addLayer(Assets.getBgTexture(0), 0, 86, -15, 0, 128, 0, 100, 128);
+			background.addLayer(Assets.getBgTexture(0), 200, 86, -15, 0, 128, 0, 100, 128);
+			break;
+			
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 13:			
+		case 14:
+		case 15:
+		case 16:
+			// stars in the night
+			
+			background.color.set(0.0f, 0.0f, 0f, 0);
+						
+			int stars = (int) ( 32 * (Math.random() + 2));
+			for (int i=0 ; i < stars; i++) {
+				int wrapX = (int) (16 * (1 + Math.random()));
+				int wrapY = (int) (16 * (1 + Math.random()));
+				float x = (float) (((double) (256 + wrapX)) * Math.random());
+				float y = (float) (((double) (256 + wrapY)) * Math.random());
+				float moment = (float) (90 * (1 + Math.random()));
+				float vX = -8f;
+				float vY = -32f;
+				int width = 8;
+				int height = 8;
+				background.addSprite(Assets.getSmallStarTexture(), x, y, vX, vY, wrapX, wrapY, width, height, moment);
+			
+			}
+			break;
+
+		case 9:
+		case 10:
+		case 11:
+		case 12:
+			// bald alien on grass
+
+			background.color.set(0.5f, 0.7f, 1f, 0);
+			
+			// mountains
+			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
+			/*
+			background.addLayer(Assets.getBgTexture(22), 0 * 64, 0, -1, 0, 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(22), 1 * 64, 0, -1, 0, 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(22), 2 * 64, 0, -1, 0, 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(22), 3 * 64, 0, -1, 0, 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(22), 4 * 64, 0, -1, 0, 64, 0, 64, 96);
+			*/
+			
+			// we'll try static mountains
+			background.addLayer(Assets.getBgTexture(22), 0 * 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(22), 1 * 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(22), 2 * 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(22), 3 * 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(22), 4 * 64, 0, 64, 96);
+			
+			// bald thing
+			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
+			background.addLayer(Assets.getBgTexture(30), 0 * 64, 32, -5, 0, 64, 0, 96, 128);
+			background.addLayer(Assets.getBgTexture(30), 3 * 64, 32, -5, 0, 64, 0, 96, 128);
+
+			// grass
+			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
+			background.addLayer(Assets.getBgTexture(21), 0 * 96, 0, -10, 0, 96, 0, 96, 64);
+			background.addLayer(Assets.getBgTexture(21), 1 * 96, 0, -10, 0, 96, 0, 96, 64);
+			background.addLayer(Assets.getBgTexture(21), 2 * 96, 0, -10, 0, 96, 0, 96, 64);
+			background.addLayer(Assets.getBgTexture(21), 3 * 96, 0, -10, 0, 96, 0, 96, 64);
+			
+			break;
+			
+		case 17:
+		case 18:
+		case 19:
+			// bald alien on snow
+
+			background.color.set(0.5f, 0.7f, 1f, 0);
+			
+			// mountains
+			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
+			/*
+			background.addLayer(Assets.getBgTexture(22), 0 * 64, 0, -1, 0, 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(22), 1 * 64, 0, -1, 0, 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(22), 2 * 64, 0, -1, 0, 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(22), 3 * 64, 0, -1, 0, 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(22), 4 * 64, 0, -1, 0, 64, 0, 64, 96);
+			*/
+			
+			// we'll try static mountains
+			background.addLayer(Assets.getBgTexture(52), 0 * 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(52), 1 * 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(52), 2 * 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(52), 3 * 64, 0, 64, 96);
+			background.addLayer(Assets.getBgTexture(52), 4 * 64, 0, 64, 96);
+			
+			// bald thing
+			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
+			background.addLayer(Assets.getBgTexture(30), 0 * 64, 32, -5, 0, 64, 0, 96, 128);
+			background.addLayer(Assets.getBgTexture(30), 2 * 64, 32, -5, 0, 64, 0, 96, 128);
+			background.addLayer(Assets.getBgTexture(30), 4 * 64, 32, -5, 0, 64, 0, 96, 128);
+
+			// snow
+			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
+			background.addLayer(Assets.getBgTexture(51), 0 * 96, 0, -10, 0, 96, 0, 96, 64);
+			background.addLayer(Assets.getBgTexture(51), 1 * 96, 0, -10, 0, 96, 0, 96, 64);
+			background.addLayer(Assets.getBgTexture(51), 2 * 96, 0, -10, 0, 96, 0, 96, 64);
+			background.addLayer(Assets.getBgTexture(51), 3 * 96, 0, -10, 0, 96, 0, 96, 64);
+			
+			break;
+			
+		default:
+			
+		}
 		return background;
 	}		
 	
