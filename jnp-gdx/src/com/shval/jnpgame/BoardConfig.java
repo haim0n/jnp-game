@@ -28,7 +28,7 @@ public class BoardConfig {
 			},
 			{ // level 1			
 			"xxxxxxxxxxxxxx",
-//			"x            x",
+			"x            x",
 			"x            x",
 			"x            x",
 			"x            x",

@@ -2,6 +2,8 @@ package com.shval.jnpgame;
 
 import static com.shval.jnpgame.Globals.*;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -20,6 +22,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	private JnpGame game;
 	private Sound buttonSound;
 	private float soundVolume; // in [0,1]
+	private ArrayList<Button> buttons;
 	private int boardWidth;
 	private int boardHeight;
 	SpriteBatch spriteBatch;
@@ -48,16 +51,21 @@ public class PlayScreen implements Screen, InputProcessor {
 		int cellHeight = board.getSpriteHeight();
 
 		Gdx.app.debug(TAG, "cellwidth is:" + cellWidth);
-		
-		// create the button with default location params
-		resetButton = new Button(0, 0,
-		 10, 10, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE);
+		initButtons();
 		
 		// ex BoardView
 		spriteBatch = new SpriteBatch();
 		camera = new OrthographicCamera(10, 7);
         camera.position.set(5, 3.5f, 0);
         camera.update();
+	}
+
+	private void initButtons() {
+		buttons = new ArrayList<Button>();
+		// reset button
+		buttons.add(new Button(board.getCols() - 4, 0,  3, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE));
+		// revert button
+		buttons.add(new Button(board.getCols() - 5, 0,  1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC));
 	}
 	
 	@Override
@@ -76,10 +84,10 @@ public class PlayScreen implements Screen, InputProcessor {
 		board.render(spriteBatch);
 
 		// buttons
-		int COLS = board.getCols();
-//		spriteBatch.draw(resetButtonTextureR, (COLS - 4) * cellWidth, 0 * cellHeight,
-//				3 * cellWidth, cellHeight * 6 / 8);
-		resetButton.render(spriteBatch);
+		for (Button button: buttons) {
+			button.render(spriteBatch);	
+		}
+		
 		spriteBatch.end();
 	}
 
@@ -94,11 +102,9 @@ public class PlayScreen implements Screen, InputProcessor {
 		cellWidth = board.getSpriteWidth();
 		cellHeight = board.getSpriteHeight();
 		uiThreshold = cellWidth/UI_FACTOR;
-		//resetButton.move((board.getCols() - 4) * cellWidth, 0 * cellHeight,
-// 3 * cellWidth, cellHeight * 6 / 8);
-		//resetButton.setWidth(3 * cellWidth);
-		resetButton.setPosition((board.getCols() - 4) * cellWidth, 0 * cellHeight);
-
+		for (Button button: buttons) {
+			button.setResolution(cellWidth, cellHeight);	
+		}
 		// the action begins (here, and not in Screen's constructor!)
 		board.start();
 	}
