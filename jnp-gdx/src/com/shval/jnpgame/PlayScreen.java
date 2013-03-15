@@ -149,13 +149,19 @@ public class PlayScreen implements Screen, InputProcessor {
 		int x = xDown/cellWidth;
 		int y = yDown/cellHeight;
 		
+		int max_col = board.getCols() - 1;
+		int max_row = board.getRows() - 1;
+		
 		Gdx.app.debug(TAG, "Action down spotted. boardHeight: " + boardHeight + ". x = " + x + " y = " + y);
-		if (y == 0 && x >= board.getCols() - 4 && x <= board.getCols() - 2)
+		if (y == 0 && x >= max_col - 3 && x <= max_col - 1)
 			game.reset();
-		if (y == 0 && x == board.getCols() - 6)
+		if (y == 0 && x == max_col - 5)
 			board.revert();
-		if (y == 0 && x == 0) // cheat
-			win();		
+		if (y == max_row && x == 0)
+			previousLevel();
+		if (y == max_row && x == max_col)
+			nextLevel();
+		
 		down = true;
 		return true;
 	}
@@ -202,8 +208,16 @@ public class PlayScreen implements Screen, InputProcessor {
 		return false;
 	}
 
+	public void nextLevel() {
+		game.nextLevel();
+	}
+
+	public void previousLevel() {
+		game.previousLevel();
+	}
+
 	public void win() {
-		game.win();
+		nextLevel();
 	}
 
 }

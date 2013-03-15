@@ -50,7 +50,7 @@ public class Cell {
 	}
 	
 	private Cell(int x, int y) {
-		this.type = WALL; // this is very comfortable for drawing board boarders
+		this.type = WALL; // this is very comfortable for drawing board borders
 		this.rawTexture = null;
 		this.anchoredTo = NONE; 
 		this.x = x;
@@ -193,9 +193,9 @@ public class Cell {
 		Cell c;
 		int t0, t1, t2;
 		int topology;
-		
+
 		Board board = jelly.getBoard();
-			
+		//Gdx.app.debug(TAG, "Setting neighbors: " + x + ", " + y );			
 		// region:
 		// x 0
 		// 0 0
@@ -214,7 +214,7 @@ public class Cell {
 		i = location[0];
 		j = location[1];
 		
-	//	Gdx.app.debug(TAG, "Setting neighbors: " + x + ", " + y + " : topology = " + topology
+		//Gdx.app.debug(TAG, "Setting neighbors: " + x + ", " + y + " : topology = " + topology
 //						+ ", i = " + i + ", j= " + j);
 		textureRegions[0][1] = new TextureRegion(rawTexture, 8 + i * 48, 8 + j * 48, 48 / 2, 48 / 2);		
 		

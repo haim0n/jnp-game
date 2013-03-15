@@ -87,6 +87,7 @@ public class Assets {
     	Texture texture;
     	
 		switch(level) {
+		case 0:
 		case 1:
 		case 2:
 		case 3:
@@ -117,6 +118,7 @@ public class Assets {
 			
 		default:
 			texture = null;
+			Gdx.app.debug("Assets", "Invalid wall texture for level " + level);
 			break;
 		}
 		
@@ -152,8 +154,9 @@ public class Assets {
 			break;
 		}
 
-		if (texture == null)
+		if (texture == null) {
 			return null;
+		}
 		
 		return texture;
     }

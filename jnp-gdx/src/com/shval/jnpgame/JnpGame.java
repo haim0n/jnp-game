@@ -14,7 +14,7 @@ public class JnpGame extends Game {
 			
 	@Override
 	public void create() {
-		currentLevel = 1;
+		currentLevel = 0;
 		
 		// load assets
 		Assets.load();
@@ -38,7 +38,7 @@ public class JnpGame extends Game {
 		playLevel(currentLevel);
 	}
 	
-	public void win() {
+	public void nextLevel() {
 		currentLevel++;
 		if (currentLevel > MAX_LEVELS) {
 			Gdx.app.debug(TAG, "You win game. Congradulations!!");
@@ -46,8 +46,18 @@ public class JnpGame extends Game {
 		}
 		
 		playLevel(currentLevel);
+	}
+	
+	public void previousLevel() {
+		currentLevel--;
+		if (currentLevel < 0) {
+			currentLevel = MAX_LEVELS;
+		}
+		
+		playLevel(currentLevel);
 
 	}
+	
 	
 	@Override
 	public void dispose() {
