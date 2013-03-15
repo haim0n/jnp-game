@@ -21,12 +21,12 @@ public class Cell {
 	private float dyFromMilestone;
 	private Speed speed;	// the speed with its directions
 	private Jelly jelly;
-	//private boolean isFixed; this is redudant only walls are really fixed
 	public int anchoredTo;
 	private int type;
 	private boolean scanFlag; // was this cell encountered in current board scanning
 	private static final int CELL_SIZE = 100; // 
 	private static final float SPEED = 800;
+	private static final float GRAVITY = -6600;
 	private int spriteWidth;
 	private int spriteHeight;
 	private boolean isResolutionSet = false;
@@ -445,10 +445,15 @@ public class Cell {
 		// update speed & location
 		float newDx = dxFromMilestone + (speed.getXv() * delta);
 		float newDy = dyFromMilestone + (speed.getYv() * delta);
-		/*
-		if (false)
-			Gdx.app.debug(TAG, "(" + x + ", " + y + "): new (dx, dy) = (" + newDx + ", " + newDy + ")");
-		*/
+		
+		// gravity
+		float Yv = speed.getYv();
+		if (Yv < 0)
+			speed.setYv(Yv + GRAVITY * delta);
+		
+		Gdx.app.debug(TAG, "Yv = " + Yv);
+		//Gdx.app.debug(TAG, "(" + x + ", " + y + "): new (dx, dy) = (" + newDx + ", " + newDy + ")");
+		
 		// milestone reached?
 		boolean isMilestone = false;
 		
@@ -516,6 +521,7 @@ public class Cell {
 		
 		
 		float vx = 0, vy = 0;
+		float oldVy = speed.getYv();
 		switch (dir) {
 		case LEFT:
 			vx = -SPEED;
@@ -524,7 +530,10 @@ public class Cell {
 			vx = SPEED;
 			break;
 		case DOWN:
-			vy = -SPEED;
+			if (oldVy == 0)
+				vy = -SPEED / 100; // gravity will take it from here
+			else
+				vy = oldVy; // again, gravity ... 
 			break;
 		case UP:
 			vy = SPEED;
