@@ -18,11 +18,8 @@ public class PlayScreen implements Screen, InputProcessor {
 	private Background background;
 	private Board board; // this is our world now
 	private JnpGame game;
-	
-	private TextureRegion resetButtonTextureR;
 	private Sound buttonSound;
 	private float soundVolume; // in [0,1]
-	
 	private int boardWidth;
 	private int boardHeight;
 	SpriteBatch spriteBatch;
@@ -47,8 +44,14 @@ public class PlayScreen implements Screen, InputProcessor {
 		buttonSound = config.getSound(SOUND_BUTTON);
 		soundVolume = config.getSoundVolume();
 		
-		Texture resetButtonsTexture = config.getResetButtonsTexture();
-		resetButtonTextureR = new TextureRegion(resetButtonsTexture, 0, 0, 256, 128);
+		int cellWidth = board.getSpriteWidth();
+		int cellHeight = board.getSpriteHeight();
+
+		Gdx.app.debug(TAG, "cellwidth is:" + cellWidth);
+		
+		// create the button with default location params
+		resetButton = new Button(0, 0,
+		 10, 10, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE);
 		
 		// ex BoardView
 		spriteBatch = new SpriteBatch();
@@ -74,9 +77,9 @@ public class PlayScreen implements Screen, InputProcessor {
 
 		// buttons
 		int COLS = board.getCols();
-		spriteBatch.draw(resetButtonTextureR, (COLS - 4) * cellWidth, 0 * cellHeight,
-				3 * cellWidth, cellHeight * 6 / 8);
-
+//		spriteBatch.draw(resetButtonTextureR, (COLS - 4) * cellWidth, 0 * cellHeight,
+//				3 * cellWidth, cellHeight * 6 / 8);
+		resetButton.render(spriteBatch);
 		spriteBatch.end();
 	}
 
@@ -91,6 +94,11 @@ public class PlayScreen implements Screen, InputProcessor {
 		cellWidth = board.getSpriteWidth();
 		cellHeight = board.getSpriteHeight();
 		uiThreshold = cellWidth/UI_FACTOR;
+		//resetButton.move((board.getCols() - 4) * cellWidth, 0 * cellHeight,
+// 3 * cellWidth, cellHeight * 6 / 8);
+		//resetButton.setWidth(3 * cellWidth);
+		resetButton.setPosition((board.getCols() - 4) * cellWidth, 0 * cellHeight);
+
 		// the action begins (here, and not in Screen's constructor!)
 		board.start();
 	}

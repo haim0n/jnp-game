@@ -411,7 +411,7 @@ public class BoardConfig {
 	}
 
 	public Texture getResetButtonsTexture() {
-		return Assets.getButtonsTexture(level);
+		return Assets.getButtonsTexture();
 	}
 
 	public Background getBackground() {

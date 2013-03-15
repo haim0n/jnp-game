@@ -1,12 +1,11 @@
-beatify app icon
+add Level Label in Playscreen
+add next/prev buttons in Playscreen
 set loglevel to be read from config file on startup.
 Win logic/screen
-render fixed jellies 
 dynamic b/g
 add revert/reset buttons. 
 add instructions
 add select level screen.
-add orientation as part of config. define it automatically using COLS/ROWS ratio
 compare COLS/ROWS ratio with runtime height/width ratio and compensate by removing/adding dummy level rows.
 compensate for cell width/height roundup errors
 calibrate speed/sensitivity
