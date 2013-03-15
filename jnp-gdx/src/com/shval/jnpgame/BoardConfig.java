@@ -2,6 +2,7 @@ package com.shval.jnpgame;
 
 import static com.shval.jnpgame.Globals.*;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
 public class BoardConfig {
@@ -547,6 +548,15 @@ public class BoardConfig {
 			
 		}
 		return background;
+	}
+
+	public Sound getSound(int soundID) {
+		return Assets.getSound(soundID);
+
+	}
+
+	public float getSoundVolume() {
+		return 0.5f; // in [0,1], TODO: get it ftom user
 	}		
 	
 }

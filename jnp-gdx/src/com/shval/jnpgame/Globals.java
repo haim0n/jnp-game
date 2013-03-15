@@ -33,7 +33,15 @@ public class Globals {
 	public static final int JELLY_YELLOW 	= 5;
 	public static final int MAX_COLORED_JELLY_TYPES = 6; 
 	// reserved ranged for futuristic space jellies
-	
 	// black jelly are mapped to type >= 100
 	public static final int JELLY_BLACK_MIN	= 100;
+	
+	// sounds
+	public static final int SOUND_FALL = 0;
+	public static final int SOUND_SLIDE = 1;
+	public static final int SOUND_MERGE_START = 2;
+	public static final int SOUND_MERGE_FINISH = 3;
+	public static final int MAX_BOARD_SOUNDS = 4;
+	
+	public static final int SOUND_BUTTON = 10;
 }

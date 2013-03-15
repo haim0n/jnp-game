@@ -3,6 +3,7 @@ package com.shval.jnpgame;
 import com.shval.jnpgame.BoardConfig;
 import static com.shval.jnpgame.Globals.*;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Board {
@@ -18,6 +19,9 @@ public class Board {
 	int cellHeight;
 	PlayScreen screen;
 	
+	private Sound[] sounds;
+	private float soundVolume; // in [0,1]
+	
 	// dummy "out of scope" cell, make it a wall
 	//static final Cell outOfScopeCell = new Cell(null, 0, 0 ,null , WALL, NONE);
 	static final Cell outOfScopeCell = Cell.createCell(-1, -1, null);
@@ -27,6 +31,11 @@ public class Board {
 		this.COLS = config.COLS;
 		this.stable = true;
 		this.screen = screen;
+		
+		soundVolume = config.getSoundVolume();
+		sounds = new Sound[MAX_BOARD_SOUNDS];
+		for (int i = 0; i < MAX_BOARD_SOUNDS; i++)
+			sounds[i] = config.getSound(i);
 		
 		cells = new Cell[COLS][ROWS];
 		for (int x = 0; x < COLS; x++) {
@@ -165,7 +174,8 @@ public class Board {
 	}
 		
 	public void start() {
-		attemptMerge(); 
+		attemptMerge();
+		setNeighbours();
 		updateBoardPhysics();
 	}
 
@@ -208,6 +218,10 @@ public class Board {
 			return false;
 		
 		boolean ret = attemptMove(dir, cell);
+		
+		if (ret)
+			sounds[SOUND_SLIDE].play(soundVolume);
+		
 		return ret;
 	}
 	
@@ -316,21 +330,22 @@ public class Board {
 			}
 		}
 		
-		if (merge) {
-			Gdx.app.debug(TAG, "Setting neighbors");
-			for (int x = 0; x < COLS ; x++) {
-				for (int y = 0; y < ROWS ; y++) {
-					Cell cell = cells[x][y];
-					
-					// moving cell do not merge
-					if (cell == null || cell.isMoving())
-						continue;
-					
-					cell.setNeighbours();
-				}
+		return merge;
+	}
+	
+	private void setNeighbours() {
+		Gdx.app.debug(TAG, "Setting neighbors");
+		for (int x = 0; x < COLS ; x++) {
+			for (int y = 0; y < ROWS ; y++) {
+				Cell cell = cells[x][y];
+				
+				// moving cells do not merge
+				if (cell == null || cell.isMoving())
+					continue;
+				
+				cell.setNeighbours();
 			}
 		}
-		return merge;
 	}
 	
 	// returns true if moving
@@ -385,13 +400,19 @@ public class Board {
 		
 		// trigger board dynamics (not to be confused with on tick update) 
 		updateBoardPhysics();
-		
-		if (attemptMerge()) {
-			if (isWinPosition()) { // check only if something merged
-				Gdx.app.debug(TAG, "You win!");
-				screen.win();
-			}
-		}		
+
+		if (stable) {// milestone is stable
+			if (attemptMerge())
+				sounds[SOUND_MERGE_START].play(soundVolume);
+			setNeighbours();
+		}
+
+
+		if (isWinPosition()) { // check only if something merged
+			Gdx.app.debug(TAG, "You win!");
+			screen.win();
+		}
+
 	}	
 	
 	private void updateBoardPhysics() {
@@ -402,11 +423,21 @@ public class Board {
 				if (cell == null)
 					continue;
 				cell.stopHorizontal();
+				
 				// can the cell fall
-				if (!attemptMove(DOWN, cell))
-					cell.stopVertical();
-				else
+				
+				if (cell.isMoving()) {
+					if (!attemptMove(DOWN, cell)) {
+						// cell just hit ground
+						cell.stopVertical();
+						sounds[SOUND_FALL].play(soundVolume);
+					} else {
+						allStill = false;
+					}
+				} else if (attemptMove(DOWN, cell)) {
+					// cells begins to fall
 					allStill = false;
+				}
 			}
 		}
 		stable = allStill;

@@ -5,6 +5,7 @@ import static com.shval.jnpgame.Globals.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,7 +18,11 @@ public class PlayScreen implements Screen, InputProcessor {
 	private Background background;
 	private Board board; // this is our world now
 	private JnpGame game;
+	
 	private TextureRegion resetButtonTextureR;
+	private Sound buttonSound;
+	private float soundVolume; // in [0,1]
+	
 	private int boardWidth;
 	private int boardHeight;
 	SpriteBatch spriteBatch;
@@ -39,6 +44,8 @@ public class PlayScreen implements Screen, InputProcessor {
 		// this.level = level;
 		board = new Board(config, this);
 		background = config.getBackground();
+		buttonSound = config.getSound(SOUND_BUTTON);
+		soundVolume = config.getSoundVolume();
 		
 		Texture resetButtonsTexture = config.getResetButtonsTexture();
 		resetButtonTextureR = new TextureRegion(resetButtonsTexture, 0, 0, 256, 128);
