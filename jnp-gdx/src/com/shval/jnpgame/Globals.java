@@ -41,7 +41,8 @@ public class Globals {
 	public static final int SOUND_SLIDE = 1;
 	public static final int SOUND_MERGE_START = 2;
 	public static final int SOUND_MERGE_FINISH = 3;
-	public static final int MAX_BOARD_SOUNDS = 4;
+	public static final int SOUND_WIN = 4;
+	public static final int MAX_BOARD_SOUNDS = 5;
 	
 	public static final int SOUND_BUTTON = 10;
 }

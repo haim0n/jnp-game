@@ -46,7 +46,7 @@ public class Board {
 		
 		boardStateStack = new Cell[REVERT_DEPTH][COLS][ROWS];
 		
-		jellifyBoard();
+		
 		
 	}
 
@@ -86,9 +86,7 @@ public class Board {
 		Gdx.app.debug(TAG, "Reverting: boardStateIndex = " + boardStateIndex);
 		if (popBoardState()) {
 			stable =  true;
-			jellifyBoard();
-			attemptMerge();
-			updateBoardPhysics();
+			start();
 		}
 	}
 	
@@ -174,6 +172,7 @@ public class Board {
 	}
 		
 	public void start() {
+		jellifyBoard();
 		attemptMerge();
 		setNeighbours();
 		updateBoardPhysics();
@@ -410,6 +409,7 @@ public class Board {
 
 		if (isWinPosition()) { // check only if something merged
 			Gdx.app.debug(TAG, "You win!");
+			sounds[SOUND_WIN].play(soundVolume);
 			screen.win();
 		}
 

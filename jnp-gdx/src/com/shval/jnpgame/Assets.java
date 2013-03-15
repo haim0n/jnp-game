@@ -38,6 +38,7 @@ public class Assets {
     public static Sound mergeStartSound;
     public static Sound mergeFinishSound;
     public static Sound buttonSound;
+    public static Sound winSound;
     
       
     public static void load () {
@@ -72,7 +73,7 @@ public class Assets {
         slideSound = Gdx.audio.newSound(Gdx.files.internal("data/1.wav"));
         mergeStartSound = Gdx.audio.newSound(Gdx.files.internal("data/3.wav"));
         mergeFinishSound = Gdx.audio.newSound(Gdx.files.internal("data/2.wav"));
-        
+        winSound = Gdx.audio.newSound(Gdx.files.internal("data/10.wav"));
         buttonSound = Gdx.audio.newSound(Gdx.files.internal("data/12.wav"));
     }
 
@@ -198,6 +199,8 @@ public class Assets {
 			return mergeStartSound;
 		case (SOUND_MERGE_FINISH):
 			return mergeFinishSound;
+		case (SOUND_WIN):
+			return winSound;
 		case (SOUND_BUTTON):
 			return buttonSound;
 		default: 
