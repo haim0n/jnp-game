@@ -477,6 +477,11 @@ public class BoardConfig {
 				background.addSprite(Assets.getSmallStarTexture(), x, y, vX, vY, wrapX, wrapY, width, height, moment);
 			
 			}
+			// rocky mountains
+			background.addLayer(Assets.getBgTexture(1), 0, 0, 96, 128);
+			background.addLayer(Assets.getBgTexture(1), 96, 0, 96, 128);
+			background.addLayer(Assets.getBgTexture(1), 2 * 96, 0, 96, 128);
+			
 			break;
 
 		case 9:
