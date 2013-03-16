@@ -26,6 +26,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	private int boardHeight;
 	SpriteBatch spriteBatch;
 	private OrthographicCamera camera;
+	private boolean isPrevRevertable;
 	
 	// UI
 	private final int UI_FACTOR = 8; // higher is more sensitive
@@ -51,6 +52,9 @@ public class PlayScreen implements Screen, InputProcessor {
 		
 		String text = "Level " + config.getLevel();
 		levelLabel = new JNPLabel(text, board.getCols() / 2 - text.length() / 6 , board.getRows() - 1);
+		
+		this.isPrevRevertable = false;
+		
 		// ex BoardView
 		spriteBatch = new SpriteBatch();
 		camera = new OrthographicCamera(10, 7);
@@ -60,14 +64,22 @@ public class PlayScreen implements Screen, InputProcessor {
 
 	private void initButtons() {
 		buttons = new ArrayList<Button>();
+		Button butt;
+		float fineOffset = 0.2f;
+		
 		// reset button
-		buttons.add(new Button(board.getCols() - 4, 0,  3, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE, new String("Reset")));
-		// revert button
-		buttons.add(new Button(board.getCols() - 6, 0,  1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC, null));
+		buttons.add(new Button(board.getCols() - 4, 0 - fineOffset, 3, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE, new String("Reset"), new String("btnReset")));
+		
 		// next button
-		buttons.add(new Button(board.getCols() - 1, board.getRows() - 1, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_RIGHT, null));
+		buttons.add(new Button(board.getCols() - 1, board.getRows() - 1 + fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_RIGHT, null, new String("btnNext")));
+		
 		// prev button
-		buttons.add(new Button(0, board.getRows() - 1, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_LEFT, null));
+		buttons.add(new Button(0, board.getRows() - 1 + fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_LEFT, null, new String("btnPrevious")));
+
+		// revert button
+		butt = new Button(board.getCols() - 6, 0 - fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE, null, new String("btnRevert"));
+		butt.setIsEnabled(false);
+		buttons.add(butt);
 
 	}
 	
@@ -86,6 +98,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		// board
 		board.render(spriteBatch);
 
+		updateRevertIcon();		
 		// buttons
 		for (Button button: buttons) {
 			button.render(spriteBatch);	
@@ -97,6 +110,29 @@ public class PlayScreen implements Screen, InputProcessor {
 		spriteBatch.end();
 	}
 
+	private void updateRevertIcon() {
+		boolean isRevertable = board.isRevertable();
+		if (isRevertable && !isPrevRevertable) {// just turned revertable
+			Button button = getButtonById("btnRevert");
+			button.setIconType(Button.ICON_ARROW_CIRC);
+			button.setIsEnabled(true);
+		}
+		if (!isRevertable && isPrevRevertable) {// just turned un-revertable
+			Button button = getButtonById("btnRevert");
+			button.setIconType(Button.ICON_NONE);
+			button.setIsEnabled(false);
+		} 
+		isPrevRevertable = isRevertable;
+	}
+	
+	Button getButtonById(String id) {
+		for (Button b: buttons) {
+			if (id.equals(b.getId()))
+				return b;
+		}
+		return null;
+	}
+	
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
@@ -174,24 +210,37 @@ public class PlayScreen implements Screen, InputProcessor {
 		// here (0, 0) is in the upper left, thats nasty
 		yDown = boardHeight - screenY;
 		 
-		
-		int x = xDown/cellWidth;
-		int y = yDown/cellHeight;
-		
-		int max_col = board.getCols() - 1;
-		int max_row = board.getRows() - 1;
+		float x = (float) xDown/ (float) cellWidth;
+		float y = (float) yDown/ (float) cellHeight;
 		
 		Gdx.app.debug(TAG, "Action down spotted. boardHeight: " + boardHeight + ". x = " + x + " y = " + y);
-		if (y == 0 && x >= max_col - 3 && x <= max_col - 1)
-			board.start();
-		if (y == 0 && x == (max_col - 5))
-			board.revert();
-		if (y == max_row && x == 0)
-			previousLevel();
-		if (y == max_row && x == max_col)
-			nextLevel();
+
+		// ask buttons
+		String type = null;
+		for (Button butt: buttons) {
+			if (butt.isPressed(x, y)) {
+				type = butt.getId();
+				break;
+			}
+		}
 		
-		down = true;
+		if (type == null) { // no button pressed
+			down = true;
+			return true;
+		}
+		
+		// button pressed - who?
+		buttonSound.play(soundVolume);
+		
+		if (type.equals(new String("btnReset"))) // TODO: implement buttons with cb like humans
+			board.start();	
+		if (type.equals(new String("btnRevert")))
+			board.revert();
+		if (type.equals(new String("btnPrevious")))
+			game.previousLevel();
+		if (type.equals(new String("btnNext")))
+			game.nextLevel();
+
 		return true;
 	}
 
@@ -237,16 +286,8 @@ public class PlayScreen implements Screen, InputProcessor {
 		return false;
 	}
 
-	public void nextLevel() {
-		game.nextLevel();
-	}
-
-	public void previousLevel() {
-		game.previousLevel();
-	}
-
 	public void win() {
-		nextLevel();
+		game.nextLevel();
 	}
 
 }

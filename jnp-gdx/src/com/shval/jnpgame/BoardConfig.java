@@ -469,7 +469,7 @@ public class BoardConfig {
 				int wrapY = (int) (16 * (1 + Math.random()));
 				float x = (float) (((double) (256 + wrapX)) * Math.random());
 				float y = (float) (((double) (256 + wrapY)) * Math.random());
-				float moment = (float) (90 * (1 + Math.random()));
+				float moment = (float) (75 * (4 + Math.random()));
 				float vX = -8f;
 				float vY = -32f;
 				int width = 8;
@@ -545,9 +545,9 @@ public class BoardConfig {
 			
 			// bald thing
 			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
-			background.addLayer(Assets.getBgTexture(30), 0 * 64, 32, -5, 0, 64, 0, 96, 128);
-			background.addLayer(Assets.getBgTexture(30), 2 * 64, 32, -5, 0, 64, 0, 96, 128);
-			background.addLayer(Assets.getBgTexture(30), 4 * 64, 32, -5, 0, 64, 0, 96, 128);
+			background.addLayer(Assets.getBgTexture(30), 0 * 64, 32, -5, 0, 128, 0, 96, 128);
+			background.addLayer(Assets.getBgTexture(30), 2 * 64, 32, -5, 0, 128, 0, 96, 128);
+			background.addLayer(Assets.getBgTexture(30), 4 * 64, 32, -5, 0, 128, 0, 96, 128);
 
 			// snow
 			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)

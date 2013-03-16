@@ -508,4 +508,9 @@ public class Board {
 	}
 	
 	
+	public boolean isRevertable() {
+		return (boardStateIndex > 0);
+	}
+	
+	
 }

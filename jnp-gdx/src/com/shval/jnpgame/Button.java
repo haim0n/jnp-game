@@ -15,9 +15,10 @@ public class Button {
 	private TextureRegion icon; 			// this one is optional - provide it to draw buttons with icons
 	private JNPLabel caption;				// button text
 	private float width; 					// 1 - means circular button, >1 --> oval button. units are in cells
-	private int x, y;  						// lower left corner
-	private int type;
-	private int cellWidth, cellHeight;
+	private float x, y;  						// lower left corner
+	private String id;
+	private float cellWidth, cellHeight;
+	private boolean isEnabled;
 	
 	private Texture allButtonsTexture;
 	private Texture allButtonIconsTexture;
@@ -35,17 +36,19 @@ public class Button {
 	public static final int ICON_ARROW_UP 		= 3;
 	public static final int ICON_ARROW_DOWN		= 4;
 	public static final int ICON_ARROW_CIRC  	= 5;
-	
+		
 	// width in cellSizes
-	public Button(int x, int y, float width, int type, int icon, String caption) {
+	public Button(float x, float y, float width, int type, int icon, String caption, String id) {
 		this.x = x;
 		this.y = y;
-		this.type = type;
+		this.id = id;
 		this.width = width;
-		initButtonTextures(x, y, type, width);
+		this.id = id;
+		this.isEnabled = true;
+		initButtonTextures(type, width);
 		setIconType(icon);
 		if (caption != null)
-			this.caption = new JNPLabel(caption, x + (width - (float) caption.length() / 3) / 2, (float) y);
+			this.caption = new JNPLabel(caption, x + (width - (float) caption.length() / 3) / 2, y);
 		Gdx.app.debug(TAG, "x" + x + ", y" + y);
 	}
 	
@@ -81,7 +84,7 @@ public class Button {
 		this.icon = new TextureRegion(allButtonIconsTexture, iconSizePx * i, iconSizePx * j, iconSizePx, iconSizePx);		
 	}
 	
-	private void initButtonTextures(int x, int y, int buttonType, float width) {
+	private void initButtonTextures(int buttonType, float width) {
 		allButtonsTexture = Assets.getButtonsTexture();
 		allButtonIconsTexture = Assets.getButtonIconsTexture();
 		
@@ -105,8 +108,8 @@ public class Button {
 	// TODO: figure out how to merge several textures into one entity
 	public void render(SpriteBatch spriteBatch) {
 		int graphicX, graphicY;
-		graphicX = x * cellWidth;
-		graphicY = y * cellHeight;
+		graphicX = (int) (x * cellWidth);
+		graphicY = (int) (y * cellHeight);
 		
 		spriteBatch.draw(lowerLeftCorner, graphicX, graphicY, width * cellWidth - cellWidth/2, cellHeight/2);
 		spriteBatch.draw(upperLeftCorner, graphicX, graphicY + cellHeight/2, width * cellWidth - cellWidth/2, cellHeight/2);
@@ -121,5 +124,32 @@ public class Button {
 					iconSizePx * cellHeight / 48);
 		}
 		
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public boolean isPressed(float eventX, float eventY) {
+		Gdx.app.debug(TAG, "Trying to press button " + id);
+		Gdx.app.debug(TAG, "EventX/Y = " + eventX + ", " + eventY + " x/y = " + x + ", " + y + " width = " + width);
+		if (!isEnabled) {
+			Gdx.app.debug(TAG, "Disabled");
+			return false;
+		}
+		if (eventX < x || eventX >= x + width) {
+			Gdx.app.debug(TAG, "Out of x scope");
+			return false;
+		}
+		if (eventY < y || eventY >= y + 1) { // TODO: add button height
+			Gdx.app.debug(TAG, "Out of y scope");
+			return false;
+		}
+		Gdx.app.debug(TAG, "Pressed");
+		return true;
+	}
+
+	public void setIsEnabled(boolean b) {
+		isEnabled = b;
 	}
 }
