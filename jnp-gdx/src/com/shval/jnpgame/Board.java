@@ -13,6 +13,7 @@ public class Board {
 	private final int ROWS, COLS;
 	private final int REVERT_DEPTH = 3;
 	private Cell cells[][];
+	private Cell initialBoard[][];
 	private Cell boardStateStack[][][];
 	private int boardStateIndex;
 	private boolean stable;
@@ -51,7 +52,6 @@ public class Board {
 	public Board(BoardConfig config, PlayScreen screen) {
 		this.ROWS = config.ROWS;
 		this.COLS = config.COLS;
-		this.stable = true;
 		this.screen = screen;
 		
 		soundVolume = config.getSoundVolume();
@@ -59,57 +59,83 @@ public class Board {
 		for (int i = 0; i < MAX_BOARD_SOUNDS; i++)
 			sounds[i] = config.getSound(i);
 		
-		cells = new Cell[COLS][ROWS];
+		
+		initialBoard = new Cell[COLS][ROWS];
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
-				cells[x][y] = Cell.createCell(x, y, config);
+				initialBoard[x][y] = Cell.createCell(x, y, config);
 			}
 		}
 		
+		cells = new Cell[COLS][ROWS];
 		boardStateStack = new Cell[REVERT_DEPTH][COLS][ROWS];
+		for (int i = 0; i <REVERT_DEPTH; i++)
+			boardStateStack[i] = new Cell[COLS][ROWS];
 		
 	}
 
-	private void pushBoardState() {
+	private void copyBoardState(Cell dst[][], Cell src[][]) {
+		for (int x = 0; x < COLS; x++) {
+			for (int y = 0; y < ROWS; y++) {
+				Cell cell = src[x][y];
+				if (cell != null) {
+					//Gdx.app.debug(TAG, "Coping cell " + x + ", " + y);
+					dst[x][y] = new Cell(cell);
+				} else {
+					dst[x][y] = null;
+				}
+			}
+		}		
+	}
+	
+	private void pushCurrentBoardState() {
+		pushBoardState(cells);
+	}
+	
+	private void pushBoardState(Cell[][] state) {
 		Gdx.app.debug(TAG, "Pushing: boardStateIndex = " + boardStateIndex);
 		if (boardStateIndex == REVERT_DEPTH) {
 			for (int i = 0; i < REVERT_DEPTH - 1; i++) {
-				boardStateStack[i] = boardStateStack[i+1];
+				copyBoardState(boardStateStack[i], boardStateStack[i+1]); // TODO: avoid copying using head & tail
 			}
 			boardStateIndex--;
 		}
 		
-		Cell stackedCells[][] = new Cell[COLS][ROWS];
-		for (int x = 0; x < COLS; x++) {
-			for (int y = 0; y < ROWS; y++) {
-				Cell cell = cells[x][y];
-				if (cell != null)
-					stackedCells[x][y] = new Cell(cells[x][y]);
-			}
-		}
-		boardStateStack[boardStateIndex] = stackedCells;
+		copyBoardState(boardStateStack[boardStateIndex], state);
 		boardStateIndex++;
 	}
 	
 
-	// returns false if stack empty
-	private boolean popBoardState() {
+	// returns null if stack empty
+	private Cell[][] popBoardState() {
 		if (boardStateIndex == 0)
-			return false;
-		boardStateIndex--;
-		cells = boardStateStack[boardStateIndex];
-		return true;
+			return null;
+		boardStateIndex--; 
+		return boardStateStack[boardStateIndex];
 	}
-
 
 	public void revert() {
 		Gdx.app.debug(TAG, "Reverting: boardStateIndex = " + boardStateIndex);
-		if (popBoardState()) {
-			stable =  true;
-			start();
+		Cell[][] state = popBoardState();
+		if (state != null) {
+			startFrom(state);
 		}
 	}
 	
+	public void start() {
+		Gdx.app.debug(TAG, "Starting");
+		startFrom(initialBoard);		
+	}
+	
+	private void startFrom(Cell[][] state) {
+		copyBoardState(cells, state);
+		stable = true;
+		jellifyBoard();
+		attemptMerge();
+		setNeighbours();
+		updateBoardPhysics();
+	}
+
 	public int getRows() {
 		return ROWS;
 	}
@@ -170,7 +196,6 @@ public class Board {
 	}
 	
 	public void setResolution(int boardWidth, int boardHeight) {
-
 		// not necessarily square
 		// TODO: try using floats
 		this.cellWidth = (int) Math.ceil((float)boardWidth / (float)COLS);
@@ -182,21 +207,18 @@ public class Board {
 			
 		Gdx.app.debug(TAG, "Sprite size = " + cellWidth + " x " + cellHeight);
 		Gdx.app.debug(TAG, "Board size = " + boardWidth + " x " + boardHeight);
+		
+		// set resolution to cells in initialBoard
+		// hope that start() will be called after serResolution
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
-				Cell cell = cells[x][y];
+				Cell cell = initialBoard[x][y];
 				if (cell != null)
 					cell.setResolution(cellWidth, cellHeight);
 			}
 		}
 	}
 		
-	public void start() {
-		jellifyBoard();
-		attemptMerge();
-		setNeighbours();
-		updateBoardPhysics();
-	}
 
 	public Cell getCell(int x, int y) {
 		if (x < 0 || x >= COLS || y < 0 || y >= ROWS) {
@@ -239,7 +261,7 @@ public class Board {
 		boolean ret = attemptMove(dir, cell);
 		
 		if (ret)
-			sounds[SOUND_SLIDE].play(soundVolume);
+			sounds[SOUND_SLIDE].play(soundVolume / 2); // sliding is quieter
 		
 		return ret;
 	}
@@ -374,7 +396,7 @@ public class Board {
 		if(cell.canMove(dir)) {
 			resetAllScanFlags();
 			if (stable) { // just swithched from stable to non stable
-				pushBoardState();
+				pushCurrentBoardState();
 				stable = false;
 			}
 			cell.move(dir);

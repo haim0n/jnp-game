@@ -180,7 +180,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		
 		Gdx.app.debug(TAG, "Action down spotted. boardHeight: " + boardHeight + ". x = " + x + " y = " + y);
 		if (y == 0 && x >= max_col - 3 && x <= max_col - 1)
-			game.reset();
+			board.start();
 		if (y == 0 && x == (max_col - 5))
 			board.revert();
 		if (y == max_row && x == 0)

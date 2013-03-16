@@ -33,11 +33,7 @@ public class JnpGame extends Game {
 		config.setLevel(level);
 		setScreen(new PlayScreen(config, this));		
 	}
-	
-	public void reset() {
-		playLevel(currentLevel);
-	}
-	
+		
 	public void nextLevel() {
 		currentLevel++;
 		if (currentLevel > MAX_LEVELS) {
