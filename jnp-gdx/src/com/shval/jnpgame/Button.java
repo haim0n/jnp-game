@@ -48,7 +48,7 @@ public class Button {
 		initButtonTextures(type, width);
 		setIconType(icon);
 		if (caption != null)
-			this.caption = new JNPLabel(caption, x + (width - (float) caption.length() / 3) / 2, y);
+			this.caption = new JNPLabel(caption, x + (width - (float) caption.length() / 3) / 2, y, false);
 		Gdx.app.debug(TAG, "x" + x + ", y" + y);
 	}
 	

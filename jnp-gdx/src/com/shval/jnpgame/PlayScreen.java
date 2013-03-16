@@ -10,6 +10,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class PlayScreen implements Screen, InputProcessor {
 
@@ -92,7 +93,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	private void initLabels(BoardConfig config) {
 		labels = new ArrayList<JNPLabel>();
 		String text = "Level " + config.getLevel();
-		JNPLabel label = new JNPLabel(text, board.getCols() / 2 - text.length() / 6 , board.getRows() - 1);
+		JNPLabel label = new JNPLabel(text, board.getCols() / 2 - text.length() / 6 , board.getRows() - 1, false);
 		labels.add(label);
 	}
 	
@@ -308,8 +309,9 @@ public class PlayScreen implements Screen, InputProcessor {
 	public void win() {
 		String text = "Excellent !!!";
 		// make it large by setting
-		JNPLabel label = new JNPLabel(text, board.getCols() / 4 - text.length() / 6 , board.getRows() / 4);
-		label.setResolution(cellWidth * 2, cellHeight * 2);
+		JNPLabel label = new JNPLabel(text, board.getCols() / 2 - text.length() / 6 , board.getRows() - 3, true);
+		label.setResolution(cellWidth, cellHeight);
+		
 		labels.add(label);
 		Button button = getButtonById("btnReset");
 		buttons.remove(button);

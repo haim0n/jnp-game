@@ -33,6 +33,7 @@ public class Assets {
     public static Texture smallStarTexture;
     public static Texture buttonIconsTexture;
     public static Texture fontTexture;
+    public static Texture msgFrameTexture;
     //public static TextureAtlas atlas;  
     
     public static Sound fallSound;
@@ -72,6 +73,7 @@ public class Assets {
         smallStarTexture = new Texture(Gdx.files.internal(("data/small_star.png")));
         buttonIconsTexture = new Texture(Gdx.files.internal(("data/bi.png")));
         fontTexture = new Texture(Gdx.files.internal(("data/font.png")));
+        msgFrameTexture = new Texture(Gdx.files.internal(("data/frame.png")));
         
         fallSound = Gdx.audio.newSound(Gdx.files.internal("data/0.wav"));
         slideSound = Gdx.audio.newSound(Gdx.files.internal("data/1.wav"));
@@ -197,6 +199,10 @@ public class Assets {
 
 	public static Texture getSmallStarTexture() {
 		return smallStarTexture;
+	}
+
+	public static Texture getMsgFrameTexture() {
+		return msgFrameTexture;
 	}
 
 	public static Sound getSound(int soundID) {

@@ -16,6 +16,9 @@ public class JNPLabel {
 	private float y;
 	private ArrayList<JNPChar> chars;
 	private String text;
+	private Texture frameTexture;
+	private int cellWidth;
+	private int cellHeight;
 	
 	private class JNPChar {
 		int graphicX;
@@ -40,11 +43,13 @@ public class JNPLabel {
 		}
 	}
 	
-	JNPLabel(String textIn, float x, float y) {
+	JNPLabel(String textIn, float x, float y, boolean showFrame) {
 		this.text = textIn;
 		this.x = x;
 		this.y = y;
 		Texture fontTexture = Assets.getFontTexture();
+		if (showFrame)
+			frameTexture = Assets.getMsgFrameTexture();
 		chars = new ArrayList<JNPChar>();
 		
 
@@ -54,11 +59,11 @@ public class JNPLabel {
 			
 			if ((c >= ' ') && (c <= 'O')) {
 				offsetX = (c - ' ') * widthPx;
-				offsetY = 4;
+				offsetY = 0;
 			}
 			else if ((c >= 'P') && (c <= '~')) {
 				offsetX = (c - 'P') * widthPx;
-				offsetY = 4 + heightPx;
+				offsetY = 0 + heightPx;
 			}
 			else {
 				offsetX = 0;
@@ -71,6 +76,8 @@ public class JNPLabel {
 	}
 	
 	public void setResolution(int cellWidth, int cellHeight) {
+		this.cellWidth = cellWidth;
+		this.cellHeight = cellHeight;
 		int width = cellWidth / 3;
 		int height = cellHeight * 3 / 4;
 		int graphicX = (int) (x * (float) cellWidth);
@@ -83,6 +90,11 @@ public class JNPLabel {
 	
 	public void render(SpriteBatch spriteBatch) {
 		//Gdx.app.debug(TAG, "Rendering - " + text);
+		if (frameTexture != null) {
+			spriteBatch.draw(frameTexture,
+					(x - 1) * cellWidth, (y - 0.5f )* cellHeight,
+					text.length() * cellWidth/3 + cellWidth * 2, cellHeight * 2);
+		}
 		for (JNPChar c: chars)
 			c.render(spriteBatch);
 	}
