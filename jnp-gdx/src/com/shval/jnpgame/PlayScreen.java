@@ -21,7 +21,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	private Sound buttonSound;
 	private float soundVolume; // in [0,1]
 	private ArrayList<Button> buttons;
-	private JNPLabel levelLable;
+	private JNPLabel levelLabel;
 	private int boardWidth;
 	private int boardHeight;
 	SpriteBatch spriteBatch;
@@ -50,7 +50,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		initButtons();
 		
 		String text = "Level " + config.getLevel();
-		levelLable = new JNPLabel(text, board.getCols() / 2 - text.length() / 6 , board.getRows() - 1);
+		levelLabel = new JNPLabel(text, board.getCols() / 2 - text.length() / 6 , board.getRows() - 1);
 		// ex BoardView
 		spriteBatch = new SpriteBatch();
 		camera = new OrthographicCamera(10, 7);
@@ -61,13 +61,13 @@ public class PlayScreen implements Screen, InputProcessor {
 	private void initButtons() {
 		buttons = new ArrayList<Button>();
 		// reset button
-		buttons.add(new Button(board.getCols() - 4, 0,  3, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE));
+		buttons.add(new Button(board.getCols() - 4, 0,  3, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE, new String("Reset")));
 		// revert button
-		buttons.add(new Button(board.getCols() - 6, 0,  1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC));
+		buttons.add(new Button(board.getCols() - 6, 0,  1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC, null));
 		// next button
-		buttons.add(new Button(board.getCols() - 1, board.getRows() - 1, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC));
+		buttons.add(new Button(board.getCols() - 1, board.getRows() - 1, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC, null));
 		// prev button
-		buttons.add(new Button(0, board.getRows() - 1, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC));
+		buttons.add(new Button(0, board.getRows() - 1, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC, null));
 
 	}
 	
@@ -92,7 +92,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		}
 		
 		// labels
-		levelLable.render(spriteBatch);
+		levelLabel.render(spriteBatch);
 		
 		spriteBatch.end();
 	}
@@ -112,7 +112,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		for (Button button: buttons) {
 			button.setResolution(cellWidth, cellHeight);	
 		}
-		levelLable.setResolution(cellWidth, cellHeight);
+		levelLabel.setResolution(cellWidth, cellHeight);
 		// the action begins (here, and not in Screen's constructor!)
 		board.start();
 	}

@@ -12,9 +12,9 @@ public class Button {
 	private TextureRegion upperRightCorner;
 	private TextureRegion lowerRightCorner;
 	
-	private TextureRegion icon; 					// this one is optional - provide it to draw buttons with icons
-	private String caption;					// button text
-	private float width; 						// 1 - means circular button, >1 --> oval button. units are in cells
+	private TextureRegion icon; 			// this one is optional - provide it to draw buttons with icons
+	private JNPLabel caption;				// button text
+	private float width; 					// 1 - means circular button, >1 --> oval button. units are in cells
 	private int x, y;  						// lower left corner
 	private int type;
 	private int cellWidth, cellHeight;
@@ -37,13 +37,15 @@ public class Button {
 	public static final int ICON_ARROW_CIRC  	= 5;
 	
 	// width in cellSizes
-	public Button(int x, int y, float width, int type, int icon) {
+	public Button(int x, int y, float width, int type, int icon, String caption) {
 		this.x = x;
 		this.y = y;
 		this.type = type;
 		this.width = width;
 		initButtonTextures(x, y, type, width);
 		setIconType(icon);
+		if (caption != null)
+			this.caption = new JNPLabel(caption, x + 1, y);
 		Gdx.app.debug(TAG, "x" + x + ",y" + y);
 	}
 	
@@ -77,13 +79,12 @@ public class Button {
 
 	}
 	
-	public void setCaption(String caption) {
-		this.caption = caption;
-	}
-	
 	public void setResolution(int cellWidth, int cellHeight) {
 		this.cellWidth = cellWidth;
 		this.cellHeight = cellHeight;
+		if (caption != null)
+			caption.setResolution(cellWidth, cellHeight);
+		
 	}
 	
 	// TODO: figure out how to merge several textures into one entity
@@ -97,7 +98,8 @@ public class Button {
 		
 		spriteBatch.draw(upperRightCorner, graphicX + width * cellWidth - cellWidth/2, graphicY + cellHeight/2, cellWidth/2, cellHeight/2);
 		spriteBatch.draw(lowerRightCorner, graphicX + width * cellWidth - cellWidth/2, graphicY, cellWidth/2, cellHeight/2);
-		
+		if (caption != null) 
+			caption.render(spriteBatch);
 		if (icon != null) {
 			spriteBatch.draw(icon, graphicX + (cellWidth - iconSizePx)/2, graphicY + (cellHeight - iconSizePx)/2, 
 					iconSizePx * cellWidth / 48,
