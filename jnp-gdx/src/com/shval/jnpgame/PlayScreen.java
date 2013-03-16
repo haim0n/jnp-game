@@ -48,7 +48,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		soundVolume = config.getSoundVolume();
 		
 		Gdx.app.debug(TAG, "cellwidth is:" + cellWidth);
-		initButtons();
+		initButtons(config);
 		
 		String text = "Level " + config.getLevel();
 		levelLabel = new JNPLabel(text, board.getCols() / 2 - text.length() / 6 , board.getRows() - 1);
@@ -62,19 +62,30 @@ public class PlayScreen implements Screen, InputProcessor {
         camera.update();
 	}
 
-	private void initButtons() {
+	private void initButtons(BoardConfig config) {
 		buttons = new ArrayList<Button>();
 		Button butt;
 		float fineOffset = 0.2f;
 		
 		// reset button
-		buttons.add(new Button(board.getCols() - 4, 0 - fineOffset, 3, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE, new String("Reset"), new String("btnReset")));
+		butt = new Button(board.getCols() - 4, 0 - fineOffset, 3, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE, new String("Reset"), new String("btnReset"));
+		buttons.add(butt);
 		
 		// next button
-		buttons.add(new Button(board.getCols() - 1, board.getRows() - 1 + fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_RIGHT, null, new String("btnNext")));
+		butt = new Button(board.getCols() - 1, board.getRows() - 1 + fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_RIGHT, null, new String("btnNext"));
+		if (config.lastLevel()) {
+			butt.setIsEnabled(false);
+			butt.setIconType(Button.ICON_NONE);
+		}		
+		buttons.add(butt);
 		
 		// prev button
-		buttons.add(new Button(0, board.getRows() - 1 + fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_LEFT, null, new String("btnPrevious")));
+		butt = new Button(0, board.getRows() - 1 + fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_LEFT, null, new String("btnPrevious"));
+		if (config.firstLevel()) {
+			butt.setIsEnabled(false);
+			butt.setIconType(Button.ICON_NONE);
+		}		
+		buttons.add(butt);
 
 		// revert button
 		butt = new Button(board.getCols() - 6, 0 - fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE, null, new String("btnRevert"));

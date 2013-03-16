@@ -575,6 +575,14 @@ public class BoardConfig {
 
 	public int getLevel() {
 		return level;
-	}		
-	
+	}
+
+	public boolean firstLevel() {
+		return (level == 1);
+	}
+
+	public boolean lastLevel() {
+		return (level == LEVELS);
+	}
+
 }

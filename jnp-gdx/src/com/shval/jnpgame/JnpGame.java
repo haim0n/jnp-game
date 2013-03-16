@@ -38,16 +38,19 @@ public class JnpGame extends Game {
 		currentLevel++;
 		if (currentLevel > MAX_LEVELS) {
 			Gdx.app.debug(TAG, "You win game. Congradulations!!");
-			currentLevel = 1;
+			currentLevel = 0;
 		}
 		
 		playLevel(currentLevel);
 	}
 	
 	public void previousLevel() {
+
 		currentLevel--;
-		if (currentLevel < 0) {
-			currentLevel = MAX_LEVELS;
+		if (currentLevel < 1) {
+			// should never be here
+			Gdx.app.error(TAG, "Invalid level " + currentLevel);
+			currentLevel = 1;
 		}
 		
 		playLevel(currentLevel);
