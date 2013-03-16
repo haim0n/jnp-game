@@ -11,7 +11,11 @@ compensate for cell width/height roundup errors
 calibrate speed/sensitivity
 resolve all inline TODO
 anchor should be vector like
-
+background must not reset
+win logic fires up on level 19
+add all button icons support 
+add button sound
+lower lowest buttons :)  
 
 ===================== code refactor ========================
 unify move & canMove logic in Jelly

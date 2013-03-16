@@ -65,7 +65,12 @@ public class PlayScreen implements Screen, InputProcessor {
 		// reset button
 		buttons.add(new Button(board.getCols() - 4, 0,  3, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE));
 		// revert button
-		buttons.add(new Button(board.getCols() - 5, 0,  1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC));
+		buttons.add(new Button(board.getCols() - 6, 0,  1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC));
+		// next button
+		buttons.add(new Button(board.getCols() - 1, board.getRows() - 1, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC));
+		// prev button
+		buttons.add(new Button(0, board.getRows() - 1, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC));
+
 	}
 	
 	@Override
@@ -176,7 +181,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		Gdx.app.debug(TAG, "Action down spotted. boardHeight: " + boardHeight + ". x = " + x + " y = " + y);
 		if (y == 0 && x >= max_col - 3 && x <= max_col - 1)
 			game.reset();
-		if (y == 0 && x == max_col - 5)
+		if (y == 0 && x == (max_col - 5))
 			board.revert();
 		if (y == max_row && x == 0)
 			previousLevel();
