@@ -95,10 +95,13 @@ public class Board {
 	private void pushBoardState(Cell[][] state) {
 		Gdx.app.debug(TAG, "Pushing: boardStateIndex = " + boardStateIndex);
 		if (boardStateIndex == REVERT_DEPTH) {
+			// a circular spin
+			Cell[][] tmp = boardStateStack[0];
 			for (int i = 0; i < REVERT_DEPTH - 1; i++) {
-				copyBoardState(boardStateStack[i], boardStateStack[i+1]); // TODO: avoid copying using head & tail
+				boardStateStack[i] = boardStateStack[i+1];
 			}
-			boardStateIndex--;
+			boardStateStack[REVERT_DEPTH - 1] = tmp;
+			boardStateIndex = REVERT_DEPTH - 1;
 		}
 		
 		copyBoardState(boardStateStack[boardStateIndex], state);
@@ -124,7 +127,8 @@ public class Board {
 	
 	public void start() {
 		Gdx.app.debug(TAG, "Starting");
-		startFrom(initialBoard);		
+		boardStateIndex = 0; // flush state stack
+		startFrom(initialBoard);
 	}
 	
 	private void startFrom(Cell[][] state) {
