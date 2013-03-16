@@ -134,12 +134,13 @@ public class Assets {
 		case 17:
 		case 18:
 		case 19:
+		case 20:
 			texture = wallTexture1;
 			break;
 			
 		default:
-			texture = null;
 			Gdx.app.error("Assets", "Invalid wall texture for level " + level);
+			texture = blackTexture;
 			break;
 		}
 		

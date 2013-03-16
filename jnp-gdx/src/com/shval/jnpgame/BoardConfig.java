@@ -255,6 +255,19 @@ public class BoardConfig {
 			"xxx          x",
 			"xxxxxxxxxxxxxx",
 			},
+			{ // level 20
+			"xxxxxxxxxxxxxx",
+			"xrrrr   rggxxx",
+			"xxxb    xxxxxx",
+			"xxxx       xBx",
+			"xx           x",
+			"xx           x",
+			"xx     x     x",
+			"xx x         x",
+			"xx        x  x",
+			"xxxxxxxxxxxxxx",
+			},
+			
 			};
 
 	public BoardConfig() {
@@ -508,6 +521,7 @@ public class BoardConfig {
 		case 17:
 		case 18:
 		case 19:
+		case 20:			
 			// bald alien on snow
 
 			background.color.set(0.5f, 0.7f, 1f, 0);
