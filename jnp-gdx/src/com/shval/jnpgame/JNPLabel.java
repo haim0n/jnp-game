@@ -55,11 +55,11 @@ public class JNPLabel {
 			
 			if ((c >= ' ') && (c <= 'O')) {
 				offsetX = (c - ' ') * widthPx;
-				offsetY = 0;
+				offsetY = 4;
 			}
 			else if ((c >= 'P') && (c <= '~')) {
 				offsetX = (c - 'P') * widthPx;
-				offsetY = heightPx;
+				offsetY = 4 + heightPx;
 			}
 			else {
 				offsetX = 0;
@@ -75,7 +75,7 @@ public class JNPLabel {
 		int width = cellWidth / 2;
 		int height = cellHeight * 3 / 4;
 		int graphicX = x * cellWidth;
-		int graphicY = y * cellHeight + cellHeight - height;
+		int graphicY = y * cellHeight + cellHeight / 8;
 		for (JNPChar c: chars) {
 			c.setLocation(graphicX, graphicY, width, height);
 			graphicX += width;
