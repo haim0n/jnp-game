@@ -38,7 +38,6 @@ public class JNPLabel {
 		void render(SpriteBatch batch) {
 			batch.draw(textureRegion, graphicX, graphicY, width, height);
 		}
-		
 	}
 	
 	JNPLabel(String textIn, float x, float y) {
@@ -83,6 +82,7 @@ public class JNPLabel {
 	}
 	
 	public void render(SpriteBatch spriteBatch) {
+		//Gdx.app.debug(TAG, "Rendering - " + text);
 		for (JNPChar c: chars)
 			c.render(spriteBatch);
 	}

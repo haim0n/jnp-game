@@ -473,6 +473,7 @@ public class Board {
 			if (isWinPosition()) { // check only if something merged
 				Gdx.app.debug(TAG, "You win!");
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_WIN]), 0.7f);
+				stable = false;
 				Timer.schedule(new WinTask(), 1f);
 			}
 		}

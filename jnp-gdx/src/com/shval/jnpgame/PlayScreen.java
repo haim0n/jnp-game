@@ -21,7 +21,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	private Sound buttonSound;
 	private float soundVolume; // in [0,1]
 	private ArrayList<Button> buttons;
-	private JNPLabel levelLabel;
+	private ArrayList<JNPLabel> labels;
 	//private int boardWidth;
 	private int boardHeight;
 	SpriteBatch spriteBatch;
@@ -49,10 +49,8 @@ public class PlayScreen implements Screen, InputProcessor {
 		
 		Gdx.app.debug(TAG, "cellwidth is:" + cellWidth);
 		initButtons(config);
-		
-		String text = "Level " + config.getLevel();
-		levelLabel = new JNPLabel(text, board.getCols() / 2 - text.length() / 6 , board.getRows() - 1);
-		
+		initLabels(config);
+
 		this.isPrevRevertable = false;
 		
 		// ex BoardView
@@ -68,7 +66,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		float fineOffset = 0.2f;
 		
 		// reset button
-		butt = new Button(board.getCols() - 4, 0 - fineOffset, 3, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE, new String("Reset"), new String("btnReset"));
+		butt = new Button(board.getCols() - 4, 0 - fineOffset, 3, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE, "Reset", new String("btnReset"));
 		buttons.add(butt);
 		
 		// next button
@@ -82,13 +80,22 @@ public class PlayScreen implements Screen, InputProcessor {
 			butt = new Button(0, board.getRows() - 1 + fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_LEFT, null, new String("btnPrevious"));
 			buttons.add(butt);
 		}
-
+		
 		// revert button
 		butt = new Button(board.getCols() - 6, 0 - fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE, null, new String("btnRevert"));
 		butt.setIsEnabled(false);
 		buttons.add(butt);
 
 	}
+
+	
+	private void initLabels(BoardConfig config) {
+		labels = new ArrayList<JNPLabel>();
+		String text = "Level " + config.getLevel();
+		JNPLabel label = new JNPLabel(text, board.getCols() / 2 - text.length() / 6 , board.getRows() - 1);
+		labels.add(label);
+	}
+	
 	
 	@Override
 	public void render(float delta) {
@@ -112,7 +119,9 @@ public class PlayScreen implements Screen, InputProcessor {
 		}
 		
 		// labels
-		levelLabel.render(spriteBatch);
+		for (JNPLabel label: labels) {
+			label.render(spriteBatch);
+		}
 		
 		spriteBatch.end();
 	}
@@ -155,7 +164,10 @@ public class PlayScreen implements Screen, InputProcessor {
 		for (Button button: buttons) {
 			button.setResolution(cellWidth, cellHeight);	
 		}
-		levelLabel.setResolution(cellWidth, cellHeight);
+		for (JNPLabel label: labels) {
+			label.setResolution(cellWidth, cellHeight);
+		}
+		
 		// the action begins (here, and not in Screen's constructor!)
 		board.start();
 	}
@@ -294,7 +306,22 @@ public class PlayScreen implements Screen, InputProcessor {
 	}
 
 	public void win() {
-		game.nextLevel();
+		String text = "Excellent !!!";
+		// make it large by setting
+		JNPLabel label = new JNPLabel(text, board.getCols() / 4 - text.length() / 6 , board.getRows() / 4);
+		label.setResolution(cellWidth * 2, cellHeight * 2);
+		labels.add(label);
+		Button button = getButtonById("btnReset");
+		buttons.remove(button);
+
+		// next button
+		{
+			float fineOffset = 0.2f;
+			button = new Button(board.getCols() - 4, 0 - fineOffset, 3, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE, "Next", new String("btnNext"));
+			button.setResolution(cellWidth, cellHeight);
+			buttons.add(button);
+		}		
+
 	}
 
 }
