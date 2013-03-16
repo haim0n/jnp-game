@@ -142,7 +142,7 @@ public class BoardConfig {
 			"x  w  w      x",
 			"x        W  Rx",
 			"xx   w     Gxx",
-			"x          xxx",			
+			"x          xxx",
 			"xxxxxxxxxxxxxx",
 			},
 			{ // level 11		
@@ -427,6 +427,7 @@ public class BoardConfig {
 		return Assets.getButtonsTexture();
 	}
 
+	
 	// rocky mountains
 	private void addHighMountLayer(Background background) {
 		int height = (int) (256 * 0.5);
@@ -447,6 +448,69 @@ public class BoardConfig {
 		background.addLayer(Assets.getBgTexture(1), 3 * width, 0, width, height);
 	}
 
+	private void addGreenMountLayer(Background background) {
+	
+		//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
+		float xSpeed = -1f;
+		int overlap = 2;
+		background.addLayer(Assets.getBgTexture(22), 0 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
+		background.addLayer(Assets.getBgTexture(22), 1 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
+		background.addLayer(Assets.getBgTexture(22), 2 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
+		background.addLayer(Assets.getBgTexture(22), 3 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
+		background.addLayer(Assets.getBgTexture(22), 4 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
+	}	
+
+	private void addGrayMountLayer(Background background) {
+		
+		//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
+		float xSpeed = -1f;
+		int overlap = 2;
+		background.addLayer(Assets.getBgTexture(52), 0 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
+		background.addLayer(Assets.getBgTexture(52), 1 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
+		background.addLayer(Assets.getBgTexture(52), 2 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
+		background.addLayer(Assets.getBgTexture(52), 3 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
+		background.addLayer(Assets.getBgTexture(52), 4 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
+	}	
+
+
+	private void addGrassLayer(Background background) {
+		
+		//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
+		float xSpeed = -10f;
+		int overlap = 2;	
+		background.addLayer(Assets.getBgTexture(21), 0 * (96 - overlap), 0, xSpeed, 0, 120, 0, 96, 64);
+		background.addLayer(Assets.getBgTexture(21), 1 * (96 - overlap), 0, xSpeed, 0, 120, 0, 96, 64);
+		background.addLayer(Assets.getBgTexture(21), 2 * (96 - overlap), 0, xSpeed, 0, 120, 0, 96, 64);
+		background.addLayer(Assets.getBgTexture(21), 3 * (96 - overlap) - 256 - 120, 0, xSpeed, 0, 120, 0, 96, 64);
+	}
+
+	private void addSnowLayer(Background background) {
+		
+		//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
+		float xSpeed = -10f;
+		int overlap = 2;	
+		background.addLayer(Assets.getBgTexture(51), 0 * (96 - overlap), 0, xSpeed, 0, 120, 0, 96, 64);
+		background.addLayer(Assets.getBgTexture(51), 1 * (96 - overlap), 0, xSpeed, 0, 120, 0, 96, 64);
+		background.addLayer(Assets.getBgTexture(51), 2 * (96 - overlap), 0, xSpeed, 0, 120, 0, 96, 64);
+		background.addLayer(Assets.getBgTexture(51), 3 * (96 - overlap) - 256 - 120, 0, xSpeed, 0, 120, 0, 96, 64);
+	}
+	
+	private void addStars(Background background) {
+		int stars = (int) ( 32 * (Math.random() + 2));
+		for (int i=0 ; i < stars; i++) {
+			int wrapX = (int) (16 * (1 + Math.random()));
+			int wrapY = (int) (16 * (1 + Math.random()));
+			float x = (float) (((double) (256 + wrapX)) * Math.random());
+			float y = (float) (((double) (256 + wrapY)) * Math.random());
+			float moment = (float) (75 * (4 + Math.random()));
+			float vX = -8f;
+			float vY = -32f;
+			int width = 8;
+			int height = 8;
+			background.addSprite(Assets.getSmallStarTexture(), x, y, vX, vY, wrapX, wrapY, width, height, moment);
+		}
+	}
+	
 	public Background getBackground() {
 		Background background = new Background();
 		
@@ -458,10 +522,10 @@ public class BoardConfig {
 		case 4:
 			// blue sky + clouds
 			background.color.set(0.5f, 0.7f, 1f, 0);
-	
+			
 			addHighMountLayer(background);
 			
-			//	dynamic
+			// clouds
 			background.addLayer(Assets.getBgTexture(0), 0, 86, -15, 0, 128, 0, 100, 128);
 			background.addLayer(Assets.getBgTexture(0), 200, 86, -15, 0, 128, 0, 100, 128);
 			break;
@@ -476,22 +540,7 @@ public class BoardConfig {
 		case 16:
 			// stars in the night
 			background.color.set(0.0f, 0.0f, 0f, 0);
-						
-			int stars = (int) ( 32 * (Math.random() + 2));
-			for (int i=0 ; i < stars; i++) {
-				int wrapX = (int) (16 * (1 + Math.random()));
-				int wrapY = (int) (16 * (1 + Math.random()));
-				float x = (float) (((double) (256 + wrapX)) * Math.random());
-				float y = (float) (((double) (256 + wrapY)) * Math.random());
-				float moment = (float) (75 * (4 + Math.random()));
-				float vX = -8f;
-				float vY = -32f;
-				int width = 8;
-				int height = 8;
-				background.addSprite(Assets.getSmallStarTexture(), x, y, vX, vY, wrapX, wrapY, width, height, moment);
-			
-			}
-			// rocky mountains
+			addStars(background);
 			addLowMountLayer(background);			
 			break;
 
@@ -502,40 +551,14 @@ public class BoardConfig {
 			// bald alien on grass
 
 			background.color.set(0.5f, 0.7f, 1f, 0);
-			
-			// mountains
-			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
-			float xSpeed = -2.5f;
-			int overlap = 2;
-			background.addLayer(Assets.getBgTexture(22), 0 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(22), 1 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(22), 2 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(22), 3 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(22), 4 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
-			
-			
-			// we'll try static mountains
-			/*
-			background.addLayer(Assets.getBgTexture(22), 0 * 64, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(22), 1 * 64, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(22), 2 * 64, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(22), 3 * 64, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(22), 4 * 64, 0, 64, 96);
-			*/
+			addGreenMountLayer(background);
 			
 			// bald thing
-			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
 			background.addLayer(Assets.getBgTexture(30), 0 * 64, 32, -5, 0, 64, 0, 96, 128);
 			background.addLayer(Assets.getBgTexture(30), 3 * 64, 32, -5, 0, 64, 0, 96, 128);
 
-			// grass
-			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
-			xSpeed = -10f;
-			background.addLayer(Assets.getBgTexture(21), 0 * (96 + overlap), 0, xSpeed, 0, 136, 0, 96, 64);
-			background.addLayer(Assets.getBgTexture(21), 1 * (96 + overlap), 0, xSpeed, 0, 136, 0, 96, 64);
-			background.addLayer(Assets.getBgTexture(21), 2 * (96 + overlap), 0, xSpeed, 0, 136, 0, 96, 64);
-			background.addLayer(Assets.getBgTexture(21), 3 * (96 + overlap), 0, xSpeed, 0, 136, 0, 96, 64);
-			
+			addGrassLayer(background);
+				
 			break;
 			
 		case 17:
@@ -546,35 +569,14 @@ public class BoardConfig {
 
 			background.color.set(0.5f, 0.7f, 1f, 0);
 			
-			// mountains
-			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
-			/*
-			background.addLayer(Assets.getBgTexture(22), 0 * 64, 0, -1, 0, 64, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(22), 1 * 64, 0, -1, 0, 64, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(22), 2 * 64, 0, -1, 0, 64, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(22), 3 * 64, 0, -1, 0, 64, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(22), 4 * 64, 0, -1, 0, 64, 0, 64, 96);
-			*/
-			
-			// we'll try static mountains
-			background.addLayer(Assets.getBgTexture(52), 0 * 64, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(52), 1 * 64, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(52), 2 * 64, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(52), 3 * 64, 0, 64, 96);
-			background.addLayer(Assets.getBgTexture(52), 4 * 64, 0, 64, 96);
-			
+			addGrayMountLayer(background);			
+						
 			// bald thing
-			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
 			background.addLayer(Assets.getBgTexture(30), 0 * 64, 32, -5, 0, 128, 0, 96, 128);
 			background.addLayer(Assets.getBgTexture(30), 2 * 64, 32, -5, 0, 128, 0, 96, 128);
 			background.addLayer(Assets.getBgTexture(30), 4 * 64, 32, -5, 0, 128, 0, 96, 128);
 
-			// snow
-			//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
-			background.addLayer(Assets.getBgTexture(51), 0 * 96, 0, -10, 0, 96, 0, 96, 64);
-			background.addLayer(Assets.getBgTexture(51), 1 * 96, 0, -10, 0, 96, 0, 96, 64);
-			background.addLayer(Assets.getBgTexture(51), 2 * 96, 0, -10, 0, 96, 0, 96, 64);
-			background.addLayer(Assets.getBgTexture(51), 3 * 96, 0, -10, 0, 96, 0, 96, 64);
+			addSnowLayer(background);
 			
 			break;
 			

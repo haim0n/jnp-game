@@ -35,7 +35,7 @@ public class Background {
 			
 			if (x >= 256) // right motion
 				x = -wrapX;
-			else if (x < -wrapX) // right motion
+			else if (x < -wrapX) // left motion
 				x = 255;
 
 			if (y >= 256) // up motion
@@ -50,11 +50,11 @@ public class Background {
 		}
 		
 		void render(SpriteBatch batch) {
-			int gX = (int) (screenWidth * x / 256);
-			int gY = (int) (screenHeight * y / 256);
+			float gX =  ((float) screenWidth * x / 256);
+			float gY =  ((float) screenHeight * y / 256);
  
-			int gWidth = screenWidth * width / 256;
-			int gHeight = screenHeight * height / 256;
+			float gWidth = (float) screenWidth * width / 256;
+			float gHeight = (float) screenHeight * height / 256;
 			//Gdx.app.debug(TAG, "Background layer at " + gX + ", " + gY + " width = " + gWidth + " height = " + gHeight);			
 
 			batch.draw(texture, gX, gY, gWidth , gHeight);
