@@ -12,8 +12,8 @@ public class JNPLabel {
 	private static final String TAG = JNPLabel.class.getSimpleName();
 	static final int widthPx = 16;
 	static final int heightPx = 38;
-	private int x;
-	private int y;
+	private float x;
+	private float y;
 	private ArrayList<JNPChar> chars;
 	private String text;
 	
@@ -41,7 +41,7 @@ public class JNPLabel {
 		
 	}
 	
-	JNPLabel(String textIn, int x, int y) {
+	JNPLabel(String textIn, float x, float y) {
 		this.text = textIn;
 		this.x = x;
 		this.y = y;
@@ -74,8 +74,8 @@ public class JNPLabel {
 	public void setResolution(int cellWidth, int cellHeight) {
 		int width = cellWidth / 3;
 		int height = cellHeight * 3 / 4;
-		int graphicX = x * cellWidth;
-		int graphicY = y * cellHeight + cellHeight / 8;
+		int graphicX = (int) (x * (float) cellWidth);
+		int graphicY = (int) (y * (float) cellHeight + (float) cellHeight / 8 );
 		for (JNPChar c: chars) {
 			c.setLocation(graphicX, graphicY, width, height);
 			graphicX += width;
