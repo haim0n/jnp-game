@@ -65,9 +65,9 @@ public class PlayScreen implements Screen, InputProcessor {
 		// revert button
 		buttons.add(new Button(board.getCols() - 6, 0,  1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC, null));
 		// next button
-		buttons.add(new Button(board.getCols() - 1, board.getRows() - 1, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC, null));
+		buttons.add(new Button(board.getCols() - 1, board.getRows() - 1, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_RIGHT, null));
 		// prev button
-		buttons.add(new Button(0, board.getRows() - 1, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_CIRC, null));
+		buttons.add(new Button(0, board.getRows() - 1, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_LEFT, null));
 
 	}
 	

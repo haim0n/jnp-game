@@ -21,7 +21,7 @@ public class Button {
 	
 	private Texture allButtonsTexture;
 	private Texture allButtonIconsTexture;
-	private static final int iconSizePx = 42;
+	private static final int iconSizePx = 40;
 	// button types - keep those subsequent
 	public static final int BLACK_BG_BLUE_FRAME  = 0;
 	public static final int BLUE_BG_BLACK_FRAME  = 1;
@@ -33,7 +33,7 @@ public class Button {
 	public static final int ICON_ARROW_LEFT  	= 1;
 	public static final int ICON_ARROW_RIGHT 	= 2;
 	public static final int ICON_ARROW_UP 		= 3;
-	public static final int ICON_ARROW_DOWN 	= 4;
+	public static final int ICON_ARROW_DOWN		= 4;
 	public static final int ICON_ARROW_CIRC  	= 5;
 	
 	// width in cellSizes
@@ -50,20 +50,35 @@ public class Button {
 	}
 	
 	public void setIconType(int icon) {
+		int i, j;
+		
 		switch (icon) {
+		case ICON_ARROW_DOWN:
+			i = 0;
+			j = 0;
+			break;
+		case ICON_ARROW_UP:
+			i = 1;
+			j = 0;
+			break;
 		case ICON_ARROW_CIRC:
-			this.icon = new TextureRegion(allButtonIconsTexture, 80, 0, iconSizePx, iconSizePx);
+			i = 2;
+			j = 0; 
+			break;
+		case ICON_ARROW_LEFT:
+			i = 2;
+			j = 1; 
 			break;
 		case ICON_ARROW_RIGHT:
-			this.icon = new TextureRegion(allButtonIconsTexture, 80, 0, iconSizePx, iconSizePx);
+			i = 0;
+			j = 2; 
 			break;
 		case ICON_NONE:
 		default:
-				this.icon = null;
-				break;
+			this.icon = null;
+			return;
 		}
-		
-		//this.icon = icon;
+		this.icon = new TextureRegion(allButtonIconsTexture, iconSizePx * i, iconSizePx * j, iconSizePx, iconSizePx);		
 	}
 	
 	private void initButtonTextures(int x, int y, int buttonType, float width) {
