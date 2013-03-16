@@ -1,15 +1,10 @@
-set loglevel to be read from config file on startup.
-Win logic/screen
-dynamic b/g
+Win screen
 add instructions
 add select level screen.
 compare COLS/ROWS ratio with runtime height/width ratio and compensate by removing/adding dummy level rows.
 compensate for cell width/height roundup errors
-calibrate speed/sensitivity
 resolve all inline TODO
 anchor should be vector like
-win logic fires up on level 19
-add all button icons support
 add solver and solution function
 consider port to libgdx AssetManager
  
