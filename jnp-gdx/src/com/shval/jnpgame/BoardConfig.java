@@ -451,25 +451,27 @@ public class BoardConfig {
 	private void addGreenMountLayer(Background background) {
 	
 		//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
-		float xSpeed = -1f;
-		int overlap = 2;
-		background.addLayer(Assets.getBgTexture(22), 0 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
-		background.addLayer(Assets.getBgTexture(22), 1 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
-		background.addLayer(Assets.getBgTexture(22), 2 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
-		background.addLayer(Assets.getBgTexture(22), 3 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
-		background.addLayer(Assets.getBgTexture(22), 4 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
+		float xSpeed = -3f;
+		float overlap = 2;
+		int height = 96;
+		background.addLayer(Assets.getBgTexture(22), 0 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, height);
+		background.addLayer(Assets.getBgTexture(22), 1 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, height);
+		background.addLayer(Assets.getBgTexture(22), 2 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, height);
+		background.addLayer(Assets.getBgTexture(22), 3 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, height);
+		background.addLayer(Assets.getBgTexture(22), 4 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, height);
 	}	
 
 	private void addGrayMountLayer(Background background) {
 		
 		//background.addLayer(texture, x, y, vX, vY, wrapX, wrapY, width, height)
-		float xSpeed = -1f;
+		float xSpeed = -3f;
 		int overlap = 2;
-		background.addLayer(Assets.getBgTexture(52), 0 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
-		background.addLayer(Assets.getBgTexture(52), 1 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
-		background.addLayer(Assets.getBgTexture(52), 2 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
-		background.addLayer(Assets.getBgTexture(52), 3 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
-		background.addLayer(Assets.getBgTexture(52), 4 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, 96);
+		int height = 96;
+		background.addLayer(Assets.getBgTexture(52), 0 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, height);
+		background.addLayer(Assets.getBgTexture(52), 1 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, height);
+		background.addLayer(Assets.getBgTexture(52), 2 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, height);
+		background.addLayer(Assets.getBgTexture(52), 3 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, height);
+		background.addLayer(Assets.getBgTexture(52), 4 * (64 - overlap), 0, xSpeed, 0, 54, 0, 64, height);
 	}	
 
 
