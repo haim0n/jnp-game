@@ -13,7 +13,8 @@ resolve all inline TODO
 anchor should be vector like
 background must not reset
 win logic fires up on level 19
-add all button icons support 
+add all button icons support
+add button caption  
 add button sound
 lower lowest buttons :)
 add solver and solution function

@@ -21,7 +21,7 @@ public class Button {
 	
 	private Texture allButtonsTexture;
 	private Texture allButtonIconsTexture;
-	private static final int iconSizePx = 29;
+	private static final int iconSizePx = 42;
 	// button types - keep those subsequent
 	public static final int BLACK_BG_BLUE_FRAME  = 0;
 	public static final int BLUE_BG_BLACK_FRAME  = 1;
@@ -50,7 +50,10 @@ public class Button {
 	public void setIconType(int icon) {
 		switch (icon) {
 		case ICON_ARROW_CIRC:
-			this.icon = new TextureRegion(allButtonIconsTexture, 86, 8, iconSizePx, iconSizePx);
+			this.icon = new TextureRegion(allButtonIconsTexture, 80, 0, iconSizePx, iconSizePx);
+			break;
+		case ICON_ARROW_RIGHT:
+			this.icon = new TextureRegion(allButtonIconsTexture, 80, 0, iconSizePx, iconSizePx);
 			break;
 		case ICON_NONE:
 		default:
