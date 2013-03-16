@@ -119,7 +119,9 @@ public class Button {
 		if (caption != null) 
 			caption.render(spriteBatch);
 		if (icon != null) {
-			spriteBatch.draw(icon, graphicX + (cellWidth - iconSizePx)/2, graphicY + (cellHeight - iconSizePx)/2, 
+			spriteBatch.draw(icon,
+					graphicX + (cellWidth * width/2) - iconSizePx * cellWidth / 48/2,
+					graphicY + (cellHeight* width/2) - iconSizePx * cellHeight/ 48/2, 
 					iconSizePx * cellWidth / 48,
 					iconSizePx * cellHeight / 48);
 		}
