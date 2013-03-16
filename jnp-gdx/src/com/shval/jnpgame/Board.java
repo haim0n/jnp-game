@@ -156,12 +156,15 @@ public class Board {
 		return cellWidth;
 	}
 	
+	public void jellifyBoard() {
+		jellify(cells);
+	}
 	// create jelly for each cell and try merging them
-	public void jellifyBoard()
+	public void jellify(Cell[][] cellState)
 	{
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
-				Cell cell = cells[x][y];
+				Cell cell = cellState[x][y];
 				if (cell == null || cell.getType() == NONE)
 					continue;
 				Jelly jelly = new Jelly(this);
@@ -169,16 +172,21 @@ public class Board {
 				jelly.join(cell);
 			}
 		}
-		attemptMerge();
 	}
 	
 	private boolean isWinPosition() {
+		// we'll need a new copy for this
+		Cell[][] checkState = new Cell[COLS][ROWS];
+		copyBoardState(checkState, cells);
+		jellify(checkState);
+		attemptMerge(checkState, false); // don't merge anchored when looking for a win
+		
 		// win iff all non-black jellies
 		Jelly jellies[] = new Jelly[MAX_COLORED_JELLY_TYPES];
 
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
-				Cell cell = cells[x][y];
+				Cell cell = checkState[x][y];
 				// we check for NONE although it isn't there
 				if (cell == null || cell.getType() == NONE)
 					continue;
@@ -323,7 +331,7 @@ public class Board {
 		return ((cell1.getX() + dx == cell2.getX()) && (cell1.getY() + dy == cell2.getY()) );
 	}
 	
-	private boolean attemptMerge(Cell cell, Cell neighbor) {
+	private boolean attemptMerge(Cell cell, Cell neighbor, boolean mergeAnchord) {
 		
 		if (neighbor == null || neighbor.isMoving())
 			return false;
@@ -336,7 +344,11 @@ public class Board {
 			return true;
 		}
 		
-		// anchored cells will be merged
+		// when merging for checking win
+		if (!mergeAnchord)
+			return false;
+		
+		// anchored cells
 		if (isNeighbour(cell, cell.anchoredTo, neighbor) ||
 			isNeighbour(neighbor, neighbor.anchoredTo, cell) ) {
 				neighbor.getJelly().merge(cell.getJelly());
@@ -346,11 +358,17 @@ public class Board {
 		return false;
 	}
 	
+	
 	private boolean attemptMerge() {
+		// for compatibility
+		return attemptMerge(cells, true); // merge anchord 
+	}
+	
+	private boolean attemptMerge(Cell[][] postition, boolean mergeAnchord) {
 		boolean merge = false; // indicates whether something merged
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
-				Cell cell = cells[x][y];
+				Cell cell = postition[x][y];
 				
 				// moving cell do not merge
 				if (cell == null || cell.isMoving())
@@ -359,19 +377,19 @@ public class Board {
 				Cell neighbor;
 				// try to merge with right neighbor
 				if (x < COLS - 1)
-					neighbor = cells[x+1][y];
+					neighbor = postition[x+1][y];
 				else
 					neighbor = null;
 				
-				merge |= attemptMerge(cell, neighbor);
+				merge |= attemptMerge(cell, neighbor, mergeAnchord);
 				
 				// try to merge with down neighbor
 				if (y < ROWS - 1)
-					neighbor = cells[x][y+1];
+					neighbor = postition[x][y+1];
 				else
 					neighbor = null;
 				
-				merge |= attemptMerge(cell, neighbor);
+				merge |= attemptMerge(cell, neighbor, mergeAnchord);
 			}
 		}
 		
