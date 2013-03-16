@@ -33,7 +33,7 @@ public class Background {
 			x = x + delta * vX;
 			y = y + delta * vY;
 			
-			if (x >= 256) // left motion
+			if (x >= 256) // right motion
 				x = -wrapX;
 			else if (x < -wrapX) // right motion
 				x = 255;

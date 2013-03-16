@@ -313,6 +313,8 @@ public class PlayScreen implements Screen, InputProcessor {
 		labels.add(label);
 		Button button = getButtonById("btnReset");
 		buttons.remove(button);
+		button = getButtonById("btnRevert");
+		buttons.remove(button);
 
 		// next button
 		{
