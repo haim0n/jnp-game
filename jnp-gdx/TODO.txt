@@ -1,9 +1,6 @@
-add Level Label in Playscreen
-add next/prev buttons in Playscreen
 set loglevel to be read from config file on startup.
 Win logic/screen
 dynamic b/g
-add revert/reset buttons. 
 add instructions
 add select level screen.
 compare COLS/ROWS ratio with runtime height/width ratio and compensate by removing/adding dummy level rows.
@@ -11,14 +8,11 @@ compensate for cell width/height roundup errors
 calibrate speed/sensitivity
 resolve all inline TODO
 anchor should be vector like
-background must not reset
 win logic fires up on level 19
 add all button icons support
-add button caption  
-add button sound
-lower lowest buttons :)
 add solver and solution function
-
+consider port to libgdx AssetManager
+ 
 ===================== code refactor ========================
 unify move & canMove logic in Jelly
 make cell abstract and inherit it for wall/jelly/etc

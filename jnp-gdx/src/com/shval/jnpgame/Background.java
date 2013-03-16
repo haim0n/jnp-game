@@ -33,15 +33,15 @@ public class Background {
 			x = x + delta * vX;
 			y = y + delta * vY;
 			
-			if (x > 256) // left motion
+			if (x >= 256) // left motion
 				x = -wrapX;
 			else if (x < -wrapX) // right motion
-				x = 256;
+				x = 255;
 
-			if (y > 256) // up motion
+			if (y >= 256) // up motion
 				y = -wrapY;			
 			else if (y < -wrapY) // down motion
-				y = 256;
+				y = 255;
 		}
 		
 		void setResolution(int screenWidth, int screenHeight) {
