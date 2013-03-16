@@ -22,7 +22,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	private float soundVolume; // in [0,1]
 	private ArrayList<Button> buttons;
 	private JNPLabel levelLabel;
-	private int boardWidth;
+	//private int boardWidth;
 	private int boardHeight;
 	SpriteBatch spriteBatch;
 	private OrthographicCamera camera;
@@ -72,20 +72,16 @@ public class PlayScreen implements Screen, InputProcessor {
 		buttons.add(butt);
 		
 		// next button
-		butt = new Button(board.getCols() - 1, board.getRows() - 1 + fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_RIGHT, null, new String("btnNext"));
-		if (config.lastLevel()) {
-			butt.setIsEnabled(false);
-			butt.setIconType(Button.ICON_NONE);
+		if (!config.lastLevel()) {
+			butt = new Button(board.getCols() - 1, board.getRows() - 1 + fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_RIGHT, null, new String("btnNext"));
+			buttons.add(butt);
 		}		
-		buttons.add(butt);
 		
 		// prev button
-		butt = new Button(0, board.getRows() - 1 + fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_LEFT, null, new String("btnPrevious"));
-		if (config.firstLevel()) {
-			butt.setIsEnabled(false);
-			butt.setIconType(Button.ICON_NONE);
-		}		
-		buttons.add(butt);
+		if (!config.firstLevel()) {
+			butt = new Button(0, board.getRows() - 1 + fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_ARROW_LEFT, null, new String("btnPrevious"));
+			buttons.add(butt);
+		}
 
 		// revert button
 		butt = new Button(board.getCols() - 6, 0 - fineOffset, 1, Button.BLACK_BG_BLUE_FRAME, Button.ICON_NONE, null, new String("btnRevert"));
@@ -148,7 +144,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
 		Gdx.app.debug(TAG, "Resizing screen to " + width + " x " + height);
-		this.boardWidth = width;
+		//this.boardWidth = width; we need only height to flip vertical orientation
 		this.boardHeight = height;
 		board.setResolution(width, height);
 		background.setResolution(width, height);
