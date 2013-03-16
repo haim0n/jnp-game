@@ -571,6 +571,10 @@ public class BoardConfig {
 
 	public float getSoundVolume() {
 		return 0.5f; // in [0,1], TODO: get it ftom user
+	}
+
+	public int getLevel() {
+		return level;
 	}		
 	
 }

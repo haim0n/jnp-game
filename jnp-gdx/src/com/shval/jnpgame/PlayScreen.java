@@ -9,9 +9,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class PlayScreen implements Screen, InputProcessor {
 
@@ -23,6 +21,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	private Sound buttonSound;
 	private float soundVolume; // in [0,1]
 	private ArrayList<Button> buttons;
+	private JNPLabel levelLable;
 	private int boardWidth;
 	private int boardHeight;
 	SpriteBatch spriteBatch;
@@ -47,12 +46,11 @@ public class PlayScreen implements Screen, InputProcessor {
 		buttonSound = config.getSound(SOUND_BUTTON);
 		soundVolume = config.getSoundVolume();
 		
-		int cellWidth = board.getSpriteWidth();
-		int cellHeight = board.getSpriteHeight();
-
 		Gdx.app.debug(TAG, "cellwidth is:" + cellWidth);
 		initButtons();
 		
+		String text = "Level " + config.getLevel();
+		levelLable = new JNPLabel(text, (board.getCols() - text.length() / 2) / 2 , board.getRows() - 1);
 		// ex BoardView
 		spriteBatch = new SpriteBatch();
 		camera = new OrthographicCamera(10, 7);
@@ -93,6 +91,9 @@ public class PlayScreen implements Screen, InputProcessor {
 			button.render(spriteBatch);	
 		}
 		
+		// labels
+		levelLable.render(spriteBatch);
+		
 		spriteBatch.end();
 	}
 
@@ -106,10 +107,12 @@ public class PlayScreen implements Screen, InputProcessor {
 		background.setResolution(width, height);
 		cellWidth = board.getSpriteWidth();
 		cellHeight = board.getSpriteHeight();
+		
 		uiThreshold = cellWidth/UI_FACTOR;
 		for (Button button: buttons) {
 			button.setResolution(cellWidth, cellHeight);	
 		}
+		levelLable.setResolution(cellWidth, cellHeight);
 		// the action begins (here, and not in Screen's constructor!)
 		board.start();
 	}

@@ -32,6 +32,7 @@ public class Assets {
     public static Texture buttonsTexture;
     public static Texture smallStarTexture;
     public static Texture buttonIconsTexture;
+    public static Texture fontTexture;
     //public static TextureAtlas atlas;  
     
     public static Sound fallSound;
@@ -69,6 +70,8 @@ public class Assets {
         
         buttonsTexture = new Texture(Gdx.files.internal(("data/button.png")));
         smallStarTexture = new Texture(Gdx.files.internal(("data/small_star.png")));
+        buttonIconsTexture = new Texture(Gdx.files.internal(("data/bi.png")));
+        fontTexture = new Texture(Gdx.files.internal(("data/font.png")));
         
         fallSound = Gdx.audio.newSound(Gdx.files.internal("data/0.wav"));
         slideSound = Gdx.audio.newSound(Gdx.files.internal("data/1.wav"));
@@ -76,7 +79,7 @@ public class Assets {
         mergeFinishSound = Gdx.audio.newSound(Gdx.files.internal("data/2.wav"));
         winSound = Gdx.audio.newSound(Gdx.files.internal("data/10.wav"));
         buttonSound = Gdx.audio.newSound(Gdx.files.internal("data/12.wav"));
-        buttonIconsTexture = new Texture(Gdx.files.internal(("data/bi.png")));
+        
     }
 
     public static Texture getBgTexture(int index) {
@@ -214,5 +217,9 @@ public class Assets {
 			Gdx.app.error("Assets", "Invalid sound ID " + soundID);
 			return null;
 		}
+	}
+
+	public static Texture getFontTexture() {
+		return fontTexture;
 	}  
 }
