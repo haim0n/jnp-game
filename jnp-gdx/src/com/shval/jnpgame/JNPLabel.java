@@ -72,7 +72,7 @@ public class JNPLabel {
 	}
 	
 	public void setResolution(int cellWidth, int cellHeight) {
-		int width = cellWidth / 2;
+		int width = cellWidth / 3;
 		int height = cellHeight * 3 / 4;
 		int graphicX = x * cellWidth;
 		int graphicY = y * cellHeight + cellHeight / 8;

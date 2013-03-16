@@ -50,7 +50,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		initButtons();
 		
 		String text = "Level " + config.getLevel();
-		levelLable = new JNPLabel(text, (board.getCols() - text.length() / 2) / 2 , board.getRows() - 1);
+		levelLable = new JNPLabel(text, board.getCols() / 2 - text.length() / 6 , board.getRows() - 1);
 		// ex BoardView
 		spriteBatch = new SpriteBatch();
 		camera = new OrthographicCamera(10, 7);

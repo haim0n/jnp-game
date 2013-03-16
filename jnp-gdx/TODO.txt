@@ -15,7 +15,8 @@ background must not reset
 win logic fires up on level 19
 add all button icons support 
 add button sound
-lower lowest buttons :)  
+lower lowest buttons :)
+add solver and solution function
 
 ===================== code refactor ========================
 unify move & canMove logic in Jelly
