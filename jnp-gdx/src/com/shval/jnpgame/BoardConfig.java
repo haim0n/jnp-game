@@ -166,7 +166,6 @@ public class BoardConfig {
 			"xx          xx",
 			"x            x",
 			"x            x",
-			"x            x",
 			"x   xxxxxx   x",			
 			"xxxxxxxxxxxxxx",
 			},			
