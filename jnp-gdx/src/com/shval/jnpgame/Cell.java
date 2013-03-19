@@ -29,7 +29,6 @@ public class Cell {
 	private static final float GRAVITY = -6600;
 	static private int graphicWidth;
 	static private int graphicHeight;
-	static private boolean isResolutionSet = false;
 	
 	public Cell(Cell other) {
 		this.type = other.type;
@@ -304,11 +303,8 @@ public class Cell {
 	
 	static public void setResolution(int spriteWidth, int spriteHeight) {
 		// set width only on first call
-		if (!isResolutionSet) {
-			Cell.graphicWidth = spriteWidth;
-			Cell.graphicHeight = spriteHeight;
-			isResolutionSet = true;
-		}
+		Cell.graphicWidth = spriteWidth;
+		Cell.graphicHeight = spriteHeight;
 		
 	}
 	

@@ -58,6 +58,7 @@ public class Background {
 			//Gdx.app.debug(TAG, "Background layer at " + gX + ", " + gY + " width = " + gWidth + " height = " + gHeight);			
 
 			batch.draw(texture, gX, gY, gWidth , gHeight);
+			//batch.draw(texture, gX, gY);
 		}
 	}
 		
