@@ -1,6 +1,7 @@
 Win screen
 add instructions
 add select level screen.
+add emerging jelly support. (target: v1.03)
 compare COLS/ROWS ratio with runtime height/width ratio and compensate by removing/adding dummy level rows.
 compensate for cell width/height roundup errors
 resolve all inline TODO
