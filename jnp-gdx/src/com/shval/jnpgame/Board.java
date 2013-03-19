@@ -221,14 +221,7 @@ public class Board {
 		Gdx.app.debug(TAG, "Board size = " + boardWidth + " x " + boardHeight);
 		
 		// set resolution to cells in initialBoard
-		// hope that start() will be called after serResolution
-		for (int x = 0; x < COLS; x++) {
-			for (int y = 0; y < ROWS; y++) {
-				Cell cell = initialBoard[x][y];
-				if (cell != null)
-					cell.setResolution(cellWidth, cellHeight);
-			}
-		}
+		Cell.setResolution(cellWidth, cellHeight);
 	}
 		
 

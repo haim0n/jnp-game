@@ -10,7 +10,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class PlayScreen implements Screen, InputProcessor {
 
@@ -59,6 +58,9 @@ public class PlayScreen implements Screen, InputProcessor {
 		camera = new OrthographicCamera(10, 7);
         camera.position.set(5, 3.5f, 0);
         camera.update();
+        
+		// the action begins (here, and not in Screen's constructor!)
+        board.start();
 	}
 
 	private void initButtons(BoardConfig config) {
@@ -169,8 +171,6 @@ public class PlayScreen implements Screen, InputProcessor {
 			label.setResolution(cellWidth, cellHeight);
 		}
 		
-		// the action begins (here, and not in Screen's constructor!)
-		board.start();
 	}
 
 	@Override

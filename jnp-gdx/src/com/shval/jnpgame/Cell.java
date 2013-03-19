@@ -27,9 +27,9 @@ public class Cell {
 	private static final int CELL_SIZE = 100; // 
 	private static final float SPEED = 800;
 	private static final float GRAVITY = -6600;
-	private int spriteWidth;
-	private int spriteHeight;
-	private boolean isResolutionSet = false;
+	static private int graphicWidth;
+	static private int graphicHeight;
+	static private boolean isResolutionSet = false;
 	
 	public Cell(Cell other) {
 		this.type = other.type;
@@ -42,10 +42,6 @@ public class Cell {
 		textureRegions = other.textureRegions;
 		anchorTextureRegions = other.anchorTextureRegions; // TODO: all nulls?
 		speed = new Speed(other.getSpeed()); // creates stale cells only
-		
-		spriteWidth = other.spriteWidth;
-		spriteHeight = other.spriteHeight;
-		isResolutionSet = other.isResolutionSet;
 
 	}
 	
@@ -306,11 +302,11 @@ public class Cell {
 
 	}
 	
-	public void setResolution(int spriteWidth, int spriteHeight) {
+	static public void setResolution(int spriteWidth, int spriteHeight) {
 		// set width only on first call
 		if (!isResolutionSet) {
-			this.spriteWidth = spriteWidth;
-			this.spriteHeight = spriteHeight;
+			Cell.graphicWidth = spriteWidth;
+			Cell.graphicHeight = spriteHeight;
 			isResolutionSet = true;
 		}
 		
@@ -353,17 +349,17 @@ public class Cell {
 		//canvas.drawBitmap(bitmap, x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2), null);
 		int graphicDx, graphicDy;
 		if (speed.getXv() != 0)
-			graphicDx = (spriteWidth * (int) dxFromMilestone) / CELL_SIZE;
+			graphicDx = (graphicWidth * (int) dxFromMilestone) / CELL_SIZE;
 		else
 			graphicDx = 0;
 		
 		if (speed.getYv() != 0)
-			graphicDy = (spriteHeight * (int) dyFromMilestone) / CELL_SIZE;
+			graphicDy = (graphicHeight * (int) dyFromMilestone) / CELL_SIZE;
 		else
 			graphicDy = 0;
 		
-		int graphicX = spriteWidth * x + graphicDx;
-		int graphicY = spriteHeight * y + graphicDy;
+		int graphicX = graphicWidth * x + graphicDx;
+		int graphicY = graphicHeight * y + graphicDy;
 		/*
 		if(false) {
 			Gdx.app.debug(TAG, "(" + x + ", " + y + "): dx, dy = " + dxFromMilestone + ", " + dyFromMilestone);
@@ -373,61 +369,61 @@ public class Cell {
 		}
 		*/
 		spriteBatch.draw(textureRegions[0][0], graphicX, graphicY,
-				spriteWidth / 2, spriteHeight / 2);
+				graphicWidth / 2, graphicHeight / 2);
 		
-		spriteBatch.draw(textureRegions[0][1], graphicX, graphicY + spriteHeight / 2,
-				spriteWidth / 2, spriteHeight / 2);
+		spriteBatch.draw(textureRegions[0][1], graphicX, graphicY + graphicHeight / 2,
+				graphicWidth / 2, graphicHeight / 2);
 		
-		spriteBatch.draw(textureRegions[1][0], graphicX + spriteWidth / 2, graphicY,
-				spriteWidth / 2, spriteHeight / 2);
+		spriteBatch.draw(textureRegions[1][0], graphicX + graphicWidth / 2, graphicY,
+				graphicWidth / 2, graphicHeight / 2);
 		
-		spriteBatch.draw(textureRegions[1][1], graphicX + spriteWidth / 2, graphicY + spriteHeight / 2,
-				spriteWidth / 2, spriteHeight / 2);
+		spriteBatch.draw(textureRegions[1][1], graphicX + graphicWidth / 2, graphicY + graphicHeight / 2,
+				graphicWidth / 2, graphicHeight / 2);
 		
 	}
 	
 	public void renderAnchors(SpriteBatch spriteBatch) {
 		int graphicDx, graphicDy;
 		if (speed.getXv() != 0)
-			graphicDx = (spriteWidth * (int) dxFromMilestone) / CELL_SIZE;
+			graphicDx = (graphicWidth * (int) dxFromMilestone) / CELL_SIZE;
 		else
 			graphicDx = 0;
 		
 		if (speed.getYv() != 0)
-			graphicDy = (spriteHeight * (int) dyFromMilestone) / CELL_SIZE;
+			graphicDy = (graphicHeight * (int) dyFromMilestone) / CELL_SIZE;
 		else
 			graphicDy = 0;
 		
-		int graphicX = spriteWidth * x + graphicDx;
-		int graphicY = spriteHeight * y + graphicDy;
+		int graphicX = graphicWidth * x + graphicDx;
+		int graphicY = graphicHeight * y + graphicDy;
 
 		// render anchors
 		// add 1 to create anchor continuity 
 		
-		int anchorWidth = spriteWidth * 3 / 8;
-		int anchorHeight = spriteHeight / 2;
+		int anchorWidth = graphicWidth * 3 / 8;
+		int anchorHeight = graphicHeight / 2;
 		
 		if (anchorTextureRegions[DOWN] != null)
 			spriteBatch.draw(anchorTextureRegions[DOWN], 
-					graphicX + spriteWidth / 2 - anchorWidth / 2, graphicY - 1,
+					graphicX + graphicWidth / 2 - anchorWidth / 2, graphicY - 1,
 					anchorWidth, anchorHeight);
 
 		if (anchorTextureRegions[UP] != null)
 			spriteBatch.draw(anchorTextureRegions[UP], 
-					graphicX + spriteWidth / 2 - anchorWidth / 2, graphicY + spriteHeight - anchorHeight + 1,
+					graphicX + graphicWidth / 2 - anchorWidth / 2, graphicY + graphicHeight - anchorHeight + 1,
 					anchorWidth, anchorHeight);
 
-		anchorWidth = spriteWidth / 2;
-		anchorHeight = spriteHeight * 3 / 8;
+		anchorWidth = graphicWidth / 2;
+		anchorHeight = graphicHeight * 3 / 8;
 
 		if (anchorTextureRegions[LEFT] != null)
 			spriteBatch.draw(anchorTextureRegions[LEFT], 
-					graphicX - 1, graphicY + spriteHeight / 2 - anchorHeight / 2,
+					graphicX - 1, graphicY + graphicHeight / 2 - anchorHeight / 2,
 					anchorWidth, anchorHeight);
 
 		if (anchorTextureRegions[RIGHT] != null)
 			spriteBatch.draw(anchorTextureRegions[RIGHT],
-					graphicX + spriteWidth - anchorWidth + 1, graphicY + spriteHeight / 2 - anchorHeight / 2,
+					graphicX + graphicWidth - anchorWidth + 1, graphicY + graphicHeight / 2 - anchorHeight / 2,
 					anchorWidth, anchorHeight);
 	}
 
