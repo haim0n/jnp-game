@@ -98,14 +98,13 @@ public class BoardConfig {
 			{ // level 7
 			"xxxxxxxxxxxxxx",
 			"x            x",
-			"x            x",			
 			"x          r x",
 			"x          w x",
 			"x     b   b  x",
 			"x     w  rr  x",			
 			"x         w  x",
 			"x R  Bw w w  x",
-			"x w  ww w w  x",			
+			"x W  Ww w w  x",			
 			"xxxxxxxxxxxxxx",
 			},
 			{ // level 8
@@ -126,12 +125,11 @@ public class BoardConfig {
 			"x            x",
 			"x            x",
 			"x            x",
-			"x            x",
 			"x          rbx",
 			"x    w     xxx",
 			"xb        ddxx",
 			"xx  Rx  x xxxx",			
-			"xxxxxxxxxxxxxx",
+			"xxxxWxxxxxxxxx",
 			},
 			{ // level 10
 			"xxxxxxxxxxxxxx",
@@ -140,9 +138,9 @@ public class BoardConfig {
 			"x    w w xxxxx",
 			"x            x",
 			"x  w  w      x",
-			"x        W  Rx",
-			"xx   w     Gxx",
-			"x          xxx",
+			"x        w  Rx",
+			"xx   w     GWx",
+			"x          Wxx",
 			"xxxxxxxxxxxxxx",
 			},
 			{ // level 11		
@@ -154,7 +152,7 @@ public class BoardConfig {
 			"xxx          x",
 			"x       y    x",
 			"x   x xxx   Yx",
-			"x   xxxxxx xxx",			
+			"x   xxxxxx xWx",			
 			"xxxxxxxxxxxxxx",
 			},
 			{ // level 12
@@ -163,7 +161,7 @@ public class BoardConfig {
 			"xxx  w  w  xxx",
 			"x            x",
 			"xb          Bx",
-			"xx          xx",
+			"xx          Wx",
 			"x            x",
 			"x            x",
 			"x   xxxxxx   x",			
@@ -190,19 +188,19 @@ public class BoardConfig {
 			"x2200       gx",
 			"x3311      xxx",
 			"x3311      xxx",
-			"xxr x Gxxx xxx",			
-			"xxxxxxxxxxxxxx",
+			"xxR x Gxxx xxx",			
+			"xxWxxxWxxxxxxx",
 			},
 			{ // level 15
 			"xxxxxxxxxxxxxx",
 			"xr r r      rx",
 			"xg w w      gx",
 			"xB          bx",
-			"xxxxx     xxxx",
+			"xWxxx     xxxx",
 			"xxxxxx   xxxxx",
 			"xxxxxx   xxxxx",
 			"xxxxxx   xxxxx",
-			"xxxxxxGgGxxxxx",			
+			"xxxxxWGgGWxxxx",			
 			"xxxxxx   xxxxx",
 			},
 			{ // level 16
@@ -210,7 +208,7 @@ public class BoardConfig {
 			"xx   3332100rx",
 			"xx   3422100xx",
 			"xx   444211xxx",
-			"xx     xxxxxxx",
+			"xW     xxxxxxx",
 			"xR     xxxxxxx",
 			"xx     xxxxxxx",
 			"xx     xxxxxxx",
@@ -223,8 +221,8 @@ public class BoardConfig {
 			"xxxx0     bg x",
 			"xxxx0    ddxxx",
 			"xxxx000xxxxxxx",
-			"x 111  xxxxxxx",
-			"xxxx     xxGxx",
+			"x 111  xxxxWxx",
+			"xxxx     xxGWx",
 			"xxxx   g    Bx",
 			"xxxx   x     x",			
 			"xxxxxxxxxxxxxx",
@@ -235,7 +233,7 @@ public class BoardConfig {
 			"xb23         x",
 			"xb2yy     y  x",
 			"xb210     ydBx",
-			"xxxxx y   xxxx",
+			"xxxxx y   xxWx",
 			"xxxxx yy  xxxx",
 			"xxxxx yyy xxxx",
 			"xxxxx yyyyxxxx",
@@ -256,7 +254,7 @@ public class BoardConfig {
 			{ // level 20
 			"xxxxxxxxxxxxxx",
 			"xrrrr   rggxxx",
-			"xxxb    xxxxxx",
+			"xxxb    xxxxWx",
 			"xxxx       xBx",
 			"xx           x",
 			"xx           x",
@@ -341,7 +339,21 @@ public class BoardConfig {
 		 		return NONE;
 		 }
 		 
-		 // TODO: for now, anchor to blacks, if no blacks around, to walls
+		 // TODO: for now, anchor to W walls or blacks anchor to blacks
+
+		 if (cells[x][y-1] == 'W')
+			 return DOWN;
+
+		 if (cells[x][y+1] == 'W')
+			 return UP;
+
+		 if (cells[x+1][y] == 'W')
+			 return RIGHT;
+		 
+		 if (cells[x-1][y] == 'W')
+			 return LEFT;
+		 
+		 
 		 if (Cell.isBlack(getType(x-1, y)))
 			 return LEFT;
 
@@ -354,20 +366,8 @@ public class BoardConfig {
 		 if (Cell.isBlack(getType(x, y-1)))
 			 return DOWN;
 
-
-		 if (Cell.isWall(getType(x-1, y)))
-			 return LEFT;
-
-		 if (Cell.isWall(getType(x, y+1)))
-			 return UP;
-
-		 if (Cell.isWall(getType(x+1, y)))
-			 return RIGHT;
-
-		 if (Cell.isWall(getType(x, y-1)))
-			 return DOWN;
-
 		 // should not be here
+		 Gdx.app.error(TAG, "Could notanchor cell at " + x + ", " + y);
 		 return NONE;
 	}
 	
