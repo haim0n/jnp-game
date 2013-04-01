@@ -150,6 +150,7 @@ public class Board implements Disposable {
 	}
 	
 	private void startFrom(Cell[][] state) {
+		renderMode = 0;
 		destoyPhysical();
 		copyBoardState(cells, state);
 		boardDynamicState = STABLE;

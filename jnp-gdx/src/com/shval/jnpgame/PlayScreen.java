@@ -32,6 +32,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	private boolean isPrevRevertable;
 	static float worldWidth = 200;
 	static float worldHeight = 200;
+	private int secretButtonCount;
 	
 	//
 	private float delta;
@@ -127,7 +128,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		if (delta < PERIOD)
 			return;
 			
-		Gdx.app.debug(TAG, "delta = " + delta + " ~ " + 1 / delta + " FPS");
+		//Gdx.app.debug(TAG, "delta = " + delta + " ~ " + 1 / delta + " FPS");
 		// background (render & update)
 		spriteBatch.begin();
 		background.render(delta, spriteBatch);
@@ -302,6 +303,19 @@ public class PlayScreen implements Screen, InputProcessor {
 				type = butt.getId();
 				break;
 			}
+		}
+
+		// secret button
+		{
+			if (xDown < cellWidth && yDown < cellHeight) {
+				Gdx.app.error(TAG, "Secret button pressed: count = " + secretButtonCount);
+				if (++secretButtonCount == 3) {
+					keyDown(Keys.X);
+					secretButtonCount = 0;
+				}
+			}
+			else
+				secretButtonCount = 0;
 		}
 		
 		if (type == null) { // no button pressed
