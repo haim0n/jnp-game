@@ -1,0 +1,27 @@
+decrease fps - how?
+remove previous rendering data/functions
+open new project
+Find mem leakages. dispose of all objects that require (textures etc), implement disposable interface
+
+
+
+_________________________________________________________
+Win screen
+add instructions
+add select level screen.
+add emerging jelly support. (target: v1.03)
+compare COLS/ROWS ratio with runtime height/width ratio and compensate by removing/adding dummy level rows.
+compensate for cell width/height roundup errors
+resolve all inline TODO
+anchor should be vector like
+add solver and solution function
+consider port to libgdx AssetManager
+Falling sound - only one per jelly.
+When dragging cells fast - we lose them
+Solution recorder
+Show some kind of grid 
+ 
+===================== code refactor ========================
+unify move & canMove logic in Jelly
+make cell abstract and inherit it for wall/jelly/etc
+try avoiding hard coded numbers
