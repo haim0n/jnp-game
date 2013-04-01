@@ -39,7 +39,13 @@ public class JnpGame extends Game {
 		screen = new PlayScreen(config, this);
 		setScreen(screen);
 	}
-		
+
+	public void flipLevel() {
+		Gdx.app.debug(TAG, "flipping level");
+		config.setFlipped();
+		playLevel(currentLevel);
+	}
+	
 	public void nextLevel() {
 		currentLevel++;
 		if (currentLevel > MAX_LEVELS) {

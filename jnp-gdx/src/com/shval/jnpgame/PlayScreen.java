@@ -32,7 +32,11 @@ public class PlayScreen implements Screen, InputProcessor {
 	private boolean isPrevRevertable;
 	static float worldWidth = 200;
 	static float worldHeight = 200;
-	private int secretButtonCount;
+	
+	// secret sequences
+	final int SECRET_LENGTH = 3;
+	int secretInd;
+	int secretSequence;
 	
 	//
 	private float delta;
@@ -305,17 +309,34 @@ public class PlayScreen implements Screen, InputProcessor {
 			}
 		}
 
-		// secret button
+		// secret buttons
 		{
-			if (xDown < cellWidth && yDown < cellHeight) {
-				Gdx.app.error(TAG, "Secret button pressed: count = " + secretButtonCount);
-				if (++secretButtonCount == 3) {
-					keyDown(Keys.X);
-					secretButtonCount = 0;
+			if (xDown < cellWidth) { 
+				// record secret button sequence
+				 secretSequence = (10 * secretSequence) + (int) yDown / cellHeight;
+				 secretInd++;
+				 
+				if (secretInd == SECRET_LENGTH) {
+					Gdx.app.error(TAG, "Secret sequence pressed: sequence: " + secretSequence);
+					switch(secretSequence) {
+					case 123:
+						Gdx.app.error(TAG, "flipping");
+						game.flipLevel();
+						break;
+					case 000:
+						keyDown(Keys.X);
+						break;
+					default:
+					}
+					secretInd = 0;
+					secretSequence = 0;
 				}
 			}
-			else
-				secretButtonCount = 0;
+			else {
+				secretInd = 0;
+				secretSequence = 0;
+			}
+			
 		}
 		
 		if (type == null) { // no button pressed

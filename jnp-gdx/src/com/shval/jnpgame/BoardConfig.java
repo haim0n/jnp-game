@@ -13,6 +13,7 @@ public class BoardConfig {
 	int level;
 	static private final String TAG = BoardConfig.class.getSimpleName();
 	private char cells[][];
+	boolean flipped;
 	
 	// level 1
 	private String levels[][] = { 
@@ -301,9 +302,23 @@ public class BoardConfig {
 	private void transposeBoard(String board[]) {
 		// in libgdx (0,0) is the lower left corner
 		// we'll stick to that
-		for (int x = 0; x < COLS; x++) {
-			for (int y = 0; y < ROWS; y++) {
-				cells[x][ROWS - 1 - y] = board[y].charAt(x);
+		
+		// flip 
+		if (flipped) {
+			Gdx.app.error(TAG, "building flipped board");
+			for (int x = 0; x < COLS; x++) {
+				for (int y = 0; y < ROWS; y++) {
+					cells[x][y] = board[y].charAt(x);
+				}
+			}			
+			flipped = false; // flip is done only once
+		}
+		
+		else {
+			for (int x = 0; x < COLS; x++) {
+				for (int y = 0; y < ROWS; y++) {
+					cells[x][ROWS - 1 - y] = board[y].charAt(x);
+				}
 			}
 		}
 	}
@@ -616,5 +631,8 @@ public class BoardConfig {
 	public boolean lastLevel() {
 		return (level == LEVELS);
 	}
-
+	
+	public void setFlipped() {
+		flipped = ! flipped;
+	}
 }

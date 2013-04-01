@@ -157,7 +157,7 @@ public class Board implements Disposable {
 		jellifyBoard();
 		attemptMerge();
 		createPhysicalCells();
-		//updateBoardPhysics(); TODO: do we really need levels who need this call?
+		//updateBoardPhysics(); //TODO: do we really need levels who need this call?
 	}
 
 	private void destoyPhysical() {
