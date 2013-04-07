@@ -309,6 +309,7 @@ public class PlayScreen implements Screen, InputProcessor {
 			}
 		}
 
+		
 		// secret buttons
 		{
 			if (xDown < cellWidth) { 
@@ -336,7 +337,6 @@ public class PlayScreen implements Screen, InputProcessor {
 				secretInd = 0;
 				secretSequence = 0;
 			}
-			
 		}
 		
 		if (type == null) { // no button pressed

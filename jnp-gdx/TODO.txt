@@ -2,7 +2,7 @@ decrease fps - how?
 remove previous rendering data/functions
 open new project
 Find mem leakages. dispose of all objects that require (textures etc), implement disposable interface
-
+Shout Assets be disposable?
 
 
 _________________________________________________________

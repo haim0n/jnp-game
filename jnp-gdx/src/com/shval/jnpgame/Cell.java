@@ -1,11 +1,13 @@
 package com.shval.jnpgame;
 
 import static com.shval.jnpgame.Globals.*;
+
 import com.shval.jnpgame.PhysicalCell;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -21,8 +23,7 @@ public class Cell implements Disposable  {
 	
 	private Texture rawTexture;	// the actual bitmap
 	private TextureRegion textureRegions[][]; // each cell composed of 2 x 2 texture regions
-	private TextureRegion anchorTextureRegions[]; // each cell can anchor 4 adjecent cells
-	
+	private TextureRegion anchorTextureRegions[]; // each cell can anchor 4 adjacent cells
 	private int x;			// the X coordinate (in the board cells matrix)
 	private int y;			// the Y coordinate 	"  "
 	private float dxFromMilestone;
@@ -38,6 +39,10 @@ public class Cell implements Disposable  {
 	static private float graphicWidth;
 	static private float graphicHeight;
 	
+	Cell emerging;
+	int emergingTo; // valid only for emerging cell
+	Sprite emergingSprite;
+	
 	public Cell(Cell other) {
 		this.type = other.type;
 		this.rawTexture = other.rawTexture;
@@ -47,8 +52,18 @@ public class Cell implements Disposable  {
 		this.jelly = null; // we assume that right jelly will be set from outside
 		
 		textureRegions = other.textureRegions;
-		anchorTextureRegions = other.anchorTextureRegions; // TODO: all nulls?
+		anchorTextureRegions = new TextureRegion[4];
+		for (int i=0; i <4; i++)
+			anchorTextureRegions[i] = other.anchorTextureRegions[i];
+		emergingSprite = other.emergingSprite;
 		speed = new Speed(other.getSpeed()); // creates stale cells only
+		
+		this.emergingTo = other.emergingTo;
+		this.emergingSprite = other.emergingSprite;
+		if (other.emerging == null)
+			this.emerging = null;
+		else
+			this.emerging = new Cell(other.emerging);
 	}
 	
 	private Cell(int x, int y) {
@@ -58,13 +73,14 @@ public class Cell implements Disposable  {
 		this.x = x;
 		this.y = y;
 		this.jelly = null;
-
+		
 		textureRegions = null;
 		anchorTextureRegions = null;
 		speed = null;
 	}
 	
 	private Cell(int x, int y, BoardConfig config) {
+		Gdx.app.debug(TAG, "Creating cell " + x + ", " + y);
 		this.type = config.getType(x, y);
 		this.rawTexture = config.getTexture(x, y);
 		this.anchoredTo = config.getAncoredTo(x, y);
@@ -83,7 +99,18 @@ public class Cell implements Disposable  {
 		}
 
 		speed = new Speed(0, 0);
+
+		if (x < 0 || y < 0) { // emerging cell
+			this.emerging = null;
+			this.emergingTo = config.getEmergingTo(x, y);
+		}
+		else if (x > 0 || y > 0) { // 0, 0 cannot hold emerging cell
+			this.emerging = createCell(-x, -y, config);
+			this.emergingSprite = config.getEmergingSprite(-x, -y);
+		}
+		
 	}
+	
 	
 	// factory of the cell,
 	// if no config is given, then a dummy cell is created
@@ -335,6 +362,7 @@ public class Cell implements Disposable  {
 		// set width only on first call
 		Cell.graphicWidth = spriteWidth;
 		Cell.graphicHeight = spriteHeight;
+
 	}
 	
 	void createPhysicalCell() {
@@ -389,6 +417,12 @@ public class Cell implements Disposable  {
 	
 	public void render(SpriteBatch spriteBatch, int layer) {
 		//Gdx.app.debug(TAG, "rendering cell");
+
+		if (layer == 0) { // emerging cells
+			if (Board.renderMode == 2) // for now
+				if (this.emerging != null)
+					this.emerging.render(spriteBatch, 1);
+		}
 		
 		if (layer == 1) {
 			if (Board.renderMode == 0)
@@ -486,6 +520,54 @@ public class Cell implements Disposable  {
 			spriteBatch.draw(anchorTextureRegions[RIGHT],
 					graphicX + graphicWidth - anchorWidth + 1, graphicY + graphicHeight / 2 - anchorHeight / 2,
 					anchorWidth, anchorHeight);
+		
+		
+		if (emerging != null) {
+			//emergingSprite.setPosition(graphicX, graphicY);
+			float angle = 0;
+			float gX = graphicX;
+			float gY = graphicY;
+			float gW = 0;
+			float gH = 0;			
+			
+			if(this.emerging.emergingTo == LEFT) {
+				angle = 0;
+				gW = graphicWidth * 1 / 6;
+				gH = graphicHeight;
+				if(this.emerging.anchoredTo != NONE) {
+					gW = gW * 3f;
+				}
+			}
+			
+			if(this.emerging.emergingTo == RIGHT) {
+				angle = 0;
+				gW = graphicWidth * 1 / 6;
+				gH = graphicHeight;
+				gX += graphicWidth * 5 / 6;
+				if(this.emerging.anchoredTo != NONE) {
+					gX += gW;
+					gW = gW * 3f;
+					gX -= gW;
+				}
+			}
+			if(this.emerging.emergingTo == UP) {
+				angle = -90;
+				gY += graphicHeight;
+				gW = graphicHeight * 1 / 6;
+				if(this.emerging.anchoredTo != NONE) {
+					//gY += gW;
+					gW = gW * 3f;
+					//gY -= gW;
+				}
+				gH = graphicWidth;
+			}
+			
+
+			
+			
+			spriteBatch.draw(emergingSprite, gX, gY, 0, 0, gW, gH, 1f, 1f, angle);
+			
+		}
 	}
 
 	/**
@@ -495,7 +577,11 @@ public class Cell implements Disposable  {
 
 	
 	boolean update(float delta) {
+		boolean isMilestone = false;
 		
+		if (this.emerging != null)
+			isMilestone |= this.emerging.update(delta);
+			
 		if(!isMoving())
 			return false; // no milestone and nothing to update
 		
@@ -512,7 +598,6 @@ public class Cell implements Disposable  {
 		//Gdx.app.debug(TAG, "(" + x + ", " + y + "): new (dx, dy) = (" + newDx + ", " + newDy + ")");
 		
 		// milestone reached?
-		boolean isMilestone = false;
 		
 		if (Math.abs(newDx) >= CELL_SIZE) {
 			isMilestone = true;
@@ -539,6 +624,11 @@ public class Cell implements Disposable  {
 			dyFromMilestone  = newDy;
 		}
 		
+		if (emergingTo != NONE) // this is an emerging cell
+			if (isMilestone) {
+				this.stopVertical();
+				emergingTo = NONE; // this will tell the board that the cell emerged
+			}
 		return isMilestone;
 	}
 
@@ -607,7 +697,8 @@ public class Cell implements Disposable  {
 		
 		
 		// move the whole parent jelly
-		jelly.move(dir);
+		if (jelly != null) // this is done for emerging cells which dont have jelly
+			jelly.move(dir);
 	}
 
 	void stop() {
@@ -656,5 +747,24 @@ public class Cell implements Disposable  {
 		
 		physicalCell.dispose();
 		// TODO: is that it ? how about the regions?
+	}
+	
+	public void emerge() {
+		if (emerging == null) {
+			Gdx.app.error(TAG, "Trying to emerge. No emerge defined!!\n");
+			return;
+		}
+		
+		// some things before emerging 
+		Cell emerging = this.emerging;
+
+		Jelly jelly = new Jelly(this.jelly.getBoard());
+		emerging.setJelly(jelly);
+		jelly.join(emerging);
+		emerging.createPhysicalCell();
+		emerging.setX(x);
+		emerging.setY(y);
+		emerging.move(this.emerging.emergingTo);
+		
 	}
 }

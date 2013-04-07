@@ -34,6 +34,7 @@ public class Assets {
     public static Texture buttonIconsTexture;
     public static Texture fontTexture;
     public static Texture msgFrameTexture;
+    public static Texture emergingTexture;
     //public static TextureAtlas atlas;  
     
     public static Sound fallSound;
@@ -74,6 +75,7 @@ public class Assets {
         buttonIconsTexture = new Texture(Gdx.files.internal(("data/bi.png")));
         fontTexture = new Texture(Gdx.files.internal(("data/font.png")));
         msgFrameTexture = new Texture(Gdx.files.internal(("data/frame.png")));
+        emergingTexture = new Texture(Gdx.files.internal(("data/ja.png")));
         
         fallSound = Gdx.audio.newSound(Gdx.files.internal("data/0.wav"));
         slideSound = Gdx.audio.newSound(Gdx.files.internal("data/1.wav"));
@@ -227,5 +229,9 @@ public class Assets {
 
 	public static Texture getFontTexture() {
 		return fontTexture;
+	}
+
+	public static Texture getEmergingTexture() {
+		return emergingTexture;
 	}  
 }

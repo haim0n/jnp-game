@@ -145,12 +145,14 @@ public class Board implements Disposable {
 	
 	public void start() {
 		Gdx.app.debug(TAG, "Starting");
+		renderMode = 0;
 		boardStateIndex = 0; // flush state stack
 		startFrom(initialBoard);
+		
 	}
 	
 	private void startFrom(Cell[][] state) {
-		renderMode = 0;
+		//renderMode = 0;
 		destoyPhysical();
 		copyBoardState(cells, state);
 		boardDynamicState = STABLE;
@@ -343,7 +345,16 @@ public class Board implements Disposable {
 		if (renderMode == 0 /* Physical */) {
 			Gdx.gl10.glEnable(GL10.GL_BLEND);
 		}
-			
+
+		for (int x = 0; x < COLS; x++) {
+			for (int y = 0; y < ROWS; y++) {
+				Cell cell = cells[x][y];
+				if (cell == null)
+					continue;
+				cell.render(spriteBatch, 0);
+			}
+		}
+		
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
 				Cell cell = cells[x][y];
@@ -468,6 +479,53 @@ public class Board implements Disposable {
 		
 		return merge;
 	}
+
+	private int attemptEmerge() {
+		int emerge = NONE; // indicates whether something emerged and where
+		for (int x = 0; x < COLS; x++) {
+			for (int y = 0; y < ROWS; y++) {
+				Cell cell = cells[x][y];
+				
+				if (cell == null)
+					continue;
+				
+				 if (cell.isMoving())
+					 Gdx.app.debug(TAG, "Attempting to emerge while moving (it may be ok)");
+				
+				 Cell emerging = cell.emerging;
+				 if (emerging == null)
+					continue;
+					
+				int dx = 0;
+				int dy = 0;
+				switch (emerging.emergingTo) {
+				case UP:
+					dy = 1;
+					break;
+				case LEFT:
+					dx = -1;
+					break;
+				case RIGHT:
+					dx = 1;
+					break;
+				default:
+					 Gdx.app.error(TAG, "Attempting to emerge to" + emerging.emergingTo);
+				}
+				
+				Cell neighbor = cells[x+dx][y+dy];
+				if (neighbor == null)
+					continue;
+				
+				if(emerging.getType() == neighbor.getType())
+					if (attemptMove(emerging.emergingTo, neighbor)) {
+						cell.emerge();
+						emerge = emerging.emergingTo;
+					}
+			}
+		}
+		return emerge;
+	}
+
 	
 	private void setNeighbours() {
 		Gdx.app.debug(TAG, "Setting neighbors");
@@ -531,6 +589,13 @@ public class Board implements Disposable {
 				if (cell == null)
 					continue;
 				cells[cell.getX()][cell.getY()] = cell;
+				if(cell.emerging != null) {
+					Cell newCell = cell.emerging;
+					if (newCell.emergingTo == NONE) { // just emerged
+						cell.emerging = null;
+						cells[newCell .getX()][newCell .getY()] = newCell;
+					}
+				}		
 			}
 		}
 		
@@ -539,7 +604,6 @@ public class Board implements Disposable {
 		updateBoardPhysics();
 		if (boardDynamicState == STABLE) {// milestone is stable			 
 			if (attemptMerge()) {
-
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_START]), 0.2f);
 				//Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), 0.3f);
 			}
@@ -654,6 +718,7 @@ public class Board implements Disposable {
 						newBoardState = DOWN_MOTION;
 				}
 			}
+			
 		}
 		else if (boardDynamicState == DOWN_MOTION) {
 
@@ -681,12 +746,27 @@ public class Board implements Disposable {
 			}
 		} 
 		else if (boardDynamicState == UP_MOTION) {
-			// TODO
+			for (int x = 0; x < COLS; x++) {
+				for (int y = 0; y < ROWS; y++) {
+					Cell cell = cells[x][y];
+					if (cell == null)
+						continue;
+					
+					cell.stopVertical();
+				}
+			}
 		}
 		else {
 			Gdx.app.error(TAG, "Something is terribly wrong ...");
 		}			
 		
+		int emergeDir = NONE;
+		if (newBoardState == STABLE)
+			emergeDir = attemptEmerge();
+		if (emergeDir != NONE) {
+			newBoardState = 1 << emergeDir;
+		}
+
 		// update state
 		boardDynamicState = newBoardState;
 	}
@@ -730,6 +810,7 @@ public class Board implements Disposable {
 					cell.dispose();
 			}
 		}
+		world.dispose();
 	}
 
 }

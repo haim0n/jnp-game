@@ -151,7 +151,8 @@ class PhysicalCell implements Disposable{
 	
 	private void buildAnchorMeshs() {
 		short indices[] = {0, 1, 2, 2, 3, 0};
-		
+		if (anchorTextures == null)
+			return;
 		// left 
 		if (anchorTextures[LEFT] != null) {
 			// we will a rectangle

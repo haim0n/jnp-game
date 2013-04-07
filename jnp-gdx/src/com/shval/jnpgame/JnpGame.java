@@ -16,7 +16,7 @@ public class JnpGame extends Game {
 			
 	@Override
 	public void create() {
-		currentLevel = 1;
+		currentLevel = 0;
 		
 		// load assets
 		Assets.load();
@@ -69,12 +69,13 @@ public class JnpGame extends Game {
 
 	}
 	
-	/*
+	
 	@Override
 	public void dispose() {
-		
+		if (screen != null)
+			screen.dispose();	
 	}
-	*/
+	
 	
 	@Override
 	public void pause() {

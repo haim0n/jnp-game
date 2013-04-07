@@ -4,6 +4,8 @@ import static com.shval.jnpgame.Globals.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class BoardConfig {
 
@@ -18,7 +20,7 @@ public class BoardConfig {
 	// level 1
 	private String levels[][] = { 
 			{ // level 0 - dev playground\
-				/*
+/*
 			"xxxxxxxxxxxxxx",
 			"x   G4brg  rRx",
 			"xd b gygr    x",
@@ -31,8 +33,8 @@ public class BoardConfig {
 			*/
 			"WWW",
 			"R R",
-			"   ",
-			"   "
+			"W y",
+			"WWW"
 			
 			},
 			{ // level 1			
@@ -350,9 +352,11 @@ public class BoardConfig {
 	*/
 	
 	int getAncoredTo(int x, int y) {
-		 char cell = cells[x][y];
+		if (x < 0 || y < 0)
+			return getEmergingAnchordTo(-x, -y);
+		char cell = cells[x][y];
 		 		 
-		 switch(cell) {
+		switch(cell) {
 		 	case 'R' :
 		 	case 'G' :		 		
 		 	case 'B' :		 		
@@ -399,6 +403,9 @@ public class BoardConfig {
 	}
 	
 	int getType(int x, int y) {
+		 if (x < 0 || y < 0) {
+			 return getEmergingType(-x, -y);
+		 }
 		 char cell = cells[x][y];
 		 int ret;
 		 switch(cell) {
@@ -444,6 +451,104 @@ public class BoardConfig {
 		 return ret;
 	}
 
+	private int getEmergingType(int x, int y) {
+		
+		if (level == 0) {
+			if (x == 1 && y == 0)
+				return JELLY_YELLOW;
+		}
+
+		if (level == 1) {
+			if (x == 10 && y == 1)
+				return JELLY_RED;
+			if (x == 13 && y == 2)
+				return JELLY_BLUE;
+			if (x == 0 && y == 2)
+				return JELLY_GREEN;
+		}
+
+		return NONE;
+	}
+	
+	private int getEmergingAnchordTo(int x, int y) {
+
+		if (level == 0) {
+			if (x == 1 && y == 0)
+				return DOWN;
+		}
+		if (level == 1) {
+			if (x == 10 && y == 1)
+				return DOWN;
+			if (x == 13 && y == 2)
+				return RIGHT;
+			if (x == 0 && y == 2)
+				return LEFT;
+		}
+
+		return NONE;
+
+	}
+
+	int getEmergingTo(int x, int y) {
+		x = -x;
+		y = -y;
+		if (level == 0) {
+			if (x == 1 && y == 0)
+				return UP;
+			
+		}
+		if (level == 1) {
+			if (x == 10 && y == 1)
+				return UP;
+			if (x == 13 && y == 2)
+				return LEFT;
+			if (x == 0 && y == 2)
+				return RIGHT;
+		}
+		return NONE;
+	}
+	
+	Sprite getEmergingSprite(int x, int y) {
+	
+		int to = getEmergingTo(x, y);
+		int type = getEmergingType(-x, -y);
+		int anchoredTo = getEmergingAnchordTo(-x, -y);
+		
+		if (type == NONE)
+			return null;
+
+		int dx = 0;
+		switch(type) {
+		case JELLY_BLUE:
+			dx = 1 * 48;
+			break;
+		case JELLY_GREEN:
+			dx = 2 * 48;
+			break;
+		case JELLY_YELLOW:
+			dx = 3 * 48;
+			break;
+			
+		}
+
+		int dy = 0;
+		int dw = 0;
+		if (anchoredTo != NONE) {
+			dy = 48;
+			dx -= 16;
+			dw = 16;
+		}
+		
+		int xP = 28 + dx;
+		int yP = 9 + dy;
+		int wP = 8 + dw;
+		int hP = 46;
+		Sprite sp = new Sprite(Assets.getEmergingTexture(), xP, yP, wP, hP);
+		if (to == UP || to == LEFT)
+			sp.flip(true, true);
+		return sp;
+	}
+	
 	public Texture getResetButtonsTexture() {
 		return Assets.getButtonsTexture();
 	}
@@ -633,6 +738,8 @@ public class BoardConfig {
 	}
 	
 	public void setFlipped() {
-		flipped = ! flipped;
+		if (level <= 20) // this will make thing simpler with emerging cells
+			flipped = ! flipped;
 	}
+
 }
