@@ -1,13 +1,18 @@
 package com.shval.jnpgame;
 
+import java.util.ArrayList;
+
 import com.shval.jnpgame.BoardConfig;
 import static com.shval.jnpgame.Globals.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -38,6 +43,7 @@ public class Board implements Disposable {
 	private float soundVolume; // in [0,1]
 	private World world; // box2d world
 	Box2DDebugRenderer debugRenderer;
+	private ArrayList<MergeEffect> mergeEffects;
 	
 	// dummy "out of scope" cell, make it a wall
 	//static final Cell outOfScopeCell = new Cell(null, 0, 0 ,null , WALL, NONE);
@@ -50,6 +56,13 @@ public class Board implements Disposable {
 		}
 	}
 
+	private class SetNeighboursTask extends Timer.Task {
+		@Override
+		public void run() {
+			setNeighbours();
+		}
+	}
+	
 	private class DelayedSoundPlay extends Timer.Task {
 		
 		Sound sound;
@@ -61,6 +74,134 @@ public class Board implements Disposable {
 		@Override
 		public void run() {
 			sound.play(soundVolume);
+		}
+	}
+	
+	private class MergeEffect {
+		static final float MAX_TTL = 0.35f;
+		float ttl1; // time to live
+		float ttl2; // time to live
+		boolean horisontal;
+		Sprite star1, star2, star3, star4, star5, star6;
+		Sprite flash;
+		float gX, gY;
+		float w = 720;
+
+		MergeEffect(boolean horisontal, int x, int y) {
+			// effect just above (if horizontal) or just to the right
+			// of cell (x, y)
+			this.horisontal = horisontal;
+			this.ttl1 = MAX_TTL;
+			this.ttl2 = MAX_TTL;
+			this.star1 = new Sprite(Assets.getStarTexture());
+			this.star2 = new Sprite(Assets.getStarTexture());
+			this.flash = new Sprite(Assets.getFlashTexture(), 26, 0, 20, 60);
+
+			this.star3 = new Sprite(Assets.getStarTexture());
+			this.star4 = new Sprite(Assets.getStarTexture());
+			this.star5 = new Sprite(Assets.getStarTexture());
+			this.star6 = new Sprite(Assets.getStarTexture());
+
+			
+			star1.setScale(cellWidth / (80), cellWidth / (80));
+			star2.setScale(cellWidth / (80), cellWidth / (80));
+			
+			star3.setScale(cellWidth / (160), cellWidth / (160));
+			star4.setScale(cellWidth / (160), cellWidth / (160));
+			star5.setScale(cellWidth / (160), cellWidth / (160));
+			star6.setScale(cellWidth / (160), cellWidth / (160));
+			
+			//star1.setSize(cellWidth / 3, cellHeight / 3);
+			//star2.setSize(cellWidth / 3, cellHeight / 3);
+			if (horisontal) {
+				this.gX = cellWidth * ((float) x + 0.5f) - 16;
+				this.gY = cellHeight * ((float) y + 1f) - 16;
+				//flash.setPosition(cellWidth * (x - 0.2f),  cellHeight * (y + 0.9f));
+				//flash.setSize(cellWidth * 1.4f, cellHeight / 6);
+				
+				flash.setSize(cellHeight / 6, cellWidth * 1.4f);
+				flash.setPosition(cellWidth * (x + 0.6f),  cellHeight * (y + 0.7f));
+				flash.rotate(90);
+				
+				
+			}
+			else {
+				this.gX = cellWidth * ((float) x + 1f) - 16;
+				this.gY = cellHeight * ((float) y + 0.5f) - 16;
+				flash.setPosition(cellWidth * (x + 0.9f),  cellHeight * (y - 0.2f));
+				flash.setSize(cellWidth / 6, cellHeight * 1.4f);
+				
+			}
+			
+			
+		}
+		
+		void update(float delta) {
+			
+			if (ttl1 > 0) {
+				ttl1 -= delta;
+					
+				float dx = 0;
+				float dy = 0;
+				
+				if (horisontal)
+					dx = 0.5f * cellWidth * (MAX_TTL - 2 * ttl1 ) / MAX_TTL;
+				else
+					dy = 0.5f * cellHeight * (MAX_TTL - 2 * ttl1 ) / MAX_TTL;
+				
+				star1.rotate(w * delta);
+				star2.rotate(- w * delta);
+				star1.setPosition(gX + dx, gY + dy);
+				star2.setPosition(gX - dx, gY - dy);
+			}
+			else {
+				float d = ttl2 / MAX_TTL;
+				d = d * d;
+				float dx = 0.4f * cellWidth * (1 - d * d);
+				float dy = 0.4f * cellWidth * (1 - d * d);
+				ttl2 -= delta;
+				
+				
+				if (horisontal) {
+					star3.setPosition(gX + cellWidth / 2 + dx, gY + dy);
+					star4.setPosition(gX - cellWidth / 2 - dx, gY + dy);
+					star5.setPosition(gX - cellWidth / 2 - dx, gY - dy);
+					star6.setPosition(gX + cellWidth / 2 + dx, gY - dy);
+				}
+				else {
+					star3.setPosition(gX + dx, gY + cellHeight / 2 + dy);
+					star4.setPosition(gX - dx, gY + cellHeight / 2+ dy);
+					star5.setPosition(gX - dx, gY - cellHeight / 2- dy);
+					star6.setPosition(gX + dx, gY - cellHeight / 2- dy);
+				}
+				star2.rotate(w * delta);
+				star3.rotate(- w * delta);
+				star4.rotate(w * delta);
+				star5.rotate(- w * delta);
+
+			}
+	
+		}
+		
+		void render(SpriteBatch batch) {
+			if (ttl1 > 0) {
+				flash.setColor(1, 1, 1, ttl1 / MAX_TTL);
+				flash.draw(batch);
+				star1.draw(batch);
+				star2.draw(batch);
+			}
+			else {
+				if (ttl2 < 3 * MAX_TTL / 4) {
+					star3.setColor(1, 1, 1, 0.3f + ttl2 / MAX_TTL);
+					star4.setColor(1, 1, 1, 0.3f + ttl2 / MAX_TTL);
+					star5.setColor(1, 1, 1, 0.3f + ttl2 / MAX_TTL);
+					star6.setColor(1, 1, 1, 0.3f + ttl2 / MAX_TTL);
+					star3.draw(batch);
+					star4.draw(batch);
+					star5.draw(batch);
+					star6.draw(batch);
+				}
+			}
 		}
 	}
 	
@@ -90,6 +231,7 @@ public class Board implements Disposable {
 		createWorld();
 				
 		outOfScopeCell = Cell.createCell(-1, -1, null);
+		mergeEffects = new ArrayList<MergeEffect>();
 	}
 
 	private void copyBoardState(Cell dst[][], Cell src[][]) {
@@ -145,7 +287,7 @@ public class Board implements Disposable {
 	
 	public void start() {
 		Gdx.app.debug(TAG, "Starting");
-		renderMode = 0;
+		renderMode = 2;
 		boardStateIndex = 0; // flush state stack
 		startFrom(initialBoard);
 		
@@ -157,8 +299,9 @@ public class Board implements Disposable {
 		copyBoardState(cells, state);
 		boardDynamicState = STABLE;
 		jellifyBoard();
-		attemptMerge();
+		attemptMerge(cells, true, false); // dont trigger merge effect
 		createPhysicalCells();
+		setNeighbours();
 		//updateBoardPhysics(); //TODO: do we really need levels who need this call?
 	}
 
@@ -221,7 +364,8 @@ public class Board implements Disposable {
 		Cell[][] checkState = new Cell[COLS][ROWS];
 		copyBoardState(checkState, cells);
 		jellify(checkState);
-		attemptMerge(checkState, false); // don't merge anchored when looking for a win
+		attemptMerge(checkState, false, false); // don't merge anchored when looking for a win
+												// also dont trigger merge effect
 		
 		// win iff all non-black jellies
 		Jelly jellies[] = new Jelly[MAX_COLORED_JELLY_TYPES];
@@ -233,6 +377,8 @@ public class Board implements Disposable {
 				if (cell == null || cell.getType() == NONE)
 					continue;
 				
+				if (cell.emerging != null) 
+					return false;
 				int type = cell.getType();
 				// walls and blacks are not in the game
 				if (type == WALL || Cell.isBlack(type))
@@ -374,7 +520,13 @@ public class Board implements Disposable {
 				cell.render(spriteBatch, 2);
 			}
 		}
-			
+		
+		if (renderMode == 2 /* static */) {
+			// render merge effects
+			for (MergeEffect c : mergeEffects) {
+				c.render(spriteBatch);
+			}
+		}
 	}
 
 	
@@ -441,11 +593,13 @@ public class Board implements Disposable {
 	
 	private boolean attemptMerge() {
 		// for compatibility
-		return attemptMerge(cells, true); // merge anchord 
+		return attemptMerge(cells, true, true); // merge anchord 
 	}
 	
-	private boolean attemptMerge(Cell[][] postition, boolean mergeAnchord) {
-		boolean merge = false; // indicates whether something merged
+	private boolean attemptMerge(Cell[][] postition, boolean mergeAnchord, boolean triggerEffect) {
+		boolean merge; // indicates whether something merged
+		boolean ret = false;
+				
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
 				Cell cell = postition[x][y];
@@ -465,19 +619,26 @@ public class Board implements Disposable {
 				else
 					neighbor = outOfScopeCell; // this is helpful for border rendering
 				
-				merge |= attemptMerge(cell, neighbor, mergeAnchord);
-				
+				merge = attemptMerge(cell, neighbor, mergeAnchord);
+				if (merge && triggerEffect)
+					if (cell.getType() == neighbor.getType())
+						mergeEffects.add(new MergeEffect(false, x, y));
+				ret |= merge;
 				// try to merge with down neighbor
 				if (y < ROWS - 1)
 					neighbor = postition[x][y+1];
 				else
 					neighbor = null;
 				
-				merge |= attemptMerge(cell, neighbor, mergeAnchord);
+				merge = attemptMerge(cell, neighbor, mergeAnchord);
+				if (merge && triggerEffect)
+					if (cell.getType() == neighbor.getType())
+						mergeEffects.add(new MergeEffect(true, x, y));
+				ret |= merge;
 			}
 		}
 		
-		return merge;
+		return ret;
 	}
 
 	private int attemptEmerge() {
@@ -563,6 +724,14 @@ public class Board implements Disposable {
 		boolean isMilestone;
 		//Gdx.app.debug(TAG, "Updating game state. delta = " + delta);
 		
+		ArrayList<MergeEffect> mergeEffectsNew = new ArrayList<MergeEffect>(); 
+		for (MergeEffect c : mergeEffects) {
+			c.update(delta);
+			if (c.ttl2 > 0)
+				mergeEffectsNew.add(c);
+		}
+		mergeEffects = mergeEffectsNew;
+		
 		if (boardDynamicState == STABLE)
 			return;
 		
@@ -604,7 +773,8 @@ public class Board implements Disposable {
 		updateBoardPhysics();
 		if (boardDynamicState == STABLE) {// milestone is stable			 
 			if (attemptMerge()) {
-				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_START]), 0.2f);
+				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_START]), 0f);
+				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), MergeEffect.MAX_TTL * 1.5f);
 				//Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), 0.3f);
 			}
 			if (isWinPosition()) { // check only if something merged
@@ -683,7 +853,8 @@ public class Board implements Disposable {
 			}
 		}		
 		
-		setNeighbours(); // align graphical properties of cells
+		//setNeighbours(); // align graphical properties of cells
+		Timer.schedule(new SetNeighboursTask(), MergeEffect.MAX_TTL * 2f);
 	}
 
 	private void updateBoardPhysics() {

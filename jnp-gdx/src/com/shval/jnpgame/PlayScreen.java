@@ -30,8 +30,8 @@ public class PlayScreen implements Screen, InputProcessor {
 	SpriteBatch spriteBatch;
 	OrthographicCamera camera;
 	private boolean isPrevRevertable;
-	static float worldWidth = 200;
-	static float worldHeight = 200;
+	static float worldWidth = 1000;
+	static float worldHeight = 1000;
 	
 	// secret sequences
 	final int SECRET_LENGTH = 3;

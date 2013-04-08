@@ -31,11 +31,12 @@ public class Assets {
     
     public static Texture buttonsTexture;
     public static Texture smallStarTexture;
+    public static Texture starTexture;
     public static Texture buttonIconsTexture;
     public static Texture fontTexture;
     public static Texture msgFrameTexture;
     public static Texture emergingTexture;
-    //public static TextureAtlas atlas;  
+    public static Texture flashTexture;
     
     public static Sound fallSound;
     public static Sound slideSound;
@@ -72,10 +73,12 @@ public class Assets {
         
         buttonsTexture = new Texture(Gdx.files.internal(("data/button.png")));
         smallStarTexture = new Texture(Gdx.files.internal(("data/small_star.png")));
+        starTexture = new Texture(Gdx.files.internal(("data/star32.png")));
         buttonIconsTexture = new Texture(Gdx.files.internal(("data/bi.png")));
         fontTexture = new Texture(Gdx.files.internal(("data/font.png")));
         msgFrameTexture = new Texture(Gdx.files.internal(("data/frame.png")));
         emergingTexture = new Texture(Gdx.files.internal(("data/ja.png")));
+        flashTexture = new Texture(Gdx.files.internal(("data/cflash.png")));
         
         fallSound = Gdx.audio.newSound(Gdx.files.internal("data/0.wav"));
         slideSound = Gdx.audio.newSound(Gdx.files.internal("data/1.wav"));
@@ -233,5 +236,13 @@ public class Assets {
 
 	public static Texture getEmergingTexture() {
 		return emergingTexture;
+	}
+
+	public static Texture getStarTexture() {
+		return starTexture;
+	}
+
+	public static Texture getFlashTexture() {
+		return flashTexture;
 	}  
 }

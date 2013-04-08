@@ -579,8 +579,9 @@ public class Cell implements Disposable  {
 	boolean update(float delta) {
 		boolean isMilestone = false;
 		
-		if (this.emerging != null)
+		if (this.emerging != null) {
 			isMilestone |= this.emerging.update(delta);
+		}
 			
 		if(!isMoving())
 			return false; // no milestone and nothing to update
