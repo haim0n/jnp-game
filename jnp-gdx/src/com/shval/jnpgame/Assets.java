@@ -37,6 +37,7 @@ public class Assets {
     public static Texture msgFrameTexture;
     public static Texture emergingTexture;
     public static Texture flashTexture;
+    public static Texture frameCursorTextrue;
     
     public static Sound fallSound;
     public static Sound slideSound;
@@ -79,6 +80,7 @@ public class Assets {
         msgFrameTexture = new Texture(Gdx.files.internal(("data/frame.png")));
         emergingTexture = new Texture(Gdx.files.internal(("data/ja.png")));
         flashTexture = new Texture(Gdx.files.internal(("data/cflash.png")));
+        frameCursorTextrue = new Texture(Gdx.files.internal(("data/bcursor2.png")));
         
         fallSound = Gdx.audio.newSound(Gdx.files.internal("data/0.wav"));
         slideSound = Gdx.audio.newSound(Gdx.files.internal("data/1.wav"));
@@ -244,5 +246,9 @@ public class Assets {
 
 	public static Texture getFlashTexture() {
 		return flashTexture;
+	}
+
+	public static Texture getFrameCursorTextrue() {
+		return frameCursorTextrue;
 	}  
 }

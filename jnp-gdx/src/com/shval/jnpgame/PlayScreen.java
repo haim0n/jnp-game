@@ -12,6 +12,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class PlayScreen implements Screen, InputProcessor {
@@ -32,6 +33,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	private boolean isPrevRevertable;
 	static float worldWidth = 1000;
 	static float worldHeight = 1000;
+	TextureRegion frameCursor;
 	
 	// secret sequences
 	final int SECRET_LENGTH = 3;
@@ -52,6 +54,8 @@ public class PlayScreen implements Screen, InputProcessor {
 	int xDown;
 	int yDown;
 	boolean down;
+
+	private long timeDown;
 	
 	public PlayScreen(BoardConfig config, JnpGame game) {
 		this.game = game;
@@ -82,6 +86,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		spriteBatch.setProjectionMatrix(camera.combined);
 		//spriteBatch.setTransformMatrix(camera.);
 		
+		this.frameCursor = new TextureRegion( Assets.getFrameCursorTextrue(), 7, 7, 47, 47);  
 		// the action begins (here, and not in Screen's constructor!)
         board.start();
 	}
@@ -168,6 +173,9 @@ public class PlayScreen implements Screen, InputProcessor {
 		for (JNPLabel label: labels) {
 			label.render(spriteBatch);
 		}
+		
+		renderCursorFrame(spriteBatch);
+		
 		spriteBatch.end();
 		
 		while (delta >= PERIOD)
@@ -338,9 +346,12 @@ public class PlayScreen implements Screen, InputProcessor {
 				secretSequence = 0;
 			}
 		}
+				
 		
 		if (type == null) { // no button pressed
 			down = true;
+			if (timeDown == 0)
+				timeDown = TimeUtils.millis();
 			return true;
 		}
 		
@@ -362,6 +373,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		down = false;
+		timeDown = 0;
 		return true;
 	}
 
@@ -383,7 +395,8 @@ public class PlayScreen implements Screen, InputProcessor {
 			return true;
 
 		Gdx.app.debug(TAG, "Attempting to slide cell (" + xDown/cellWidth + ", " + yDown/cellHeight + ")" + "in direction " + dir);
-		board.attemptSlide(dir, xDown/cellWidth, yDown/cellHeight);
+		if (board.attemptSlide(dir, xDown/cellWidth, yDown/cellHeight))
+			timeDown = TimeUtils.millis();
 		xDown = x;
 		yDown = y;
 		return true;
@@ -429,4 +442,33 @@ public class PlayScreen implements Screen, InputProcessor {
 
 	}
 
+	void renderCursorFrame(SpriteBatch batch) {
+		
+		if (down == false)
+			return;
+
+		int delta = (int) ( TimeUtils.millis() - timeDown ) ;
+		float a = (float) delta / ((float) 1000 * 2f);
+		Gdx.app.debug(TAG, "a = " + a + " delta = " + delta + ", time " + (float) TimeUtils.millis() + ", timeDown " + timeDown);
+		int x = xDown / cellWidth;
+		int y = yDown / cellHeight;
+		
+		float gCellWidth = worldWidth / board.getCols();
+		float gCellHeight = worldHeight / board.getRows();
+		
+		final int K = 2; 
+		for (int i = -K; i <= K; ++i) {
+			for (int j = -K; j <= K; ++j) {
+				float d = (float) ( i * i + j * j ) / (float) (K * K + K * K);
+				int xx = x + i;
+				int yy = y + j;
+				float alpha = Math.min(Math.max(0f, a - d), 1f);
+				batch.setColor(0, 0, 0, alpha);
+				batch.draw(frameCursor, xx * gCellWidth, yy * gCellHeight, gCellWidth, gCellHeight);
+			}
+		}
+			
+		batch.setColor(1, 1, 1, 1);
+		
+	}
 }
