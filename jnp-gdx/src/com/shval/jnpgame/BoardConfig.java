@@ -55,7 +55,7 @@ public class BoardConfig {
 			"x            x", // 			
 			"x            x",
 			"x            x",
-			"x     g   g  x",
+			"x     y   y  x",
 			"x   r r   r  x",
 			"xxxxx x x xxxx",
 			"xxxxxxxxxxxxxx",
@@ -65,7 +65,7 @@ public class BoardConfig {
 			"x            x",
 			"x            x", //			
 			"x            x",
-			"x   bg  x g  x",
+			"x   by  x y  x",
 			"xxx xxxrxxx  x",
 			"x      b     x",
 			"xxx xxxrxxxxxx",
@@ -458,7 +458,7 @@ public class BoardConfig {
 				return JELLY_YELLOW;
 		}
 
-		if (level == 1) {
+		if (level == 11) {
 			if (x == 10 && y == 1)
 				return JELLY_RED;
 			if (x == 13 && y == 2)
@@ -476,7 +476,7 @@ public class BoardConfig {
 			if (x == 1 && y == 0)
 				return DOWN;
 		}
-		if (level == 1) {
+		if (level == 11) {
 			if (x == 10 && y == 1)
 				return DOWN;
 			if (x == 13 && y == 2)
@@ -497,7 +497,7 @@ public class BoardConfig {
 				return UP;
 			
 		}
-		if (level == 1) {
+		if (level == 11) {
 			if (x == 10 && y == 1)
 				return UP;
 			if (x == 13 && y == 2)
