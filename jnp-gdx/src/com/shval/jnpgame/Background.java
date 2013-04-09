@@ -168,12 +168,12 @@ public class Background {
 		bgSprite.width = width;
 		bgSprite.height = height;
 		bgSprite.moment = moment;
-		
 		Gdx.app.debug(TAG, "Adding background sprite with " + 
 				x + ", " + y + ", " + 
 				vX + ", " + vY + ", " + 
 				wrapX + ", " + wrapY + ", " + moment);
 		
+		bgSprite.sprite.setColor(200f/255f, 200f/255f, 50f/255f, 1);
 		backgroundElements.add(bgSprite);
 	}
 	

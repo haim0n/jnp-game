@@ -3,6 +3,8 @@ package com.shval.jnpgame;
  
 public class Globals {
 	
+	public static final boolean PHYSICS_SUPPORTED = false;
+	
 	// fits for every hole
 	public static final int NONE 	= -1;
 	

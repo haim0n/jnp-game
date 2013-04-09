@@ -276,9 +276,11 @@ public class PlayScreen implements Screen, InputProcessor {
 		Gdx.app.debug(TAG, "Action keydown spotted. keycode = " + keycode);
 		if (keycode == Keys.X) {
 			// switch between rendering modes
-			Board.renderMode += 1;
-			if (Board.renderMode == 3)
-				Board.renderMode = 0;
+			if (PHYSICS_SUPPORTED) {
+				Board.renderMode += 1;
+				if (Board.renderMode == 3)
+					Board.renderMode = 0;
+			}
 		}
 		return true;
 	}

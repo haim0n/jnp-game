@@ -31,9 +31,12 @@ public class BoardConfig {
 			"xxxxxxxxxxxxxx",
 			
 			*/
-			"WWW",
-			"R R",
-			"W y",
+			"   ",
+			" yy",			
+			"  w",
+			"   ",
+			"   ",			
+			"   ",
 			"WWW"
 			
 			},
@@ -635,8 +638,8 @@ public class BoardConfig {
 			float moment = (float) (75 * (4 + Math.random()));
 			float vX = -8f;
 			float vY = -32f;
-			int width = 4;
-			int height = 4;
+			int width = 6;
+			int height = 6;
 			background.addSprite(Assets.getSmallStarTexture(), x, y, textureWidth, textureHeight , vX, vY, wrapX, wrapY, width, height, moment);
 		}
 	}

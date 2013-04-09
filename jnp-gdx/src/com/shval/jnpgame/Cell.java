@@ -35,7 +35,7 @@ public class Cell implements Disposable  {
 	private boolean scanFlag; // was this cell encountered in current board scanning
 	private static final float CELL_SIZE = 100; // 
 	private static final float SPEED = 500;
-	private static final float GRAVITY = -4200;
+	private static final float GRAVITY = -4000;
 	static private float graphicWidth;
 	static private float graphicHeight;
 	
@@ -77,6 +77,7 @@ public class Cell implements Disposable  {
 		textureRegions = null;
 		anchorTextureRegions = null;
 		speed = null;
+		emergingTo = NONE;
 	}
 	
 	private Cell(int x, int y, BoardConfig config) {
@@ -87,6 +88,7 @@ public class Cell implements Disposable  {
 		this.x = x;
 		this.y = y;
 		this.jelly = null;
+		this.emergingTo = NONE;
 		
 		textureRegions = new TextureRegion[2][2];
 		anchorTextureRegions = new TextureRegion[4]; // TODO: all nulls?
@@ -319,7 +321,8 @@ public class Cell implements Disposable  {
 		bottomLeft[1][0] = new Vector2((8 + i * 48 + 48 / 2) / 256f, (24 + 8 + j * 48 + 48 / 2) / 256f);
 
 		Gdx.app.debug(TAG, "Setting texture bottom left to " + x + ", " + y);
-		physicalCell.setTextureBL(bottomLeft);
+		if (PHYSICS_SUPPORTED)
+			physicalCell.setTextureBL(bottomLeft);
 		
 		
 		// anchoring
@@ -354,7 +357,8 @@ public class Cell implements Disposable  {
 			anchors[DOWN] = c.getRawTexture();
 		}
 
-		physicalCell.setAnchors(anchors);
+		if (PHYSICS_SUPPORTED)
+			physicalCell.setAnchors(anchors);
 	}
 	
 	public static void setResolution(float spriteWidth, float spriteHeight) {
@@ -366,6 +370,8 @@ public class Cell implements Disposable  {
 	}
 	
 	void createPhysicalCell() {
+		if (!PHYSICS_SUPPORTED)
+			return;
 		//Gdx.app.debug(TAG, "Creating phy-cell");
 		float rows = jelly.getBoard().getRows();
 		float cols = jelly.getBoard().getCols();
@@ -673,22 +679,26 @@ public class Cell implements Disposable  {
 		switch (dir) {
 		case LEFT:
 			vx = -SPEED;
-			physicalCell.move(LEFT);
+			if (PHYSICS_SUPPORTED)
+				physicalCell.move(LEFT);
 			break;
 		case RIGHT:		
 			vx = SPEED;
-			physicalCell.move(RIGHT);
+			if (PHYSICS_SUPPORTED)
+				physicalCell.move(RIGHT);
 			break;
 		case DOWN:
 			if (oldVy == 0)
 				vy = -SPEED / 100; // gravity will take it from here
 			else
 				vy = oldVy; // again, gravity ...
-			physicalCell.move(DOWN);
+			if (PHYSICS_SUPPORTED)
+				physicalCell.move(DOWN);
 			break;
 		case UP:
 			vy = SPEED;
-			physicalCell.move(UP);
+			if (PHYSICS_SUPPORTED)
+				physicalCell.move(UP);
 			break;
 		default:
 			// should never be here
@@ -696,7 +706,7 @@ public class Cell implements Disposable  {
 		}
 		speed.set(vx, vy);
 		
-		
+		//Gdx.app.debug(TAG, "x, y = " + x + ", " + y + " vx, vy = " + vx + ", " + vy);
 		// move the whole parent jelly
 		if (jelly != null) // this is done for emerging cells which dont have jelly
 			jelly.move(dir);
@@ -712,6 +722,7 @@ public class Cell implements Disposable  {
 	}
 
 	void stopVertical() {
+		Gdx.app.debug(TAG, "x, y = " + x + ", " + y + ". Stopping vertically");
 		speed.setYv(0);
 	}
 	
@@ -746,7 +757,8 @@ public class Cell implements Disposable  {
 	public void dispose() {
 		//rawTexture.dispose();
 		
-		physicalCell.dispose();
+		if (PHYSICS_SUPPORTED)
+			physicalCell.dispose();
 		// TODO: is that it ? how about the regions?
 	}
 	

@@ -776,6 +776,7 @@ public class Board implements Disposable {
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_START]), 0f);
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), MergeEffect.MAX_TTL * 1.5f);
 				//Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), 0.3f);
+				Timer.schedule(new SetNeighboursTask(), MergeEffect.MAX_TTL * 2f);
 			}
 			if (isWinPosition()) { // check only if something merged
 				Gdx.app.debug(TAG, "You win!");
@@ -790,6 +791,8 @@ public class Board implements Disposable {
 	
 	
 	private void createPhysicalCells() {
+		if (!PHYSICS_SUPPORTED)
+			return;
 		Gdx.app.debug(TAG, "Creating phy cells");
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
@@ -863,6 +866,7 @@ public class Board implements Disposable {
 		
 		int newBoardState = STABLE; // until proven otherwise
 		
+		Gdx.app.debug(TAG, "Updating physics, dynamic state = " + boardDynamicState);
 		// horizontal motion
 		if (boardDynamicState == RIGHT_MOTION || boardDynamicState == LEFT_MOTION) {
 			//  stop all horizontal motion
@@ -903,7 +907,7 @@ public class Board implements Disposable {
 					// already falling cell ?
 					if (cell.isMoving()) {
 						if (!attemptMove(DOWN, cell)) {
-							// cecreatell just hit ground
+							// just hit ground
 							cell.stopVertical();
 							sounds[SOUND_FALL].play(soundVolume);
 						} else {
