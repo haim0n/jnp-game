@@ -130,8 +130,8 @@ public class Board implements Disposable {
 				flash.setSize(cellHeight / 6, cellWidth * 1.4f);
 				flash.setPosition(cellWidth * (x + 0.6f),  cellHeight * (y + 0.7f));
 				flash.rotate(90);
-				gX2 = cellWidth * x;
-				gY2 = cellHeight * (y + 1);
+				gX2 = cellWidth * x - 16;
+				gY2 = cellHeight * (y + 1) - 16;
 			}
 			else {
 				this.gX = cellWidth * ((float) x + 1f) - 16;
@@ -142,8 +142,8 @@ public class Board implements Disposable {
 				gY2 = cellHeight * y;
 			}
 			
-			gX3 = cellWidth * (x + 1);
-			gY3 = cellHeight * (y + 1);
+			gX3 = cellWidth * (x + 1) - 16;
+			gY3 = cellHeight * (y + 1) - 16;
 		}
 		
 		void update(float delta) {
