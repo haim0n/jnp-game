@@ -48,10 +48,20 @@ public class Board implements Disposable {
 	// dummy "out of scope" cell, make it a wall
 	//static final Cell outOfScopeCell = new Cell(null, 0, 0 ,null , WALL, NONE);
 	static Cell outOfScopeCell;
+	boolean boardLocked = false;
+	
+
+	private class UnlockTask extends Timer.Task {
+		@Override
+		public void run() {
+			boardLocked = false;
+		}
+	}
 	
 	private class WinTask extends Timer.Task {
 		@Override
 		public void run() {
+			boardLocked = true; // take control of the board
 			screen.win();
 		}
 	}
@@ -82,9 +92,11 @@ public class Board implements Disposable {
 		float ttl1; // time to live
 		float ttl2; // time to live
 		boolean horisontal;
-		Sprite star1, star2, star3, star4, star5, star6;
+		Sprite star1, star2, star3;
 		Sprite flash;
 		float gX, gY;
+		float gX2, gY2;
+		float gX3, gY3;
 		float w = 720;
 
 		MergeEffect(boolean horisontal, int x, int y) {
@@ -98,18 +110,14 @@ public class Board implements Disposable {
 			this.flash = new Sprite(Assets.getFlashTexture(), 26, 0, 20, 60);
 
 			this.star3 = new Sprite(Assets.getStarTexture());
-			this.star4 = new Sprite(Assets.getStarTexture());
-			this.star5 = new Sprite(Assets.getStarTexture());
-			this.star6 = new Sprite(Assets.getStarTexture());
+
 
 			
 			star1.setScale(cellWidth / (80), cellWidth / (80));
 			star2.setScale(cellWidth / (80), cellWidth / (80));
 			
 			star3.setScale(cellWidth / (160), cellWidth / (160));
-			star4.setScale(cellWidth / (160), cellWidth / (160));
-			star5.setScale(cellWidth / (160), cellWidth / (160));
-			star6.setScale(cellWidth / (160), cellWidth / (160));
+
 			
 			//star1.setSize(cellWidth / 3, cellHeight / 3);
 			//star2.setSize(cellWidth / 3, cellHeight / 3);
@@ -122,18 +130,20 @@ public class Board implements Disposable {
 				flash.setSize(cellHeight / 6, cellWidth * 1.4f);
 				flash.setPosition(cellWidth * (x + 0.6f),  cellHeight * (y + 0.7f));
 				flash.rotate(90);
-				
-				
+				gX2 = cellWidth * x;
+				gY2 = cellHeight * (y + 1);
 			}
 			else {
 				this.gX = cellWidth * ((float) x + 1f) - 16;
 				this.gY = cellHeight * ((float) y + 0.5f) - 16;
 				flash.setPosition(cellWidth * (x + 0.9f),  cellHeight * (y - 0.2f));
 				flash.setSize(cellWidth / 6, cellHeight * 1.4f);
-				
+				gX2 = cellWidth * (x + 1);
+				gY2 = cellHeight * y;
 			}
 			
-			
+			gX3 = cellWidth * (x + 1);
+			gY3 = cellHeight * (y + 1);
 		}
 		
 		void update(float delta) {
@@ -155,32 +165,9 @@ public class Board implements Disposable {
 				star2.setPosition(gX - dx, gY - dy);
 			}
 			else {
-				float d = ttl2 / MAX_TTL;
-				d = d * d;
-				float dx = 0.4f * cellWidth * (1 - d * d);
-				float dy = 0.4f * cellWidth * (1 - d * d);
 				ttl2 -= delta;
-				
-				
-				if (horisontal) {
-					star3.setPosition(gX + cellWidth / 2 + dx, gY + dy);
-					star4.setPosition(gX - cellWidth / 2 - dx, gY + dy);
-					star5.setPosition(gX - cellWidth / 2 - dx, gY - dy);
-					star6.setPosition(gX + cellWidth / 2 + dx, gY - dy);
-				}
-				else {
-					star3.setPosition(gX + dx, gY + cellHeight / 2 + dy);
-					star4.setPosition(gX - dx, gY + cellHeight / 2+ dy);
-					star5.setPosition(gX - dx, gY - cellHeight / 2- dy);
-					star6.setPosition(gX + dx, gY - cellHeight / 2- dy);
-				}
-				star2.rotate(w * delta);
 				star3.rotate(- w * delta);
-				star4.rotate(w * delta);
-				star5.rotate(- w * delta);
-
 			}
-	
 		}
 		
 		void render(SpriteBatch batch) {
@@ -192,14 +179,29 @@ public class Board implements Disposable {
 			}
 			else {
 				if (ttl2 < 3 * MAX_TTL / 4) {
-					star3.setColor(1, 1, 1, 0.3f + ttl2 / MAX_TTL);
-					star4.setColor(1, 1, 1, 0.3f + ttl2 / MAX_TTL);
-					star5.setColor(1, 1, 1, 0.3f + ttl2 / MAX_TTL);
-					star6.setColor(1, 1, 1, 0.3f + ttl2 / MAX_TTL);
+					float d = ttl2 / MAX_TTL;
+					star3.setColor(1, 1, 1, ttl2 / MAX_TTL);
+					d = d * d;
+					float dx = 0.4f * cellWidth * (1 - d * d);
+					float dy = 0.4f * cellHeight * (1 - d * d);
+
+
+					star3.setPosition(gX3 + dx, gY3 + dy);
 					star3.draw(batch);
-					star4.draw(batch);
-					star5.draw(batch);
-					star6.draw(batch);
+					star3.setPosition(gX3 - dx, gY3 + dy);
+					star3.draw(batch);
+					star3.setPosition(gX3 + dx, gY3 - dy);
+					star3.draw(batch);
+					star3.setPosition(gX3 - dx, gY3 - dy);
+					star3.draw(batch);
+					star3.setPosition(gX2 + dx, gY2 + dy);
+					star3.draw(batch);
+					star3.setPosition(gX2 - dx, gY2 + dy);
+					star3.draw(batch);
+					star3.setPosition(gX2 + dx, gY2 - dy);
+					star3.draw(batch);
+					star3.setPosition(gX2 - dx, gY2 - dy);
+					star3.draw(batch);					
 				}
 			}
 		}
@@ -452,7 +454,7 @@ public class Board implements Disposable {
 		Cell cell;
 
 		// dont allow slides while not stable
-		if (boardDynamicState != STABLE)
+		if (/*boardDynamicState != STABLE ||*/ boardLocked)
 			return false;
 
 		if (x < 0 || x >= COLS || y < 0 || y >= ROWS) {
@@ -468,8 +470,10 @@ public class Board implements Disposable {
 		
 		boolean ret = attemptMove(dir, cell);
 		
-		if (ret)
+		if (ret) {
 			sounds[SOUND_SLIDE].play(soundVolume / 2); // sliding is quieter
+			boardLocked = true;
+		}
 		
 		return ret;
 	}
@@ -791,11 +795,14 @@ public class Board implements Disposable {
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), MergeEffect.MAX_TTL * 1.5f);
 				//Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), 0.3f);
 				Timer.schedule(new SetNeighboursTask(), MergeEffect.MAX_TTL * 2f);
+				Timer.schedule(new UnlockTask(), MergeEffect.MAX_TTL * 3f);
+			}
+			else {
+				boardLocked = false;
 			}
 			if (isWinPosition()) { // check only if something merged
 				Gdx.app.debug(TAG, "You win!");
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_WIN]), 0.7f);
-				boardDynamicState = RIGHT_MOTION; // just to take control of the board
 				Timer.schedule(new WinTask(), 1f);
 			}
 			createPhysicalCells();

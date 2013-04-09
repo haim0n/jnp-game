@@ -465,7 +465,7 @@ public class PlayScreen implements Screen, InputProcessor {
 				int xx = x + i;
 				int yy = y + j;
 				float alpha = Math.min(Math.max(0f, a - d), 1f);
-				batch.setColor(0, 0, 0, alpha);
+				batch.setColor(1, 1, 1, alpha);
 				batch.draw(frameCursor, xx * gCellWidth, yy * gCellHeight, gCellWidth, gCellHeight);
 			}
 		}
