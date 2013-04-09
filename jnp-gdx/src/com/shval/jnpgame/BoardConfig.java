@@ -1,6 +1,8 @@
 package com.shval.jnpgame;
 
 import static com.shval.jnpgame.Globals.*;
+import java.util.HashMap;
+import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -271,7 +273,18 @@ public class BoardConfig {
 			"xx        x  x",
 			"xxxxxxxxxxxxxx",
 			},
-			
+			{ // level 21
+			"xxxxxxxxxxxxxx",
+			"x      x     x",
+			"x      x     x",
+			"x      W     x",
+			"x      G     x",
+			"x        gb  x",
+			"xxxx     xx  x",
+			"xxxr b     r x",
+			"xxxx xxxxxxxxx",
+			"xxxxxxxxxxxxxx",			
+			},			
 	};
 	
 	private String levels_16x9[][] = { 
@@ -516,12 +529,25 @@ public class BoardConfig {
 			"xxx        x  xx",
 			"xxxxxxxxxxxxxxxx",
 			},
+			{ // level 21
+			"xxxxxxxxxxxxxx",
+			"x      x     x",
+			"x      x     x",
+			"x      W     x",
+			"x      G     x",
+			"x        gb  x",
+			"xxxx     xx  x",
+			"xxxr b     r x",
+			"xxxx xxxxxxxxx",
+			"xxxxxxxxxxxxxx",			
+			},			
 			
 	};
 
 
 	public BoardConfig() {
 		LEVELS = levels_4x3.length - 1; // zero level doesn't count
+		initEmerging();
 		Gdx.app.debug(TAG, "Number of levels is " + LEVELS);
 	}
 	
@@ -653,7 +679,7 @@ public class BoardConfig {
 	
 	int getType(int x, int y) {
 		 if (x < 0 || y < 0) {
-			 return getEmergingType(-x, -y);
+			 return getEmergingType(x, y);
 		 }
 		 char cell = cells[x][y];
 		 int ret;
@@ -700,103 +726,6 @@ public class BoardConfig {
 		 return ret;
 	}
 
-	private int getEmergingType(int x, int y) {
-		
-		if (level == 0) {
-			if (x == 1 && y == 0)
-				return JELLY_YELLOW;
-		}
-
-		if (level == 111) {
-			if (x == 10 && y == 1)
-				return JELLY_RED;
-			if (x == 13 && y == 2)
-				return JELLY_BLUE;
-			if (x == 0 && y == 2)
-				return JELLY_GREEN;
-		}
-
-		return NONE;
-	}
-	
-	private int getEmergingAnchordTo(int x, int y) {
-
-		if (level == 0) {
-			if (x == 1 && y == 0)
-				return DOWN;
-		}
-		if (level == 111) {
-			if (x == 10 && y == 1)
-				return DOWN;
-			if (x == 13 && y == 2)
-				return RIGHT;
-			if (x == 0 && y == 2)
-				return LEFT;
-		}
-
-		return NONE;
-
-	}
-
-	int getEmergingTo(int x, int y) {
-		x = -x;
-		y = -y;
-		if (level == 0) {
-			if (x == 1 && y == 0)
-				return UP;
-			
-		}
-		if (level == 111) {
-			if (x == 10 && y == 1)
-				return UP;
-			if (x == 13 && y == 2)
-				return LEFT;
-			if (x == 0 && y == 2)
-				return RIGHT;
-		}
-		return NONE;
-	}
-	
-	Sprite getEmergingSprite(int x, int y) {
-	
-		int to = getEmergingTo(x, y);
-		int type = getEmergingType(-x, -y);
-		int anchoredTo = getEmergingAnchordTo(-x, -y);
-		
-		if (type == NONE)
-			return null;
-
-		int dx = 0;
-		switch(type) {
-		case JELLY_BLUE:
-			dx = 1 * 48;
-			break;
-		case JELLY_GREEN:
-			dx = 2 * 48;
-			break;
-		case JELLY_YELLOW:
-			dx = 3 * 48;
-			break;
-			
-		}
-
-		int dy = 0;
-		int dw = 0;
-		if (anchoredTo != NONE) {
-			dy = 48;
-			dx -= 16;
-			dw = 16;
-		}
-		
-		int xP = 28 + dx;
-		int yP = 9 + dy;
-		int wP = 8 + dw;
-		int hP = 46;
-		Sprite sp = new Sprite(Assets.getEmergingTexture(), xP, yP, wP, hP);
-		if (to == UP || to == LEFT)
-			sp.flip(true, true);
-		return sp;
-	}
 	
 	public Texture getResetButtonsTexture() {
 		return Assets.getButtonsTexture();
@@ -894,7 +823,7 @@ public class BoardConfig {
 		Background background = new Background();
 		
 		// background.color.set(Color.blue); TODO: why doesnt it work !!!		
-		switch (level) {
+		switch ((level + 1) % 20) {
 		case 1:
 		case 2:
 		case 3:
@@ -991,4 +920,102 @@ public class BoardConfig {
 			flipped = ! flipped;
 	}
 
+	
+	
+	HashMap<Integer, Emerging> emergingMap; // Map[level][x][y] - emerging cell 
+	
+	int key(int level, int x, int y) {
+		return (1000 * level + 100 * x + y); // 2 digits should be enough
+	}
+	
+	private class Emerging {
+		int type;
+		int anchoredTo;
+		int emergingTo;
+		Emerging(int type, int emergingTo, int anchoredTo) {
+			this.type = type;
+			this.emergingTo = emergingTo;
+			this.anchoredTo = anchoredTo;
+		}
+	}
+	
+	private int getEmergingType(int x, int y) {
+
+		Emerging e = emergingMap.get(key(level, -x, -y));
+		if (e == null)
+			return NONE;
+		else
+			return e.type;
+	}
+	
+	private int getEmergingAnchordTo(int x, int y) {
+
+		Emerging e = emergingMap.get(key(level, -x, -y));
+		if (e == null)
+			return NONE;
+		else
+			return e.anchoredTo;
+	}
+
+	int getEmergingTo(int x, int y) {
+		Emerging e = emergingMap.get(key(level, -x, -y));
+		if (e == null)
+			return NONE;
+		else
+			return e.emergingTo;
+	}
+	
+	Sprite getEmergingSprite(int x, int y) {
+	
+		int to = getEmergingTo(x, y);
+		int type = getEmergingType(x, y);
+		int anchoredTo = getEmergingAnchordTo(x, y);
+		
+		if (type == NONE)
+			return null;
+
+		int dx = 0;
+		switch(type) {
+		case JELLY_BLUE:
+			dx = 1 * 48;
+			break;
+		case JELLY_GREEN:
+			dx = 2 * 48;
+			break;
+		case JELLY_YELLOW:
+			dx = 3 * 48;
+			break;
+			
+		}
+
+		int dy = 0;
+		int dw = 0;
+		if (anchoredTo != NONE) {
+			dy = 48;
+			dx -= 16;
+			dw = 16;
+		}
+		
+		int xP = 28 + dx;
+		int yP = 9 + dy;
+		int wP = 8 + dw;
+		int hP = 46;
+		Sprite sp = new Sprite(Assets.getEmergingTexture(), xP, yP, wP, hP);
+		if (to == UP || to == LEFT)
+			sp.flip(true, true);
+		return sp;
+	}
+
+	
+	private void initEmerging() {
+		emergingMap = new HashMap<Integer, Emerging> ();
+		
+		emergingMap.put(key(0, 1, 0), new Emerging(JELLY_YELLOW, UP, DOWN));
+		emergingMap.put(key(21, 7, 1), new Emerging(JELLY_RED, UP, NONE));
+		//emergingMap.put(key(0, 1, 0), new Emerging(JELLY_YELLOW, DOWN, UP));
+		//emergingMap.put(key(0, 1, 0), new Emerging(JELLY_YELLOW, DOWN, UP));
+
+	}
+	
+	
 }
