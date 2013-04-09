@@ -49,7 +49,7 @@ public class Cell implements Disposable  {
 		this.anchoredTo = other.anchoredTo;
 		this.x = other.x;
 		this.y = other.y;
-		this.jelly = null; // we assume that right jelly will be set from outside
+		this.jelly = other.jelly; // we assume that jellify() will rewrite this
 		
 		textureRegions = other.textureRegions;
 		anchorTextureRegions = new TextureRegion[4];
@@ -722,7 +722,7 @@ public class Cell implements Disposable  {
 	}
 
 	void stopVertical() {
-		Gdx.app.debug(TAG, "x, y = " + x + ", " + y + ". Stopping vertically");
+		//Gdx.app.debug(TAG, "x, y = " + x + ", " + y + ". Stopping vertically");
 		speed.setYv(0);
 	}
 	

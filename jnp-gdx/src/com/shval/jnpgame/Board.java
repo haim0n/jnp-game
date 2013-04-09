@@ -276,6 +276,12 @@ public class Board implements Disposable {
 		boardStateIndex--; 
 		return boardStateStack[boardStateIndex];
 	}
+	
+	private Cell[][] peekBoardState() {
+		if (boardStateIndex == 0)
+			return null;
+		return boardStateStack[boardStateIndex - 1];
+	}
 
 	public void revert() {
 		Gdx.app.debug(TAG, "Reverting: boardStateIndex = " + boardStateIndex);
@@ -299,7 +305,7 @@ public class Board implements Disposable {
 		copyBoardState(cells, state);
 		boardDynamicState = STABLE;
 		jellifyBoard();
-		attemptMerge(cells, true, false); // dont trigger merge effect
+		attemptMerge(cells, null, true); // dont trigger merge effect
 		createPhysicalCells();
 		setNeighbours();
 		//updateBoardPhysics(); //TODO: do we really need levels who need this call?
@@ -364,7 +370,7 @@ public class Board implements Disposable {
 		Cell[][] checkState = new Cell[COLS][ROWS];
 		copyBoardState(checkState, cells);
 		jellify(checkState);
-		attemptMerge(checkState, false, false); // don't merge anchored when looking for a win
+		attemptMerge(checkState, null, false); // don't merge anchored when looking for a win
 												// also dont trigger merge effect
 		
 		// win iff all non-black jellies
@@ -590,21 +596,20 @@ public class Board implements Disposable {
 		return false;
 	}
 	
-	
+	/*
 	private boolean attemptMerge() {
 		// for compatibility
 		return attemptMerge(cells, true, true); // merge anchord 
 	}
+	*/
 	
-	private boolean attemptMerge(Cell[][] postition, boolean mergeAnchord, boolean triggerEffect) {
-		boolean merge; // indicates whether something merged
+	private boolean attemptMerge(Cell[][] postition, Cell[][] oldPostition, boolean mergeAnchord) {
 		boolean ret = false;
 				
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
 				Cell cell = postition[x][y];
-				
-				// moving cell do not merge
+								
 				if (cell == null)
 					continue;
 				
@@ -615,26 +620,32 @@ public class Board implements Disposable {
 				Cell neighbor;
 				// try to merge with right neighbor
 				if (x < COLS - 1)
-					neighbor = postition[x+1][y];
+					neighbor = postition[x + 1][y];
 				else
 					neighbor = outOfScopeCell; // this is helpful for border rendering
 				
-				merge = attemptMerge(cell, neighbor, mergeAnchord);
-				if (merge && triggerEffect)
-					if (cell.getType() == neighbor.getType())
+				ret |= attemptMerge(cell, neighbor, mergeAnchord);
+				if (oldPostition != null && neighbor != null && cell.getType() == neighbor.getType()) {
+					Cell oldCell = oldPostition[x][y];
+					Cell oldNeighbor = (x < COLS - 1) ? oldPostition[x + 1][y] : null;
+					if (oldNeighbor != null && oldCell.getJelly() != oldNeighbor.getJelly()) {
 						mergeEffects.add(new MergeEffect(false, x, y));
-				ret |= merge;
-				// try to merge with down neighbor
+					}
+				}
+				// try to merge with up neighbor
 				if (y < ROWS - 1)
 					neighbor = postition[x][y+1];
 				else
 					neighbor = null;
 				
-				merge = attemptMerge(cell, neighbor, mergeAnchord);
-				if (merge && triggerEffect)
-					if (cell.getType() == neighbor.getType())
+				ret |= attemptMerge(cell, neighbor, mergeAnchord);
+				if (oldPostition != null && neighbor != null && cell.getType() == neighbor.getType()) {
+					Cell oldCell = oldPostition[x][y];
+					Cell oldNeighbor = (y < ROWS - 1) ? oldPostition[x][y + 1] : null;
+					if (oldNeighbor != null && oldCell.getJelly() != oldNeighbor.getJelly()) {
 						mergeEffects.add(new MergeEffect(true, x, y));
-				ret |= merge;
+					}
+				}
 			}
 		}
 		
@@ -724,7 +735,7 @@ public class Board implements Disposable {
 		boolean isMilestone;
 		//Gdx.app.debug(TAG, "Updating game state. delta = " + delta);
 		
-		ArrayList<MergeEffect> mergeEffectsNew = new ArrayList<MergeEffect>(); 
+		ArrayList<MergeEffect> mergeEffectsNew = new ArrayList<MergeEffect>();
 		for (MergeEffect c : mergeEffects) {
 			c.update(delta);
 			if (c.ttl2 > 0)
@@ -771,8 +782,11 @@ public class Board implements Disposable {
 		// trigger board dynamics (not to be confused with on tick update) 
 //		int oldBoardState = boardState;
 		updateBoardPhysics();
-		if (boardDynamicState == STABLE) {// milestone is stable			 
-			if (attemptMerge()) {
+		if (boardDynamicState == STABLE) {// milestone is stable
+			
+			Cell oldCells[][] = new Cell[COLS][ROWS];
+			copyBoardState(oldCells, cells);
+			if ( attemptMerge(cells, oldCells , true)) {
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_START]), 0f);
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), MergeEffect.MAX_TTL * 1.5f);
 				//Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), 0.3f);

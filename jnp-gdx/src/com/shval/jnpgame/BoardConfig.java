@@ -31,12 +31,7 @@ public class BoardConfig {
 			"xxxxxxxxxxxxxx",
 			
 			*/
-			"   ",
-			" yy",			
-			"  w",
-			"   ",
-			"   ",			
-			"   ",
+			"y y",
 			"WWW"
 			
 			},
@@ -461,7 +456,7 @@ public class BoardConfig {
 				return JELLY_YELLOW;
 		}
 
-		if (level == 11) {
+		if (level == 111) {
 			if (x == 10 && y == 1)
 				return JELLY_RED;
 			if (x == 13 && y == 2)
@@ -479,7 +474,7 @@ public class BoardConfig {
 			if (x == 1 && y == 0)
 				return DOWN;
 		}
-		if (level == 11) {
+		if (level == 111) {
 			if (x == 10 && y == 1)
 				return DOWN;
 			if (x == 13 && y == 2)
@@ -500,7 +495,7 @@ public class BoardConfig {
 				return UP;
 			
 		}
-		if (level == 11) {
+		if (level == 111) {
 			if (x == 10 && y == 1)
 				return UP;
 			if (x == 13 && y == 2)
