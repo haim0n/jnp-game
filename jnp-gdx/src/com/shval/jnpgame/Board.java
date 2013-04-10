@@ -670,7 +670,6 @@ public class Board implements Disposable {
 
 	private int attemptEmerge() {
 		
-		int emerge = NONE; // indicates whether something emerged and where
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
 				Cell cell = cells[x][y];
@@ -708,13 +707,10 @@ public class Board implements Disposable {
 				if(emerging.getType() == neighbor.getType())
 					if (attemptMove(emerging.emergingTo, neighbor)) {
 						cell.emerge();
-						emerge = emerging.emergingTo;
+						int emerge = emerging.emergingTo;
+						return 1 << emerge; // let the emerge one by one
 					}
 			}
-		}
-
-		if (emerge != NONE) { 
-			return 1 << emerge;
 		}
 
 		return STABLE;

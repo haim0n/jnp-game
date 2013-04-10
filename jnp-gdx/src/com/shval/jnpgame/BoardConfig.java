@@ -725,7 +725,7 @@ public class BoardConfig {
 	HashMap<Integer, Emerging> emergingMap; // Map[level][x][y] - emerging cell 
 	
 	int key(int level, int x, int y) {
-		return (1000 * level + 100 * x + y); // 2 digits should be enough
+		return (10000 * level + 100 * x + y); // 2 digits should be enough
 	}
 	
 	private class Emerging {
