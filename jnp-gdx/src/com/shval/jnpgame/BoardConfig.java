@@ -413,7 +413,7 @@ public class BoardConfig {
 	
 	int getAncoredTo(int x, int y) {
 		if (x < 0 || y < 0)
-			return getEmergingAnchordTo(-x, -y);
+			return getEmergingAnchordTo(x, y);
 		char cell = cells[x][y];
 		 		 
 		switch(cell) {

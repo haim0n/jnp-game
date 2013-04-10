@@ -53,13 +53,12 @@ public class Cell implements Disposable  {
 		
 		textureRegions = other.textureRegions;
 		anchorTextureRegions = new TextureRegion[4];
-		for (int i=0; i <4; i++)
+		for (int i=0; i < 4; i++)
 			anchorTextureRegions[i] = other.anchorTextureRegions[i];
-		emergingSprite = other.emergingSprite;
+		this.emergingSprite = other.emergingSprite;
 		speed = new Speed(other.getSpeed()); // creates stale cells only
 		
 		this.emergingTo = other.emergingTo;
-		this.emergingSprite = other.emergingSprite;
 		if (other.emerging == null)
 			this.emerging = null;
 		else
@@ -104,7 +103,10 @@ public class Cell implements Disposable  {
 
 		if (x < 0 || y < 0) { // emerging cell
 			this.emerging = null;
+			this.anchoredTo = config.getAncoredTo(x, y);
 			this.emergingTo = config.getEmergingTo(x, y);
+			
+			Gdx.app.debug(TAG, "emerging cell emerging to " + emergingTo + " anchored to " + anchoredTo);
 		}
 		else if (x > 0 || y > 0) { // 0, 0 cannot hold emerging cell
 			this.emerging = createCell(-x, -y, config);
