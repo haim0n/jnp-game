@@ -86,7 +86,17 @@ public class Board implements Disposable {
 			sound.play(soundVolume);
 		}
 	}
-	
+
+	private class AttemptEmergeTask extends Timer.Task {
+		
+		@Override
+		public void run() {
+			boardDynamicState = attemptEmerge();
+			if (boardDynamicState == STABLE)
+				boardLocked = false;
+		}
+	}
+		
 	private class MergeEffect {
 		static final float MAX_TTL = 0.35f;
 		float ttl1; // time to live
@@ -454,8 +464,10 @@ public class Board implements Disposable {
 		Cell cell;
 
 		// dont allow slides while not stable
-		if (/*boardDynamicState != STABLE ||*/ boardLocked)
+		if (/*boardDynamicState != STABLE ||*/ boardLocked) {
+			Gdx.app.debug(TAG, "Attempting to slide. Board is locked");
 			return false;
+		}
 
 		if (x < 0 || x >= COLS || y < 0 || y >= ROWS) {
 			// error
@@ -657,6 +669,7 @@ public class Board implements Disposable {
 	}
 
 	private int attemptEmerge() {
+		
 		int emerge = NONE; // indicates whether something emerged and where
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
@@ -699,7 +712,12 @@ public class Board implements Disposable {
 					}
 			}
 		}
-		return emerge;
+
+		if (emerge != NONE) { 
+			return 1 << emerge;
+		}
+
+		return STABLE;
 	}
 
 	
@@ -785,29 +803,37 @@ public class Board implements Disposable {
 		
 		// trigger board dynamics (not to be confused with on tick update) 
 //		int oldBoardState = boardState;
-		updateBoardPhysics();
-		if (boardDynamicState == STABLE) {// milestone is stable
-			
+		
+		int newState = updateBoardPhysics();
+		if (newState == STABLE) {// milestone is stable
+			boolean merged;
 			Cell oldCells[][] = new Cell[COLS][ROWS];
 			copyBoardState(oldCells, cells);
-			if ( attemptMerge(cells, oldCells , true)) {
+			if (merged = attemptMerge(cells, oldCells , true)) {
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_START]), 0f);
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), MergeEffect.MAX_TTL * 1.5f);
 				//Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), 0.3f);
 				Timer.schedule(new SetNeighboursTask(), MergeEffect.MAX_TTL * 2f);
-				Timer.schedule(new UnlockTask(), MergeEffect.MAX_TTL * 3f);
 			}
-			else {
-				boardLocked = false;
-			}
-			if (isWinPosition()) { // check only if something merged
+			if (merged && isWinPosition()) { // check only if something merged
 				Gdx.app.debug(TAG, "You win!");
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_WIN]), 0.7f);
 				Timer.schedule(new WinTask(), 1f);
 			}
 			createPhysicalCells();
-		}
+			
+			if (merged) {
+				Timer.schedule(new AttemptEmergeTask(), MergeEffect.MAX_TTL * 3f);
+			}
+			else {
+				Timer.schedule(new AttemptEmergeTask(), 0);
+			}
 
+		}
+		else {
+			boardDynamicState = newState;
+		}
+		
 	}	
 	
 	
@@ -881,7 +907,8 @@ public class Board implements Disposable {
 		Timer.schedule(new SetNeighboursTask(), MergeEffect.MAX_TTL * 2f);
 	}
 
-	private void updateBoardPhysics() {
+	// returns new board state
+	private int updateBoardPhysics() {
 		// this function is called iff a milestone was reached
 		// also, board motion is either vertical or horizontal, but not both 
 		
@@ -956,15 +983,8 @@ public class Board implements Disposable {
 			Gdx.app.error(TAG, "Something is terribly wrong ...");
 		}			
 		
-		int emergeDir = NONE;
-		if (newBoardState == STABLE)
-			emergeDir = attemptEmerge();
-		if (emergeDir != NONE) {
-			newBoardState = 1 << emergeDir;
-		}
-
 		// update state
-		boardDynamicState = newBoardState;
+		return newBoardState;
 	}
 	
 	

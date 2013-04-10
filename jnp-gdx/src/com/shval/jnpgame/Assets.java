@@ -119,7 +119,9 @@ public class Assets {
     	
     	Texture texture;
     	
-		switch((level + 1) % 20) {
+    	if (level > 20)
+    		level -= 20;
+		switch(level) {
 		case 0:
 		case 1:
 		case 2:
