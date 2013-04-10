@@ -148,8 +148,8 @@ public class Board implements Disposable {
 				this.gY = cellHeight * ((float) y + 0.5f) - 16;
 				flash.setPosition(cellWidth * (x + 0.9f),  cellHeight * (y - 0.2f));
 				flash.setSize(cellWidth / 6, cellHeight * 1.4f);
-				gX2 = cellWidth * (x + 1);
-				gY2 = cellHeight * y;
+				gX2 = cellWidth * (x + 1) - 16;
+				gY2 = cellHeight * y - 16;
 			}
 			
 			gX3 = cellWidth * (x + 1) - 16;
@@ -295,20 +295,26 @@ public class Board implements Disposable {
 		return boardStateStack[boardStateIndex - 1];
 	}
 
-	public void revert() {
+	public boolean revert() {
 		Gdx.app.debug(TAG, "Reverting: boardStateIndex = " + boardStateIndex);
+		if (boardLocked)
+			return false;
 		Cell[][] state = popBoardState();
 		if (state != null) {
 			startFrom(state);
+			return true;
 		}
+		return false;
 	}
 	
-	public void start() {
+	public boolean start() {
+		if (boardLocked)
+			return false;
 		Gdx.app.debug(TAG, "Starting");
 		renderMode = 2;
 		boardStateIndex = 0; // flush state stack
 		startFrom(initialBoard);
-		
+		return true;
 	}
 	
 	private void startFrom(Cell[][] state) {

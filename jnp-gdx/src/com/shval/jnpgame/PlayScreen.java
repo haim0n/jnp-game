@@ -357,17 +357,20 @@ public class PlayScreen implements Screen, InputProcessor {
 			return true;
 		}
 		
-		// button pressed - who?
-		buttonSound.play(soundVolume);
 		
+		// button pressed - who?
+		boolean pressed = true;
 		if (type.equals(new String("btnReset"))) // TODO: implement buttons with cb like humans
-			board.start();	
+			pressed = board.start();	
 		if (type.equals(new String("btnRevert")))
-			board.revert();
+			pressed = board.revert();
 		if (type.equals(new String("btnPrevious")))
 			game.previousLevel();
 		if (type.equals(new String("btnNext")))
 			game.nextLevel();
+
+		if(pressed)
+			buttonSound.play(soundVolume);
 
 		return true;
 	}
