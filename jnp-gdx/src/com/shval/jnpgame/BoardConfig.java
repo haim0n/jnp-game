@@ -284,7 +284,56 @@ public class BoardConfig {
 			"xxxr b     r x",
 			"xxxx xxxxxxxxx",
 			"xxxxxxxxxxxxxx",			
+			},
+			{ // level 22
+			"xxxxxxxxxxxxxx",
+			"x            x",
+			"x            x",
+			"x            x",
+			"x            x",
+			"x    g  bgr  x",
+			"x x xx  xxx xx",
+			"xbx          x",
+			"xxxxxxxxxxxxxx",
 			},			
+			{ // level 23
+			"xxxxxxxxxxxxxx",
+			"x            x",
+			"x            x",
+			"x    g       x",
+			"x    b       x",
+			"x    x    r  x",
+			"x        xx  x",
+			"x b          x",
+			"xxxx r xxx xgx",
+			"xxxxxxxxxxxxxx",
+			},
+			{ // level 24
+			"xxxxxxxxxxxxxx",
+			"xg   b     xxx",
+			"xr   g     xxx",
+			"xY   b y    yx",
+			"xW   x x   xxx",
+			"xxxx       xxx",
+			"xxxx       xxx",
+			"xxxxxx xxxxxxx",
+			"xxxxxxGxxxxxxx",
+			"xxxxxxWxxxxxxx",
+			},			
+			{ // level 25
+			"xxxxxxxxxxxxxx",
+			"xxxxxxxx  W  x",
+			"xxxxxxxx  R  x",
+			"xxxxxxxx     x",
+			"xxxxx     r  x",
+			"xx111    222 x",
+			"x 111    222 x",
+			"x g        x x",
+			"xxxxxxxxxxxxxx",
+			"xxxxxxxxxxxxxx",
+			},			
+
+
 	};
 
 	public BoardConfig() {
@@ -557,9 +606,12 @@ public class BoardConfig {
 	
 	public Background getBackground() {
 		Background background = new Background();
-		
+		int bgLevel = this.level;
+		if (bgLevel > 20) {
+			bgLevel -= 20;
+		}
 		// background.color.set(Color.blue); TODO: why doesnt it work !!!		
-		switch ((level + 1) % 20) {
+		switch (bgLevel) {
 		case 1:
 		case 2:
 		case 3:
@@ -746,10 +798,19 @@ public class BoardConfig {
 	private void initEmerging() {
 		emergingMap = new HashMap<Integer, Emerging> ();
 		
-		emergingMap.put(key(0, 1, 0), new Emerging(JELLY_YELLOW, UP, DOWN));
+		
 		emergingMap.put(key(21, 7, 1), new Emerging(JELLY_RED, UP, NONE));
-		//emergingMap.put(key(0, 1, 0), new Emerging(JELLY_YELLOW, DOWN, UP));
-		//emergingMap.put(key(0, 1, 0), new Emerging(JELLY_YELLOW, DOWN, UP));
+		
+		emergingMap.put(key(22, 6, 0), new Emerging(JELLY_RED, UP, DOWN));
+		
+		emergingMap.put(key(23, 8, 1), new Emerging(JELLY_RED, UP, NONE));
+		
+		emergingMap.put(key(24, 4, 2), new Emerging(JELLY_GREEN, UP, NONE));
+		emergingMap.put(key(24, 9, 2), new Emerging(JELLY_RED, UP, DOWN));
+	
+		emergingMap.put(key(25, 4, 1), new Emerging(JELLY_GREEN, UP, NONE));
+		emergingMap.put(key(25, 7, 1), new Emerging(JELLY_GREEN, UP, NONE));
+		emergingMap.put(key(25, 10, 1), new Emerging(JELLY_GREEN, UP, NONE));
 
 	}
 	
