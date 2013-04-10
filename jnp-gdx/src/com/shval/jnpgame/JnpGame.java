@@ -32,8 +32,8 @@ public class JnpGame extends Game {
 
 	private void playLevel(int level) {
 		Gdx.app.debug(TAG, "Playing level " + level);
-		float resRatio = (float)Gdx.graphics.getWidth()/(float)Gdx.graphics.getHeight();
-		config.setLevel(level, resRatio);
+		
+		config.setLevel(level);
 		if (screen != null)
 			screen.dispose();
 		
