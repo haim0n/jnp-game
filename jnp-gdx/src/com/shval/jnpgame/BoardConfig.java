@@ -331,6 +331,18 @@ public class BoardConfig {
 			"x g        x x",
 			"xxxxxxxxxxxxxx",
 			"xxxxxxxxxxxxxx",
+			},
+			{ // level 26
+			"xxxxxxxxxxxxxx",
+			"xx     r  xxxx",
+			"xx     r  xxxx",
+			"xx33333333xxxx",
+			"xx     r     x",
+			"xx22222222   x",
+			"xx  r        x",
+			"xx11111111xxxx",
+			"xx     r  xxxx",
+			"xxxxxxxxxxxxxx",
 			},			
 
 
@@ -807,10 +819,14 @@ public class BoardConfig {
 		
 		emergingMap.put(key(24, 4, 2), new Emerging(JELLY_GREEN, UP, NONE));
 		emergingMap.put(key(24, 9, 2), new Emerging(JELLY_RED, UP, DOWN));
-	
+			
 		emergingMap.put(key(25, 4, 1), new Emerging(JELLY_GREEN, UP, NONE));
 		emergingMap.put(key(25, 7, 1), new Emerging(JELLY_GREEN, UP, NONE));
 		emergingMap.put(key(25, 10, 1), new Emerging(JELLY_GREEN, UP, NONE));
+
+		emergingMap.put(key(26, 4, 0), new Emerging(JELLY_RED, UP, NONE));
+		emergingMap.put(key(26, 7, 2), new Emerging(JELLY_RED, UP, NONE));
+		emergingMap.put(key(26, 4, 4), new Emerging(JELLY_RED, UP, NONE));
 
 	}
 	
