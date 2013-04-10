@@ -793,9 +793,11 @@ public class Board implements Disposable {
 						cell.emerging = null;
 						cells[newCell .getX()][newCell .getY()] = newCell;
 					}
-				}		
+				}
 			}
 		}
+		
+		Timer.schedule(new SetNeighboursTask(), 0);
 		
 		// trigger board dynamics (not to be confused with on tick update) 
 //		int oldBoardState = boardState;
