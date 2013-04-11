@@ -334,7 +334,7 @@ public class BoardConfig {
 			},
 			{ // level 26
 			"xxxxxxxxxxxxxx",
-			"xx     r  xxxx",
+			"xx        xxxx",
 			"xx     r  xxxx",
 			"xx33333333xxxx",
 			"xx     r     x",
