@@ -595,6 +595,9 @@ public class Board implements Disposable {
 		
 		if (neighbor == null)
 			return false;
+
+		//Gdx.app.debug(TAG, "attempting to merge " + cell.getX() + ", " + cell.getY() + 
+			//	   " and " + neighbor.getX() + ", " + neighbor.getY());
 		
 		if (cell.getJelly() == neighbor.getJelly())
 			return false;
@@ -713,6 +716,7 @@ public class Board implements Disposable {
 				if(emerging.getType() == neighbor.getType())
 					if (attemptMove(emerging.emergingTo, neighbor)) {
 						cell.emerge();
+						//mergeCells(cell.emerging, neighbor);
 						int emerge = emerging.emergingTo;
 						return 1 << emerge; // let the emerge one by one
 					}
@@ -796,8 +800,8 @@ public class Board implements Disposable {
 				if(cell.emerging != null) {
 					Cell newCell = cell.emerging;
 					if (newCell.emergingTo == NONE) { // just emerged
-						cell.emerging = null;
 						cells[newCell .getX()][newCell .getY()] = newCell;
+						cell.emerging = null;
 					}
 				}
 			}
@@ -816,7 +820,6 @@ public class Board implements Disposable {
 			if (merged = attemptMerge(cells, oldCells , true)) {
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_START]), 0f);
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), MergeEffect.MAX_TTL * 1.5f);
-				//Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), 0.3f);
 				Timer.schedule(new SetNeighboursTask(), MergeEffect.MAX_TTL * 2f);
 			}
 			if (merged && isWinPosition()) { // check only if something merged

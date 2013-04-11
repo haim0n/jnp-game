@@ -776,6 +776,7 @@ public class Cell implements Disposable  {
 		Jelly jelly = new Jelly(this.jelly.getBoard());
 		emerging.setJelly(jelly);
 		jelly.join(emerging);
+		
 		emerging.createPhysicalCell();
 		emerging.setX(x);
 		emerging.setY(y);
