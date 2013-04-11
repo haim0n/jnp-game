@@ -823,6 +823,7 @@ public class Board implements Disposable {
 				Gdx.app.debug(TAG, "You win!");
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_WIN]), 0.7f);
 				Timer.schedule(new WinTask(), 1f);
+				return;
 			}
 			createPhysicalCells();
 			
