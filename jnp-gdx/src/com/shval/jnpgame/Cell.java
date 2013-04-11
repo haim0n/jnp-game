@@ -34,8 +34,8 @@ public class Cell implements Disposable  {
 	private int type;
 	private boolean scanFlag; // was this cell encountered in current board scanning
 	private static final float CELL_SIZE = 100; // 
-	private static final float SPEED = 500;
-	private static final float GRAVITY = -4000;
+	private static final float SPEED = 750;
+	private static final float GRAVITY = -8000;
 	static private float graphicWidth;
 	static private float graphicHeight;
 	
