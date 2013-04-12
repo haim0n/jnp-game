@@ -17,7 +17,7 @@ public class BoardConfig {
 	static private final String TAG = BoardConfig.class.getSimpleName();
 	private char cells[][];
 	boolean flipped;
-	private static final String CONFIG_FILE = "game.save";
+	private static final String SAVE_FILE = "game.save";
 	
 	private String levels[][] = { 
 			{ // level 0 - dev playground\
@@ -915,13 +915,13 @@ public class BoardConfig {
 	}
 
 	public void setLastPlayedLevel(int level) {
-		FileHandle handle = Gdx.files.local(CONFIG_FILE);
+		FileHandle handle = Gdx.files.local(SAVE_FILE);
 
 		handle.writeBytes(new byte[] {(byte)level}, false);
 	}
 
 	public int getLastPlayedLevel() {
-		FileHandle handle = Gdx.files.local(CONFIG_FILE);
+		FileHandle handle = Gdx.files.local(SAVE_FILE);
 		
 		if (!handle.exists())
 			return 1;
