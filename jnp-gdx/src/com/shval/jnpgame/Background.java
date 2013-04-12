@@ -154,7 +154,7 @@ public class Background {
 	
 	void addSprite(Texture texture, float x, float y, int textureWidth, int textureHeight,
 			float vX, float vY,
-			int wrapX, int wrapY, int width, int height, float moment) {
+			int wrapX, int wrapY, int width, int height, float moment, boolean gold) {
 		
 		BackgroundSprite bgSprite = new BackgroundSprite();
 		bgSprite.texture = texture;
@@ -173,7 +173,8 @@ public class Background {
 				vX + ", " + vY + ", " + 
 				wrapX + ", " + wrapY + ", " + moment);
 		
-		bgSprite.sprite.setColor(200f/255f, 200f/255f, 50f/255f, 1);
+		if (gold)
+			bgSprite.sprite.setColor(200f/255f, 200f/255f, 50f/255f, 1);
 		backgroundElements.add(bgSprite);
 	}
 	

@@ -395,7 +395,7 @@ public class BoardConfig {
 			},
 			{ // level 31
 			"xxxxxxxxxxxxxx",
-			"xxb        bxx",
+			"xxb  xxxx  bxx",
 			"xxx  r  r  xxx",
 			"xx   xxxx   xx",
 			"xx xxxxxxxx xx",
@@ -781,7 +781,7 @@ public class BoardConfig {
 			float vY = -32f;
 			int width = 6;
 			int height = 6;
-			background.addSprite(Assets.getSmallStarTexture(), x, y, textureWidth, textureHeight , vX, vY, wrapX, wrapY, width, height, moment);
+			background.addSprite(Assets.getSmallStarTexture(), x, y, textureWidth, textureHeight , vX, vY, wrapX, wrapY, width, height, moment, true);
 		}
 	}
 	
@@ -798,7 +798,7 @@ public class BoardConfig {
 		int width = 100;
 		int height = 100;
 		background.addSprite(Assets.getSunRiseTexture(), x, y, textureWidth,
-				textureHeight, vX, vY, wrapX, wrapY, width, height, moment);
+				textureHeight, vX, vY, wrapX, wrapY, width, height, moment, false);
 	}
 	
 	public Background getBackground() {
