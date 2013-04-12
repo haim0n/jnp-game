@@ -767,7 +767,7 @@ public class BoardConfig {
 		background.addLayer(Assets.getBgTexture(51), 3 * (96 - overlap) - 256 - 120, 0, xSpeed, 0, 120, 0, 96, 64);
 	}
 	
-	private void addStars(Background background) {
+	private void addStars(Background background, boolean isGoldColor) {
 		int stars = (int) ( 32 * (Math.random() + 2));
 		for (int i=0 ; i < stars; i++) {
 			int wrapX = (int) (16 * (1 + Math.random()));
@@ -781,7 +781,7 @@ public class BoardConfig {
 			float vY = -32f;
 			int width = 6;
 			int height = 6;
-			background.addSprite(Assets.getSmallStarTexture(), x, y, textureWidth, textureHeight , vX, vY, wrapX, wrapY, width, height, moment, true);
+			background.addSprite(Assets.getSmallStarTexture(), x, y, textureWidth, textureHeight , vX, vY, wrapX, wrapY, width, height, moment, isGoldColor);
 		}
 	}
 	
@@ -833,7 +833,7 @@ public class BoardConfig {
 		case 16:
 			// stars in the night
 			background.color.set(0.0f, 0.0f, 0f, 0);
-			addStars(background);
+			addStars(background, true);
 			addLowMountLayer(background);			
 			break;
 
@@ -878,7 +878,7 @@ public class BoardConfig {
 			addGrayMountLayer(background);		
 			
 			
-			addStars(background);
+			addStars(background, false);
 			addSunrise(background);
 			addSnowLayer(background);
 						
