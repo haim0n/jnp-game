@@ -16,15 +16,13 @@ public class JnpGame extends Game {
 			
 	@Override
 	public void create() {
-		currentLevel = 40;
-		
 		// load assets
 		Assets.load();
 		
 		//load board config
 		config = new BoardConfig();
-		
-		MAX_LEVELS = config.getLevels();
+		currentLevel = config.getLastPlayedLevel();
+		MAX_LEVELS = config.getNumLevels();
 		//
 		Gdx.app.setLogLevel(logLevel);
 		playLevel(currentLevel);
@@ -80,6 +78,7 @@ public class JnpGame extends Game {
 	
 	@Override
 	public void pause() {
+		config.setLastPlayedLevel(currentLevel);
 	}
 
 	@Override

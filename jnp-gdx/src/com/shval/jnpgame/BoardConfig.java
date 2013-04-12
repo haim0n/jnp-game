@@ -4,6 +4,7 @@ import static com.shval.jnpgame.Globals.*;
 import java.util.HashMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
@@ -16,6 +17,7 @@ public class BoardConfig {
 	static private final String TAG = BoardConfig.class.getSimpleName();
 	private char cells[][];
 	boolean flipped;
+	private static final String CONFIG_FILE = "game.save";
 	
 	private String levels[][] = { 
 			{ // level 0 - dev playground\
@@ -536,7 +538,7 @@ public class BoardConfig {
 		Gdx.app.debug(TAG, "Level " + level + " defined");
 	}
 
-	int getLevels() {
+	int getNumLevels() {
 		return LEVELS;
 	}
 	
@@ -912,8 +914,22 @@ public class BoardConfig {
 			flipped = ! flipped;
 	}
 
-	
-	
+	public void setLastPlayedLevel(int level) {
+		FileHandle handle = Gdx.files.local(CONFIG_FILE);
+
+		handle.writeBytes(new byte[] {(byte)level}, false);
+	}
+
+	public int getLastPlayedLevel() {
+		FileHandle handle = Gdx.files.local(CONFIG_FILE);
+		
+		if (!handle.exists())
+			return 1;
+		
+		byte[] bytes = handle.readBytes();
+		return bytes[0];
+	}
+
 	HashMap<Integer, Emerging> emergingMap; // Map[level][x][y] - emerging cell 
 	
 	int key(int level, int x, int y) {
