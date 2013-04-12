@@ -785,10 +785,26 @@ public class BoardConfig {
 		}
 	}
 	
+	private void addSunrise(Background background) {
+		int wrapX = 0;
+		int wrapY = 0;
+		float x = 100;
+		float y = 25;
+		int textureWidth = 256;
+		int textureHeight = 256;
+		float moment = 20f;
+		float vX = 0;
+		float vY = 0;
+		int width = 100;
+		int height = 100;
+		background.addSprite(Assets.getSunRiseTexture(), x, y, textureWidth,
+				textureHeight, vX, vY, wrapX, wrapY, width, height, moment);
+	}
+	
 	public Background getBackground() {
 		Background background = new Background();
 		int bgLevel = this.level;
-		if (bgLevel > 20) {
+		if (bgLevel > 20 && bgLevel < 40) {
 			bgLevel -= 20;
 		}
 		// background.color.set(Color.blue); TODO: why doesnt it work !!!		
@@ -856,7 +872,16 @@ public class BoardConfig {
 			addSnowLayer(background);
 			
 			break;
+		case 40:
+			// stars in the night
+			background.color.set(0.0f, 0.0f, 0f, 0);
+			addGrayMountLayer(background);		
 			
+			
+			addStars(background);
+			addSunrise(background);
+			addSnowLayer(background);
+						
 		default:
 			
 		}

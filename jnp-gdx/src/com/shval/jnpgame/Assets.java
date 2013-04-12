@@ -31,6 +31,7 @@ public class Assets {
     
     public static Texture buttonsTexture;
     public static Texture smallStarTexture;
+    public static Texture sunRiseTexture;
     public static Texture starTexture;
     public static Texture buttonIconsTexture;
     public static Texture fontTexture;
@@ -72,9 +73,11 @@ public class Assets {
         bgTexture51 = new Texture(Gdx.files.internal("data/bg51.png"));
         bgTexture52 = new Texture(Gdx.files.internal("data/bg52.png"));
         
+        
         buttonsTexture = new Texture(Gdx.files.internal(("data/button.png")));
         smallStarTexture = new Texture(Gdx.files.internal(("data/small_star.png")));
         starTexture = new Texture(Gdx.files.internal(("data/star32.png")));
+        sunRiseTexture = new Texture(Gdx.files.internal(("data/bg70.png")));
         buttonIconsTexture = new Texture(Gdx.files.internal(("data/bi.png")));
         fontTexture = new Texture(Gdx.files.internal(("data/font.png")));
         msgFrameTexture = new Texture(Gdx.files.internal(("data/frame.png")));
@@ -208,6 +211,10 @@ public class Assets {
 
 	public static Texture getSmallStarTexture() {
 		return smallStarTexture;
+	}
+
+	public static Texture getSunRiseTexture() {
+		return sunRiseTexture;
 	}
 
 	public static Texture getMsgFrameTexture() {

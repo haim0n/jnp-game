@@ -16,7 +16,7 @@ public class JnpGame extends Game {
 			
 	@Override
 	public void create() {
-		currentLevel = 26;
+		currentLevel = 40;
 		
 		// load assets
 		Assets.load();
