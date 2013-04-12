@@ -883,7 +883,7 @@ public class Board implements Disposable {
 				//Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), MergeEffect.MAX_TTL * 1.5f);
 				Timer.schedule(new SetNeighboursTask(), MergeEffect.MAX_TTL * 2f);
 			}
-			if (merged && isWinPosition()) { // check only if something merged
+			if (/*merged&&*/ isWinPosition()) {
 				Gdx.app.debug(TAG, "You win!");
 				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_WIN]), 0.7f);
 				Timer.schedule(new WinTask(), 1f);
