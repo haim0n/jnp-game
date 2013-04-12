@@ -465,6 +465,55 @@ public class BoardConfig {
 			"x    111111  x",
 			"xxxxxxxxxxxxxx",
 			},
+			{ // level 37
+			"xxxxxxxxxxxxxx",
+			"xrr  rrr  rryx",
+			"xxx    x   xxx",
+			"x           gx",
+			"x  rrr    rrRW",
+			"xx  1        x",
+			"xxx 1        x",
+			"xx  1        x",
+			"xxx 1       xx",
+			"xxxxxxxxxxxxxx",
+			},
+			{ // level 38
+			"xWWWxxxxxxxxxx",
+			"xGGGxxybr    x",
+			"x   xxbyb    x",
+			"xGGGxxxxxxx  x",
+			"x111xx       x",
+			"xx1xxx       x",
+			"xx      xx xxx",
+			"xx       xxxxx",
+			"xxxxx xxxxxxxx",
+			"xxxxxxxxxxxxxx",
+			},
+			{ // level 39
+			"xxxxxxxxxxxxxx",
+			"xxxxxx    xxxx",
+			"xxxx  1111xxxx",
+			"xxxxx    xxxxx",
+			"xxrx      xgxx",
+			"xxb        bxx",
+			"xyr        gyx",
+			"xxxx      xxxx",
+			"xxxxx xx xxxxx",
+			"xxxxxxxxxxxxxx",
+			},
+			{ // level 40
+			"xxxxxxxxxxxxxx",
+			"x      r r r x",
+			"xx2yWxxx x x x",
+			"xx22R  x x r x",
+			"xxry y x x x x",
+			"xx11 x x x r x",
+			"xx11       x x",
+			"xx1          x",
+			"xxxx     x   x",
+			"xxxxxxxxxxxxxx",
+			},
+
 
 	};
 
@@ -980,7 +1029,16 @@ public class BoardConfig {
 		emergingMap.put(key(34, 13, 7), new Emerging(JELLY_BLUE, LEFT, NONE));
 		
 		emergingMap.put(key(36, 4, 0), new Emerging(JELLY_RED, UP, NONE));
+		
+		emergingMap.put(key(37, 0, 5), new Emerging(JELLY_GREEN, RIGHT, NONE));
+		emergingMap.put(key(37, 0, 6), new Emerging(JELLY_YELLOW, RIGHT, NONE));
+		
+		emergingMap.put(key(38, 2, 1), new Emerging(JELLY_RED, UP, NONE));
+		
+		emergingMap.put(key(39, 3, 2), new Emerging(JELLY_GREEN, UP, NONE));
+		emergingMap.put(key(39, 10, 2), new Emerging(JELLY_RED, UP, NONE));
 
+		emergingMap.put(key(40, 3, 1), new Emerging(JELLY_YELLOW, UP, NONE));
 	}
 	
 	
