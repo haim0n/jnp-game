@@ -927,7 +927,11 @@ public class BoardConfig {
 			return 1;
 		
 		byte[] bytes = handle.readBytes();
-		return bytes[0];
+		int level = bytes[0];
+		if (level >= 0 && level <= LEVELS) {
+			return bytes[0];
+		} else 
+			return 1;
 	}
 
 	HashMap<Integer, Emerging> emergingMap; // Map[level][x][y] - emerging cell 
