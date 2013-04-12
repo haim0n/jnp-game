@@ -1,12 +1,8 @@
 package com.shval.jnpgame;
 
 import static com.shval.jnpgame.Globals.*;
-
 import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.physics.box2d.World;
-
 
 public class Jelly {
 	

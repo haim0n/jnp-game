@@ -2,12 +2,10 @@ package com.shval.jnpgame;
 
 import static com.shval.jnpgame.Globals.*;
 import java.util.HashMap;
-import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class BoardConfig {
 
