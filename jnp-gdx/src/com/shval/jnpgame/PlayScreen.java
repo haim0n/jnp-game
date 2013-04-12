@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.sun.xml.internal.ws.api.pipe.NextAction;
 
 public class PlayScreen implements Screen, InputProcessor {
 
@@ -339,6 +340,9 @@ public class PlayScreen implements Screen, InputProcessor {
 						break;
 					default:
 					}
+					
+					if (secretSequence <= 40 && secretSequence > 0)
+						game.goToLevel(secretSequence);
 					secretInd = 0;
 					secretSequence = 0;
 				}

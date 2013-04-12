@@ -622,24 +622,34 @@ public class Board implements Disposable {
 	}
 	*/
 	
-	private boolean attemptMerge(Cell[][] postition, Cell[][] oldPostition, boolean mergeAnchord) {
+	private boolean attemptMerge(Cell[][] position, Cell[][] oldPostition, boolean mergeAnchord) {
 		boolean ret = false;
 				
 		for (int x = 0; x < COLS; x++) {
 			for (int y = 0; y < ROWS; y++) {
-				Cell cell = postition[x][y];
+				Cell cell = position[x][y];
 								
 				if (cell == null)
 					continue;
 				
-				 if (cell.isMoving())
-					 Gdx.app.error(TAG, "Attempting to merge while moving");
+				 if (cell.isMoving()) {
+					 if (position == cells) {
+						 Gdx.app.error(TAG, "Attempting to merge board while moving");
+						 Gdx.app.error(TAG, "cell " + x + ", " + y + ". v = (" + 
+						 cell.getSpeed().getXv() + ", " + cell.getSpeed().getYv() + ")");
+					 }
+					 else {
+						 Gdx.app.debug(TAG, "Attempting to merge board while moving");
+						 Gdx.app.debug(TAG, "cell " + x + ", " + y + ". v = (" + 
+						 cell.getSpeed().getXv() + ", " + cell.getSpeed().getYv() + ")");						 
+					 }
+				 }
 				
 				 
 				Cell neighbor;
 				// try to merge with right neighbor
 				if (x < COLS - 1)
-					neighbor = postition[x + 1][y];
+					neighbor = position[x + 1][y];
 				else
 					neighbor = outOfScopeCell; // this is helpful for border rendering
 				
@@ -653,7 +663,7 @@ public class Board implements Disposable {
 				}
 				// try to merge with up neighbor
 				if (y < ROWS - 1)
-					neighbor = postition[x][y+1];
+					neighbor = position[x][y+1];
 				else
 					neighbor = null;
 				

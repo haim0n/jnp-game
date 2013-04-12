@@ -16,6 +16,11 @@ public class JnpGame extends Game {
 			
 	@Override
 	public void create() {
+<<<<<<< Upstream, based on origin/master
+=======
+		currentLevel = 1;
+		
+>>>>>>> b9546d1 goTo level cheat
 		// load assets
 		Assets.load();
 		
@@ -42,6 +47,15 @@ public class JnpGame extends Game {
 	public void flipLevel() {
 		Gdx.app.debug(TAG, "flipping level");
 		config.setFlipped();
+		playLevel(currentLevel);
+	}
+
+	public void goToLevel(int l) {
+		currentLevel = l;
+		if (currentLevel > MAX_LEVELS || currentLevel < 0) {
+			currentLevel = 0;
+		}
+		
 		playLevel(currentLevel);
 	}
 	
