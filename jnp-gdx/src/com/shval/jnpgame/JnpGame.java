@@ -16,11 +16,7 @@ public class JnpGame extends Game {
 			
 	@Override
 	public void create() {
-<<<<<<< Upstream, based on origin/master
-=======
-		currentLevel = 1;
-		
->>>>>>> b9546d1 goTo level cheat
+
 		// load assets
 		Assets.load();
 		
