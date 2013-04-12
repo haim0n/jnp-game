@@ -454,7 +454,7 @@ public class PlayScreen implements Screen, InputProcessor {
 
 		int delta = (int) ( TimeUtils.millis() - timeDown ) ;
 		float a = (float) delta / ((float) 1000 * 2f);
-		Gdx.app.debug(TAG, "a = " + a + " delta = " + delta + ", time " + (float) TimeUtils.millis() + ", timeDown " + timeDown);
+		//Gdx.app.debug(TAG, "a = " + a + " delta = " + delta + ", time " + (float) TimeUtils.millis() + ", timeDown " + timeDown);
 		int x = xDown / cellWidth;
 		int y = yDown / cellHeight;
 		

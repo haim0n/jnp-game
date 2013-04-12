@@ -110,6 +110,9 @@ public class Board implements Disposable {
 		float w = 720;
 
 		MergeEffect(boolean horisontal, int x, int y) {
+			Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_START]), 0f);
+			Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), MergeEffect.MAX_TTL * 1.5f);
+
 			// effect just above (if horizontal) or just to the right
 			// of cell (x, y)
 			this.horisontal = horisontal;
@@ -671,6 +674,8 @@ public class Board implements Disposable {
 						mergeEffects.add(new MergeEffect(true, x, y));
 					}
 				}
+				
+				
 			}
 		}
 		
@@ -718,7 +723,60 @@ public class Board implements Disposable {
 						cell.emerge();
 						//mergeCells(cell.emerging, neighbor);
 						int emerge = emerging.emergingTo;
-						return 1 << emerge; // let the emerge one by one
+						boardLocked = true;
+						return 1 << emerge; // let them emerge one by one
+					}
+			}
+		}
+
+		return STABLE;
+	}
+
+	private int attemptMergeEmerge() {
+		
+		for (int x = 0; x < COLS; x++) {
+			for (int y = 0; y < ROWS; y++) {
+				Cell cell = cells[x][y];
+				
+				if (cell == null)
+					continue;
+				
+				 if (cell.isMoving())
+					 Gdx.app.debug(TAG, "Attempting to merge-emerge while moving (it may be ok)");
+				
+				 Cell emerging = cell.emerging;
+				 if (emerging == null)
+					continue;
+					
+				int dx = 0;
+				int dy = 0;
+				switch (emerging.emergingTo) {
+				case UP:
+					dy = 1;
+					break;
+				case LEFT:
+					dx = -1;
+					break;
+				case RIGHT:
+					dx = 1;
+					break;
+				default:
+					 Gdx.app.error(TAG, "Attempting to emerge to" + emerging.emergingTo);
+				}
+				
+				Cell neighbor = cells[x+dx][y+dy];
+				if (neighbor == null)
+					continue;
+				
+				if(emerging.getType() == neighbor.getType())
+					if (attemptMove(emerging.emergingTo, neighbor)) {
+						cell.emerge();
+						//mergeCells(cell.emerging, neighbor);
+						int emerge = emerging.emergingTo;
+						mergeCells(emerging, neighbor);
+						mergeEffects.add(
+								new MergeEffect(emerging.emergingTo == UP, Math.min(x,  x+dx), Math.min(y, y+dy)));  
+						return 1 << emerge;// let them emerge one by one
 					}
 			}
 		}
@@ -817,9 +875,12 @@ public class Board implements Disposable {
 			boolean merged;
 			Cell oldCells[][] = new Cell[COLS][ROWS];
 			copyBoardState(oldCells, cells);
-			if (merged = attemptMerge(cells, oldCells , true)) {
-				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_START]), 0f);
-				Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), MergeEffect.MAX_TTL * 1.5f);
+			merged = attemptMerge(cells, oldCells , true);
+			newState = attemptMergeEmerge();
+			merged = merged || newState != STABLE;
+			if (merged) {
+				//Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_START]), 0f);
+				//Timer.schedule(new DelayedSoundPlay(sounds[SOUND_MERGE_FINISH]), MergeEffect.MAX_TTL * 1.5f);
 				Timer.schedule(new SetNeighboursTask(), MergeEffect.MAX_TTL * 2f);
 			}
 			if (merged && isWinPosition()) { // check only if something merged
@@ -831,17 +892,20 @@ public class Board implements Disposable {
 			createPhysicalCells();
 			
 			if (merged) {
-				Timer.schedule(new AttemptEmergeTask(), MergeEffect.MAX_TTL * 3f);
+				//Timer.schedule(new AttemptEmergeTask(), MergeEffect.MAX_TTL * 3f);
+				Timer.schedule(new UnlockTask(), MergeEffect.MAX_TTL * 3f);
 			}
 			else {
-				Timer.schedule(new AttemptEmergeTask(), 0);
+				//Timer.schedule(new AttemptEmergeTask(), 0);
+				Timer.schedule(new UnlockTask(), 0);
 			}
 
 		}
-		else {
+		//else {
 			boardDynamicState = newState;
-		}
+		//}
 		
+		Gdx.app.debug(TAG, "Updating done. board dynamic state = " + boardDynamicState);
 	}	
 	
 	
@@ -992,6 +1056,7 @@ public class Board implements Disposable {
 		}			
 		
 		// update state
+		Gdx.app.debug(TAG, "Updating physics done, returning new dynamic state = " + newBoardState);
 		return newBoardState;
 	}
 	

@@ -227,7 +227,7 @@ public class Cell implements Disposable  {
 		int t0, t1, t2;
 		int topology;
 
-		Gdx.app.debug(TAG, "Setting neighbors for cell: " + x + ", " + y );
+		//Gdx.app.debug(TAG, "Setting neighbors for cell: " + x + ", " + y );
 		Board board = jelly.getBoard();
 					
 		// region:
@@ -322,7 +322,7 @@ public class Cell implements Disposable  {
 		textureRegions[1][0] = new TextureRegion(rawTexture, 8 + i * 48 + 48 / 2, 8 + j * 48 + 48 / 2, 48 / 2, 48 / 2);
 		bottomLeft[1][0] = new Vector2((8 + i * 48 + 48 / 2) / 256f, (24 + 8 + j * 48 + 48 / 2) / 256f);
 
-		Gdx.app.debug(TAG, "Setting texture bottom left to " + x + ", " + y);
+		//Gdx.app.debug(TAG, "Setting texture bottom left to " + x + ", " + y);
 		if (PHYSICS_SUPPORTED)
 			physicalCell.setTextureBL(bottomLeft);
 		
