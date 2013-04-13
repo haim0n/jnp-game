@@ -966,8 +966,9 @@ public class BoardConfig {
 	public void setLastPlayedLevel(int level) {
 		FileHandle handle = Gdx.files.local(SAVE_FILE);
 		
-		handle.writeBytes(new byte[] {(byte)level}, false);
-		handle.writeBytes(complete, true);
+		//handle.writeBytes(new byte[] {(byte)level}, false);
+		complete[0] = (byte) level; // complete[0] = last level
+		handle.writeBytes(complete, false);
 	}
 
 	public int getLastPlayedLevel() {
