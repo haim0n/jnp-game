@@ -1,6 +1,8 @@
 package com.shval.jnpgame;
 
 import static com.shval.jnpgame.Globals.*;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -18,6 +20,7 @@ public class BoardConfig {
 	private char cells[][];
 	boolean flipped;
 	private static final String SAVE_FILE = "game.save";
+	byte complete[];
 	
 	private String levels[][] = { 
 			{ // level 0 - dev playground\
@@ -556,6 +559,7 @@ public class BoardConfig {
 		LEVELS = levels.length - 1; // zero level doesn't count
 		initEmerging();
 		Gdx.app.debug(TAG, "Number of levels is " + LEVELS);
+		complete = new byte[LEVELS + 1];
 	}
 	
 	public void setLevel(int level) {
@@ -961,8 +965,9 @@ public class BoardConfig {
 
 	public void setLastPlayedLevel(int level) {
 		FileHandle handle = Gdx.files.local(SAVE_FILE);
-
+		
 		handle.writeBytes(new byte[] {(byte)level}, false);
+		handle.writeBytes(complete, true);
 	}
 
 	public int getLastPlayedLevel() {
@@ -972,12 +977,15 @@ public class BoardConfig {
 			return 1;
 		
 		byte[] bytes = handle.readBytes();
+		complete = Arrays.copyOf(bytes, bytes.length);
 		int level = bytes[0];
 		if (level >= 0 && level <= LEVELS) {
 			return bytes[0];
 		} else 
 			return 1;
 	}
+	
+	
 
 	HashMap<Integer, Emerging> emergingMap; // Map[level][x][y] - emerging cell 
 	
@@ -1132,8 +1140,18 @@ public class BoardConfig {
 	public int whichBonusLevel(int level) {
 		// 3 last levels are bonus
 		int bonus = level - (LEVELS - 3);
-		return bonus > 0 ? bonus : 0;
+		return bonus;
+	}
+
+	public boolean isCurrentLevelCompleted() {
+		return (complete[level] == 1);
 	}
 	
+	
+	public void setCurrentLevelAsComplete() {
+		
+		complete[level] = (byte) 1;
+	}
+
 	
 }

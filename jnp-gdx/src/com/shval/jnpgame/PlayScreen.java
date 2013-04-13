@@ -35,6 +35,9 @@ public class PlayScreen implements Screen, InputProcessor {
 	static float worldWidth = 1000;
 	static float worldHeight = 1000;
 	TextureRegion frameCursor;
+	TextureRegion passedLevelStar;
+	float passedLevelStarGX;
+	float passedLevelStarGY;
 	
 	// secret sequences
 	final int SECRET_LENGTH = 3;
@@ -79,7 +82,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		//camera = new OrthographicCamera(10, 7);
 
 
-		camera = new OrthographicCamera(worldWidth, /*0.95f **/ worldHeight);
+		camera = new OrthographicCamera(worldWidth, worldHeight);
 		camera.position.set(worldWidth / 2, worldHeight / 2, 0);
 		camera.update();
 
@@ -87,7 +90,9 @@ public class PlayScreen implements Screen, InputProcessor {
 		spriteBatch.setProjectionMatrix(camera.combined);
 		//spriteBatch.setTransformMatrix(camera.);
 		
-		this.frameCursor = new TextureRegion( Assets.getFrameCursorTextrue(), 7, 7, 47, 47);  
+		this.frameCursor = new TextureRegion( Assets.getFrameCursorTextrue(), 7, 7, 47, 47);
+		if (config.isCurrentLevelCompleted())
+			this.passedLevelStar = new TextureRegion( Assets.getStarTexture());
 		// the action begins (here, and not in Screen's constructor!)
         board.start();
 	}
@@ -129,12 +134,17 @@ public class PlayScreen implements Screen, InputProcessor {
 		 if (bonus > 0) {
 			 text = "Bonus Level ";
 			 while (bonus-- > 0)
-				 text = text + "*";
+				 text = text + "I";
 		 }
 		 else
 			 text = "Level " + level;
+		 
+		 if (bonus == 0)
+			 text += " (last)";
 		JNPLabel label = new JNPLabel(text, board.getCols() / 2 - text.length() / 6 , board.getRows() - 1, false);
 		labels.add(label);
+		passedLevelStarGX = worldWidth * (board.getCols() / 2 - text.length() / 6 - 1) / board.getCols();
+		passedLevelStarGY = worldHeight * (board.getRows() - 0.5f) / board.getRows();
 	}
 	
 	
@@ -179,6 +189,13 @@ public class PlayScreen implements Screen, InputProcessor {
 			button.render(spriteBatch);	
 		}
 		
+		
+		// completed star
+		if (passedLevelStar != null) {
+			spriteBatch.draw(passedLevelStar, passedLevelStarGX, passedLevelStarGY, cellWidth, cellHeight);
+		}
+		
+			
 		// labels
 		for (JNPLabel label: labels) {
 			label.render(spriteBatch);
@@ -457,6 +474,10 @@ public class PlayScreen implements Screen, InputProcessor {
 
 			buttons.add(button);
 		}		
+		
+		// completed star
+		this.passedLevelStar = new TextureRegion( Assets.getStarTexture());
+		this.game.config.setCurrentLevelAsComplete();
 
 	}
 
