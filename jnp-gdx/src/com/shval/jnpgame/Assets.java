@@ -122,7 +122,7 @@ public class Assets {
     	
     	Texture texture;
     	
-    	if (level > 20)
+    	if (level > 20 && level <= 40)
     		level -= 20;
 		switch(level) {
 		case 0:
@@ -154,7 +154,13 @@ public class Assets {
 		case 20:
 			texture = wallTexture1;
 			break;
-			
+
+		case 41:
+		case 42:
+		case 43:			
+			texture = wallTexture5;
+			break;
+
 		default:
 			Gdx.app.error("Assets", "Invalid wall texture for level " + level);
 			texture = blackTexture;

@@ -513,7 +513,42 @@ public class BoardConfig {
 			"xxxx     x   x",
 			"xxxxxxxxxxxxxx",
 			},
-
+			{ // Bonus level *
+			"xxxxxxxxxxxxxx",
+			"xb  bb  bb  bx",
+			"xr  rr  rr  rx",
+			"xx bbb  bbb xx",
+			"x   11  22   x",
+			"x   WB  RW   x",
+			"x            x",
+			"xx    WW    xx",
+			"xxx   RB   xxx",
+			"xxxxxxxxxxxxxx",
+			},
+			{ // Bonus level **
+			"xxxxxxxxxxxxxx",
+			"xxxxxrrrrxxxxx",
+			"xxx12335587xxx",
+			"xxx11446677xxx",
+			"xxx 999ddd xxx",
+			"xxx D    : xxx",
+			"xxx =    ; xxx",
+			"xxx > rr < xxx",
+			"xxx > rr < xxx",
+			"xxxxxxxxxxxxxx",
+			},
+			{ // Bonus level ***
+			"xxxxxxxxxxxxxx",
+			"xrgrgr    xxxx",
+			"xgrgrg    xxxx",
+			"xrgrgr    xxxx",
+			"xxxxxWB   bbbx",
+			"xxxxxx    xxxx",
+			"xxxxxx    xxxx",
+			"xxxxxx    xxxx",
+			"xxxxxxG  Rxxxx",
+			"xxxxxxWxxWxxxx",
+			},						
 
 	};
 
@@ -682,7 +717,14 @@ public class BoardConfig {
 		 	case '6' :
 		 	case '7' :
 		 	case '8' :
-		 	case '9' :
+		 	case '9' :		 		
+		 	case '9' + 1 :
+		 	case '9' + 2 :
+		 	case '9' + 3 :
+		 	case '9' + 4 :
+		 	case '9' + 5 :
+		 	case '9' + 6 :
+		 	case '9' + 7 : 		
 		 		ret = getBlackType(cell);
 		 		break;
 		 	default :
@@ -873,6 +915,9 @@ public class BoardConfig {
 			
 			break;
 		case 40:
+		case 41:			
+		case 42:
+		case 43:			
 			// stars in the night
 			background.color.set(0.0f, 0.0f, 0f, 0);
 			addGrayMountLayer(background);		
@@ -1082,6 +1127,12 @@ public class BoardConfig {
 		emergingMap.put(key(39, 10, 2), new Emerging(JELLY_RED, UP, NONE));
 
 		emergingMap.put(key(40, 3, 1), new Emerging(JELLY_YELLOW, UP, NONE));
+	}
+
+	public int whichBonusLevel(int level) {
+		// 3 last levels are bonus
+		int bonus = level - (LEVELS - 3);
+		return bonus > 0 ? bonus : 0;
 	}
 	
 	

@@ -79,7 +79,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		//camera = new OrthographicCamera(10, 7);
 
 
-		camera = new OrthographicCamera(worldWidth, worldHeight);
+		camera = new OrthographicCamera(worldWidth, /*0.95f **/ worldHeight);
 		camera.position.set(worldWidth / 2, worldHeight / 2, 0);
 		camera.update();
 
@@ -123,7 +123,16 @@ public class PlayScreen implements Screen, InputProcessor {
 	
 	private void initLabels(BoardConfig config) {
 		labels = new ArrayList<JNPLabel>();
-		String text = "Level " + config.getLevel();
+		 int level = config.getLevel();
+		 int bonus = config.whichBonusLevel(level);
+		 String text;
+		 if (bonus > 0) {
+			 text = "Bonus Level ";
+			 while (bonus-- > 0)
+				 text = text + "*";
+		 }
+		 else
+			 text = "Level " + level;
 		JNPLabel label = new JNPLabel(text, board.getCols() / 2 - text.length() / 6 , board.getRows() - 1, false);
 		labels.add(label);
 	}
