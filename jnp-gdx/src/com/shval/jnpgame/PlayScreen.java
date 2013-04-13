@@ -143,8 +143,8 @@ public class PlayScreen implements Screen, InputProcessor {
 			 text += " (last)";
 		JNPLabel label = new JNPLabel(text, board.getCols() / 2 - text.length() / 6 , board.getRows() - 1, false);
 		labels.add(label);
-		float x = board.getCols() / 2 - text.length() / 6 - 1.2f;
-		float y = board.getRows() - 0.7f;
+		float x = board.getCols() / 2 - text.length() / 6 - 0.9f;
+		float y = board.getRows() - 0.75f;
 		
 		passedLevelStarGX =  (x * (float) worldWidth / (float) board.getCols());
 		passedLevelStarGY = (y * (float) worldHeight / (float) board.getRows());
@@ -195,7 +195,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		
 		// completed star
 		if (passedLevelStar != null) {
-			spriteBatch.draw(passedLevelStar, passedLevelStarGX, passedLevelStarGY, cellWidth, cellHeight);
+			spriteBatch.draw(passedLevelStar, passedLevelStarGX, passedLevelStarGY, 0.7f * worldWidth / board.getCols(), 0.6f * worldHeight / board.getRows());
 		}
 		
 			
