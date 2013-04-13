@@ -143,8 +143,11 @@ public class PlayScreen implements Screen, InputProcessor {
 			 text += " (last)";
 		JNPLabel label = new JNPLabel(text, board.getCols() / 2 - text.length() / 6 , board.getRows() - 1, false);
 		labels.add(label);
-		passedLevelStarGX = worldWidth * (board.getCols() / 2 - text.length() / 6 - 1) / board.getCols();
-		passedLevelStarGY = worldHeight * (board.getRows() - 0.5f) / board.getRows();
+		float x = board.getCols() / 2 - text.length() / 6 - 1.2f;
+		float y = board.getRows() - 0.7f;
+		
+		passedLevelStarGX =  (x * (float) worldWidth / (float) board.getCols());
+		passedLevelStarGY = (y * (float) worldHeight / (float) board.getRows());
 	}
 	
 	
