@@ -164,9 +164,13 @@ public class PlayScreen implements Screen, InputProcessor {
 		// background (render & update)
 		spriteBatch.begin();
 		background.render(delta, spriteBatch);
+
+		// cursor
+		renderCursorFrame(spriteBatch);
 		spriteBatch.end();
 		
 		
+
 		
 		// board
 		
@@ -203,8 +207,6 @@ public class PlayScreen implements Screen, InputProcessor {
 		for (JNPLabel label: labels) {
 			label.render(spriteBatch);
 		}
-		
-		renderCursorFrame(spriteBatch);
 		
 		spriteBatch.end();
 		
@@ -490,7 +492,8 @@ public class PlayScreen implements Screen, InputProcessor {
 			return;
 
 		int delta = (int) ( TimeUtils.millis() - timeDown ) ;
-		float a = (float) delta / ((float) 1000 * 2f);
+		//float a = (float) delta / ((float) 1000 * 2f);
+		float a = Math.min((float) delta / ((float) 3000 ), 1f);
 		//Gdx.app.debug(TAG, "a = " + a + " delta = " + delta + ", time " + (float) TimeUtils.millis() + ", timeDown " + timeDown);
 		int x = xDown / cellWidth;
 		int y = yDown / cellHeight;
@@ -498,13 +501,14 @@ public class PlayScreen implements Screen, InputProcessor {
 		float gCellWidth = worldWidth / board.getCols();
 		float gCellHeight = worldHeight / board.getRows();
 		
-		final int K = 2; 
+		final int K = 10; 
 		for (int i = -K; i <= K; ++i) {
 			for (int j = -K; j <= K; ++j) {
-				float d = (float) ( i * i + j * j ) / (float) (K * K + K * K);
+				float d = (float) ( i * i + j * j ) / (float) (K * K);
 				int xx = x + i;
 				int yy = y + j;
-				float alpha = Math.min(Math.max(0f, a - d), 1f);
+				//float alpha = Math.min(Math.max(0f, a - d), 1f);
+				float alpha = Math.max(a - 2 * d, 0f);
 				batch.setColor(1, 1, 1, alpha);
 				batch.draw(frameCursor, xx * gCellWidth, yy * gCellHeight, gCellWidth, gCellHeight);
 			}

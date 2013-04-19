@@ -181,7 +181,7 @@ public class Board implements Disposable {
 				star1.draw(batch);
 				star2.draw(batch);
 			}
-			else {
+			else if (ttl2 > 0) {
 				if (ttl2 < 3 * MAX_TTL / 4) {
 					float d = ttl2 / MAX_TTL;
 					star3.setColor(1, 1, 1, ttl2 / MAX_TTL);
@@ -546,6 +546,7 @@ public class Board implements Disposable {
 		if (renderMode == 2 /* static */) {
 			// render merge effects
 			for (MergeEffect c : mergeEffects) {
+				c.update(delta);
 				c.render(spriteBatch);
 			}
 		}
@@ -824,7 +825,6 @@ public class Board implements Disposable {
 		
 		ArrayList<MergeEffect> mergeEffectsNew = new ArrayList<MergeEffect>();
 		for (MergeEffect c : mergeEffects) {
-			c.update(delta);
 			if (c.ttl2 > 0)
 				mergeEffectsNew.add(c);
 		}
